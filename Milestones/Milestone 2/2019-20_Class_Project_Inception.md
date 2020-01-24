@@ -7,7 +7,7 @@
 
 ## **Vision Statement 1.0**
 
-For coaches who want to strategize how to use their swimmers in meets, our application will store race results for swimmers and show performance over time so that coaches can predict how they will perform in the future.
+For coaches who need to record and analyze their athlete's data, the Class Project is an analytical tool that will store athlete records and provide predictive race and meet results. Unlike Athletic.net, that only provides the data, our product will predict future race results and allow coaches to organize their teams in the most effective matter to win meets.
 ___
 
 ## **Initial Requirements Elaboration and Elicitation:**
@@ -61,6 +61,8 @@ ___
 6. The core entity is the athlete.  They are essentially free agents in the system.  They can be a member of one or more teams at one time, then change at any time.  Later when we want to have teams and do predictive analysis we'll let the coaches assemble their own teams and add/remove athletes from their rosters.
 7. The first stats we want are: 1) display PR's prominently in each race event, 2) show a historical picture/plot of performance, per race type and distance, 3) some measure of how they rank compared to other athletes, both current and historical, 4) something that shows how often they compete in each race event, i.e. which events are they competing in most frequently, and alternately, which events are they "avoiding".
 8. Coaches should be able to generate schedules for swimmers at at a meet and choose the best one. The schedules will use performance and preference data to put athletes in events to give the team the best chance for winning the meet.
+9. The ability to download a csv files with relevant data. CSV can include event results, or a single swimmer results over time. Also be able to print which event each athlete will compete in based off of a strategy that is made using this application. This will give the coach a physical paper to take to meets.
+10. For administrators, there should be a tool to easilly upload a CSV file to add data to the database.
 
 ___
 
@@ -74,10 +76,14 @@ ___
 ## **Identify Non-Functional Requirements**
 
 1. User accounts and data must be stored indefinitely.  They don't want to delete; rather, mark items as "deleted" but don't actually delete them.  They also used the word "inactive" as a synonym for deleted.
+
 2. Passwords should not expire
 3. Site should never return debug error pages.  Web server should have a custom 404 page that is cute or funny and has a link to the main index page.
 4. All server errors must be logged so we can investigate what is going on in a page accessible only to Admins.
 5. English will be the default language.
+6. We are going to use Bootstrap 4 instead of trying to use CSS.
+7. Our scheme for the website is black and blue.
+8. The software should be portable, OS to OS. E.g.: Android to Apple.
 
 ___
 ## **Identify Functional Requirements (User Stories)**
