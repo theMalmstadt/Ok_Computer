@@ -26,3 +26,7 @@ textarea {
 .nav-link, .navbar-brand {
     color: aqua !important;
 }
+
+.text-primary {
+    color: aqua !important;
+}
