@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ClassProject.Models;
 
 namespace ClassProject.Controllers
 {
@@ -26,6 +27,27 @@ namespace ClassProject.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
+        }
+
+        private ResultContext db = new ResultContext();
+
+        public ActionResult Athlete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+            }
+            
+            var found = db.Athletes.Find(id);
+
+            if (found == null)
+            {
+                return HttpNotFound();
+            }
+
+            var ViewModel = new AthleteViewModel(found);
+
+            return View(ViewModel);
         }
     }
 }

@@ -54,6 +54,8 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -177,8 +179,16 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Athlete.cs" />
+    <Compile Include="Models\AthleteViewModel.cs" />
+    <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\Event_Results.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ResultContext.cs" />
+    <Compile Include="Models\Race.cs" />
+    <Compile Include="Models\Team.cs" />
+    <Compile Include="Models\team_athlete.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -343,6 +353,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Error\PageNotFound.cshtml" />
     <Content Include="Web_deploy.config" />
+    <Content Include="Views\Home\Athlete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="Scripts\index.d.ts" />
@@ -404,5 +415,4 @@
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
   </Target>
-
 </Project>
