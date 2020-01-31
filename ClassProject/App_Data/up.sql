@@ -71,3 +71,51 @@ GO
 CREATE NONCLUSTERED INDEX [IX_UserId] ON [dbo].[AspNetUserRoles]([UserId] ASC);
 GO
 CREATE NONCLUSTERED INDEX [IX_RoleId] ON [dbo].[AspNetUserRoles]([RoleId] ASC);
+
+
+-- #######################################
+-- #             Data Tables			 #
+-- #######################################
+
+-- ############# Team #############
+CREATE TABLE [dbo].[Teams]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+    [TeamName] NVARCHAR (256) NOT NULL
+);
+GO
+
+-- ############# Athlete #############
+CREATE TABLE [dbo].[Athletes]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+    [AthleteName] NVARCHAR (256) NOT NULL
+);
+GO
+
+-- ############# Team_Athlete #############
+CREATE TABLE [dbo].[team_athlete]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+	Team_Id INT FOREIGN KEY REFERENCES Teams([Id]),
+	Athlete_Id INT FOREIGN KEY REFERENCES Athletes([Id])
+);
+GO
+
+-- ############# Events #############
+CREATE TABLE [dbo].[Events]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+    [EventName] NVARCHAR (256) NOT NULL
+);
+GO
+
+-- ############# Event_Result #############
+CREATE TABLE [dbo].[Event_Results]
+(
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+	[Athlete_Id] INT FOREIGN KEY REFERENCES Athletes([Id]),
+	[Event_Id] INT FOREIGN KEY REFERENCES Events([Id]),
+	[RecordedTime] FLOAT (5) NOT NULL, 
+);
+GO
