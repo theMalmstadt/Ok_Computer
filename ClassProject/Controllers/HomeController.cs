@@ -35,14 +35,14 @@ namespace ClassProject.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(System.Net.HttpStatusCode.BadRequest);
+                return View("~/Views/Error/PageNotFound.cshtml");
             }
             
             var found = db.Athletes.Find(id);
 
             if (found == null)
             {
-                return HttpNotFound();
+                return View("~/Views/Error/PageNotFound.cshtml");
             }
 
             var ViewModel = new AthleteViewModel(found);

@@ -8,7 +8,7 @@ namespace ClassProject.Models
     public partial class ResultContext : DbContext
     {
         public ResultContext()
-            : base("name=ClassProjectDB") // change this back if it does not work
+            : base("name=ResultDatabase")
         {
         }
 

@@ -179,6 +179,10 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetRole.cs" />
+    <Compile Include="Models\AspNetUser.cs" />
+    <Compile Include="Models\AspNetUserClaim.cs" />
+    <Compile Include="Models\AspNetUserLogin.cs" />
     <Compile Include="Models\Athlete.cs" />
     <Compile Include="Models\AthleteViewModel.cs" />
     <Compile Include="Models\Event.cs" />
@@ -194,6 +198,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\down.sql" />
+    <Content Include="App_Data\seed.sql" />
     <Content Include="App_Data\up.sql" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />

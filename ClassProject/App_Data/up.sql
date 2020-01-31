@@ -116,6 +116,7 @@ CREATE TABLE [dbo].[Event_Results]
     [Id] INT IDENTITY(1,1) PRIMARY KEY,
 	[Athlete_Id] INT FOREIGN KEY REFERENCES Athletes([Id]),
 	[Event_Id] INT FOREIGN KEY REFERENCES Events([Id]),
-	[RecordedTime] FLOAT (5) NOT NULL, 
+	[RecordedTime] FLOAT (5) NOT NULL,
+	[EventDate] Datetime NOT NULL,  
 );
 GO

@@ -16,6 +16,8 @@ namespace ClassProject.Models
 
         public float RecordedTime { get; set; }
 
+        public DateTime EventDate { get; set; }
+
         public virtual Athlete Athlete { get; set; }
 
         public virtual Event Event { get; set; }
