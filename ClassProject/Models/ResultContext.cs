@@ -8,7 +8,7 @@ namespace ClassProject.Models
     public partial class ResultContext : DbContext
     {
         public ResultContext()
-            : base("name=ResultDatabase")
+            : base("name=ClassProjectDB_Azure")
         {
         }
 

@@ -21,7 +21,7 @@ namespace ClassProject.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("ClassProjectDB", throwIfV1Schema: false)
+            : base("ClassProjectDB_Azure", throwIfV1Schema: false)
         {
             Database.SetInitializer<ApplicationDbContext>(null);
         }
