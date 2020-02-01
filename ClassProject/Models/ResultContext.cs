@@ -8,7 +8,11 @@ namespace ClassProject.Models
     public partial class ResultContext : DbContext
     {
         public ResultContext()
+<<<<<<< HEAD
             : base("name=ClassProjectDB")
+=======
+          
+>>>>>>> 3ae2edaa4f911dbcd791f88f6ebfde043c9f1cb4
         {
         }
 
