@@ -30,5 +30,7 @@ namespace ClassProject.Models
         {
             return new ApplicationDbContext();
         }
+
+        public System.Data.Entity.DbSet<ClassProject.Models.Event> Events { get; set; }
     }
 }

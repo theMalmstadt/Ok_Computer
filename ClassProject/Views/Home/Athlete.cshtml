@@ -1,0 +1,25 @@
+﻿@model ClassProject.Models.AthleteViewModel
+
+@{
+    ViewBag.Title = "Athlete";
+}
+
+<h2>@Html.DisplayFor(Model => Model.AthleteName)</h2>
+
+
+<table>
+    <tr>
+        <th>Date</th>
+        <th>Event</th>
+        <th>Time</th>
+    </tr>
+
+    @foreach (var result in Model.AthleteResults)
+    {
+        <tr>
+            <td>@result.EventDate.ToString("yyyy-MM-dd")</td>
+            <td>@result.Event.EventName</td>
+            <td>@result.RecordedTime</td> 
+        </tr>
+    }
+</table>
