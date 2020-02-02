@@ -49,5 +49,29 @@ namespace ClassProject.Controllers
 
             return View(ViewModel);
         }
+
+        public ActionResult Search()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult  Search(string searchStr)
+        {
+            var athleteVar = from i in db.Athletes
+                           select i;
+            if (!String.IsNullOrEmpty(searchStr))
+            {
+                ViewBag.Success = true;
+                athleteVar = athleteVar.Where(s => s.AthleteName.Contains(searchStr));
+            }
+            if (athleteVar.Any())
+                ViewBag.Results = true;
+            else 
+                ViewBag.Results = false;
+            IEnumerable<AthleteViewModel> ViewModel = from i in athleteVar.AsEnumerable()
+                                                      select new AthleteViewModel(i);
+            return View(ViewModel);
+        }
     }
 }
