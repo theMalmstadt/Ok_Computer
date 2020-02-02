@@ -11,7 +11,7 @@
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
+            <h4>Access Your Tracker by using your registered email address:</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Log in" class="btn btn-default" />
+                        <input type="submit" value="Log in" class="btn btn-primary" />
                     </div>
                 </div>
                 <p>
@@ -52,9 +52,12 @@
         </section>
     </div>
     <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+
+        <img src="https://media.gettyimages.com/photos/perfect-butterfly-stroke-picture-id459214425?s=2048x2048" class="img-fluid" alt="Sample Photo" />
+        <img src="https://images.unsplash.com/photo-1530549387789-4c1017266635?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80" class="img-fluid" alt="Sample Photo" />
+        <img src="https://media.ussportscamps.com/media/images/swim/nike/camps/_1024x600_crop_center-center_100_none/2019-swim-camps.jpg" class="img-fluid" alt="Sample Photo" />
+
+
     </div>
 </div>
 
