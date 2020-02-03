@@ -19,15 +19,19 @@ ___
 ### Interview QA:
 
 Q: Do we want private and public events?
+
 A: We want both. We want to be able to set event visibility.
 
 Q: Do we want brackets to be pulled automatically from Challonge?
+
 A: This does sound nice, but the organizer would have to specify the tournament bracket that they want to pull.
 
 Q: How many results per page per search?
+
 A: 10 is fine.
 
 Q: How are ties handled in matches? Will our algorithm need to anticipate extra playtime?
+
 A: Ties are handled fairly quickly with sudden deaths or coin tosses. I don’t think the algorithm should need to worry about ties. 
 
 ___
@@ -35,7 +39,9 @@ ___
 **The product is centered around “three” core features:** 
 
 1. Create new tournaments or register existing tournaments from external services and communicate with them. Many features will be from [Challonge](https://challonge.com/)
+
 2. Algorithmically, the application should schedule matches efficiently and handle all bracket movement based on match results.
+
 3. View current, upcoming, and recent events in my area. Each event will have details associated that I can use to join or view results of.
 
 ## **List of Needs and Features**
@@ -93,36 +99,55 @@ U: User Story
 T: Task  
 
 1. [E] As an event organizer, I want to create an account and create a new event.
+
     1. [U] As an event organizer, I want to create an account so that I can manage events. Accounts will be used for adding data such as events, tournaments, and competitors. We will also allow events to be marked at public or private, where only users with accounts can view them if they are private. Public events should be viewable by every user. Accounts should be easy to create and a user should know when they are logged in. The account should be able to store basic information such as a username and the account user’s spoken name. Spoken name should be optional. We don’t want bots to make a million accounts flooding our database, so their should be a captcha at the point of account registration.
+
         1. [1] Create ASP.Net Webapp
         2. [2] Create account database
         3. [3] Create login and register pages
         4. [4] Add captcha security to register page
+
 2. [U] As an event organizer, I want to create events so that I can add tournaments to manage. Events should have a unique name. The event creator’s username will be the event organizer name stored with the event. The date and time need to be stored as well. There may be an event that spans multiple days so we will have the datetime indicate the start of the event. We will have a short description field available to indicate multi-day events or cover any other unusual event details. Visibility of the event will need to be decided upon. This should be easy since it only needs to be a switch; public = true, private = false. All of these options should be decided on one page and ask for confirmation before creating event. Only registered users can create accounts, so we will have the option to create an account available to everyone but indicate that a user must be logged in to create an event if they try to do so. The events will also need two attributes for location. An address stored in one space and a second for specific details such as which building or floor it will be at the address. (Though, note this will need to be included in the table but another epic will cover address entry).
-        1. [T] Create database with event tables
-        2. [T] Create page to enter event name, datetime(s), and other base info
-        3. [T] Create indicator to tell user to login/register to create events
-    3. [U] As an event organizer, I want to add the location for my event so that competitors can easily find the event. This feature will need to be added to the create event page. There will be two fields available for adding an address to an event. The first address will be a single line address that will give the right address when put into Google Maps. There should be a way for the event organizer to verify that the address in Google Maps is the correct one. This could be by finding the location in maps, and getting that address or searching for the location after an address is entered where then the event organizer can confirm it is the correct address. The second field will allow the event organizer to specify details of the location. This field will be optional so null values will be accepted.
-        1. [T] Add address entry to create event page
-        2. [T] Address confirmation through Google Maps
-    4. [U] As a user, I want to be able to view events so that I know all relevant details of that event. This page will include all entered data for the event in a coherent and relevant way. Name of the event, organizer username, description, date, and time prominently show with other data easily located. We would like to integrate Google Maps in this story as well. We want at minimum a link that will take us to the address within google maps. If time allows, a panel with the displayed destination on a smaller map located to the side would be nice. All displayed data should take up only ½ to ⅔ of the screen as the bottom part will show all tournaments that will take place at the event. Tournament creation will be covered in a later epic but we do want to build this page with that feature in mind. This event will need to be findable on the site via searching or from a list of events. Best way to index this each event page is by event Id that will be stored in the database.
-        1. [T] Easily show all event details on one page
-2. [T] Connect to Google Maps API to give direct address info and options
+
+    1. [T] Create database with event tables
+    2. [T] Create page to enter event name, datetime(s), and other base info
+    3. [T] Create indicator to tell user to login/register to create events
+
+3. [U] As an event organizer, I want to add the location for my event so that competitors can easily find the event. This feature will need to be added to the create event page. There will be two fields available for adding an address to an event. The first address will be a single line address that will give the right address when put into Google Maps. There should be a way for the event organizer to verify that the address in Google Maps is the correct one. This could be by finding the location in maps, and getting that address or searching for the location after an address is entered where then the event organizer can confirm it is the correct address. The second field will allow the event organizer to specify details of the location. This field will be optional so null values will be accepted.
+
+    1. [T] Add address entry to create event page
+    2. [T] Address confirmation through Google Maps
+
+4. [U] As a user, I want to be able to view events so that I know all relevant details of that event. This page will include all entered data for the event in a coherent and relevant way. Name of the event, organizer username, description, date, and time prominently show with other data easily located. We would like to integrate Google Maps in this story as well. We want at minimum a link that will take us to the address within google maps. If time allows, a panel with the displayed destination on a smaller map located to the side would be nice. All displayed data should take up only ½ to ⅔ of the screen as the bottom part will show all tournaments that will take place at the event. Tournament creation will be covered in a later epic but we do want to build this page with that feature in mind. This event will need to be findable on the site via searching or from a list of events. Best way to index this each event page is by event Id that will be stored in the database.
+
+    1. [T] Easily show all event details on one page
+    2. [T] Connect to Google Maps API to give direct address info and options
+
 2. [E] As an event organizer, I want to register a new tournament.
+
 3. [E] As an event organizer, I want to add event data easily, such as competitors and match results.
+
 4. [E] As an event organizer, I want to pull info from an existing tournament through external sites and associate duplicate competitors.
-5. [E] As an event organizer, I want to send data such as scheduled brackets to external sites. 
+
+5. [E] As an event organizer, I want to send data such as scheduled brackets to external sites.
+
 6. [E] As an event organizer, I want a list of templates I can choose from when I set up tournaments or events.
 
 7. [E] As an event organizer, I want to keep track of all competitor statuses (availability and standing).
+
 8. [E] As an event organizer, I want a view of all matches that are completed and need to be completed to progress to the next level.
+
 9. [E] As an event organizer, I want to easily select who will be in the next match and when it will take place.
+
 10. [E] As an event organizer, I want an algorithm to generate schedules based on all competitors statuses.
 
 11. [E] As a competitor, I want to see upcoming and recent events.
+
 12. [E] As a competitor, I want to see event details such as location, tournaments, competitors, etc.
 13. [E] As a competitor,  I want to be able to search for events based on locations or tournaments at that event.
+
 14. [E] As a competitor, I want to view up to date standings for each active tournament in an event.
+
 15. [E] As a competitor, I want to see my standings and when my next match in the event will be.
 
 ___
@@ -146,10 +171,15 @@ ___
 ## **Timeline and Release Plan**
 
 Sprint 1 (2/17/20 - 3/1/20) - Creation tools for accounts, events, and tournaments
+
 Sprint 2 (3/2/20 - 3/15/20) - View of tournaments for all users
+
 Sprint 3 (April) - Match scheduling tools & pulling data from external sites
+
 Sprint 4 (April) - Algorithmic scheduling
+
 Sprint 5 (May) - Testing and refinement
+
 Sprint 6 (May) - Testing and refinement
 
 All features delivered in May.
