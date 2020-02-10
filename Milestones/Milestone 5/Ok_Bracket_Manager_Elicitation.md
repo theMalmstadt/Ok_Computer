@@ -359,7 +359,7 @@ ___
 
 ## **Initial Architecture Envisioning**
 
-[Architecture Overview](/Milestones/Milestone%204/Diagrams/architecture_overview.png)
+[Architecture Overview](diagrams/architecture_overview.png)
 
 ___
 

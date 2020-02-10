@@ -6,7 +6,7 @@
 1. ClassProject
     - This is a class wide project that was worked on for four weeks to help understand SCRUM development. Within this project you'll see the Pheledecky Tracker, a basic web application with basic login/register and search pages.
 1. Milestones
-    1. Milestone1 - 
+    1. Milestone1 
         * Team name, motto, logo, letterhead, business cards, resumes, three project ideas
     1. Milestone2
         * Inception phase for class project, lists of needs and features, requirements(functional and non-functional), initial architecture
@@ -22,9 +22,9 @@
 This is the senior capstone project of the team Ok Computer, the Ok Bracket Manager.
 
 ### **Vision Statement**
-```
-"For tournament organizers who need to organize multiple brackets at a single event, the OK Bracket Manager is an application that will provide a single page to view and manage matches across all brackets at once. Unlike other bracket management applications, our product will unify multiple brackets into a single page, and have an understanding of what matches should happen based on the needs of the event as a whole."
-```
+
+> "For tournament organizers who need to organize multiple brackets at a single event, the OK Bracket Manager is an application that will provide a single page to view and manage matches across all brackets at once. Unlike other bracket management applications, our product will unify multiple brackets into a single page, and have an understanding of what matches should happen based on the needs of the event as a whole."
+
 
 ### **Status**
 Nothing started yet! Developement will start soon.
