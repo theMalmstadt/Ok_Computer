@@ -22,7 +22,7 @@ CREATE TABLE [dbo].[AspNetUsers]
     [PasswordHash]         NVARCHAR (MAX) NULL,
     [SecurityStamp]        NVARCHAR (MAX) NULL,
     [ApiKey]               NVARCHAR (MAX) NULL,
-    [Subdomain]            NVARCHAR(256) NOT NULL,
+    [Subdomain]            NVARCHAR(256)  NULL,
     [PhoneNumber]          NVARCHAR (MAX) NULL,
     [PhoneNumberConfirmed] BIT            NOT NULL,
     [TwoFactorEnabled]     BIT            NOT NULL,
@@ -88,48 +88,5 @@ CREATE TABLE [dbo].[Event](
 	[Location] NVARCHAR(256) NULL,
 	[Public] BIT NOT NULL,
 	CONSTRAINT [FK_dbo.Events_dbo.AspNetUsers_Id] Foreign KEY ([OrganizerID]) REFERENCES [dbo].[AspNetUsers] ([ID])
-);
-GO
-
--- ############# Tournament #############
-CREATE TABLE [dbo].[Tournament](
-    [TournamentID] INT IDENTITY (1,1) PRIMARY KEY,
-    [TournamentName] NVARCHAR(128) NOT NULL,
-    [EventID] INT NOT NULL,
-    [Description] NVARCHAR(256) NULL,
-    [Game] NVARCHAR(256) NULL,
-    [ApiId] INT NULL,
-    [UrlString] NVARCHAR(256) NOT NULL,
-    [IsTeams] BIT NOT NULL
-    CONSTRAINT [FK_dbo.Events_dbo.Event_EventID] Foreign KEY ([EventID]) REFERENCES [dbo].[Event] ([EventID])
-);
-GO
-
--- ############# Match #############
-CREATE TABLE [dbo].[Match](
-    [MatchID] INT IDENTITY (1,1) PRIMARY KEY,
-    [TournamentID] INT NOT NULL,
-    [Competitor1ID] INT NULL,
-    [Competitor2ID] INT NULL,
-    [Identifier] NVARCHAR(16),
-    [Round] INT,
-    [ApiID] INT NOT NULL,
-    [PrereqMatch1ID] INT NULL,
-    [PrereqMatch2ID] INT NULL,
-    [Time] DATETIME NULL
-    CONSTRAINT [FK_dbo.Events_dbo.Tournament_TournamentID] Foreign KEY ([TournamentID]) REFERENCES [dbo].[Tournament] ([ID]),
-    CONSTRAINT [FK_dbo.Events_dbo.Competitor_CompetitorID] Foreign KEY ([Competitor1ID]) REFERENCES [dbo].[Competitor] ([ID]),
-    CONSTRAINT [FK_dbo.Events_dbo.Competitor_CompetitorID] Foreign KEY ([Competitor2ID]) REFERENCES [dbo].[Competitor] ([ID]),
-    CONSTRAINT [FK_dbo.Events_dbo.Match_MatchID] Foreign KEY ([Competitor2ID]) REFERENCES [dbo].[Competitor] ([ID])
-);
-GO
-
--- ############# Competitor #############
-CREATE TABLE [dbo].[Competitor](
-    [CompetitorID] INT IDENTITY (1,1) PRIMARY KEY,
-    [CompetitorName] NVARCHAR (128) NOT NULL,
-    [EventID] INT NOT NULL,
-    [BusyState] NVARCHAR(1) NULL,
-    CONSTRAINT [FK_dbo.Events_dbo.Event_EventID] Foreign KEY ([EventID]) REFERENCES [dbo].[Event] ([EventID])
 );
 GO

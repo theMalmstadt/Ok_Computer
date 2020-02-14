@@ -1,4 +1,5 @@
-﻿@model OBM.Models.Event
+﻿@using Microsoft.AspNet.Identity
+@model OBM.Models.Event
 
 @{
     ViewBag.Title = "Delete";
@@ -6,59 +7,69 @@
 
 <h2>Delete</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.OrganizerID)
-        </dt>
+@if (Request.IsAuthenticated && (User.Identity.GetUserId() == Model.OrganizerID))
+{
+    <h3>Are you sure you want to delete this?</h3>
+    <div>
+        <h4>Event</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.OrganizerID)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.OrganizerID)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.OrganizerID)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EventName)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.EventName)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.EventName)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.EventName)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Location)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Location)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Location)
+            </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Public)
-        </dt>
+            <dt>
+                @Html.DisplayNameFor(model => model.Public)
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Public)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.Public)
+            </dd>
 
-    </dl>
+        </dl>
 
-    @using (Html.BeginForm()) {
-        @Html.AntiForgeryToken()
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
-    }
-</div>
+            <div class="form-actions no-color">
+                <input type="submit" value="Delete" class="btn btn-default" /> |
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+}
