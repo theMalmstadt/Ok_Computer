@@ -7,7 +7,7 @@
 
 <h2>Edit</h2>
 
-@if (Request.IsAuthenticated)
+@if (Request.IsAuthenticated&& (User.Identity.GetUserId() == Model.OrganizerID))
 {
     using (Html.BeginForm())
     {
