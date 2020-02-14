@@ -21,9 +21,8 @@ namespace OBM.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("OBMDB", throwIfV1Schema: false)
+            : base("DefaultConnection", throwIfV1Schema: false)
         {
-            //Database.SetInitializer<ApplicationDbContext>(null);
         }
 
         public static ApplicationDbContext Create()
