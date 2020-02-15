@@ -23,7 +23,7 @@ namespace OBM.Models
         public ApplicationDbContext()
             : base("OBMDB", throwIfV1Schema: false)
         {
-            //Database.SetInitializer<ApplicationDbContext>(null);
+            Database.SetInitializer<ApplicationDbContext>(null);
         }
 
         public static ApplicationDbContext Create()
