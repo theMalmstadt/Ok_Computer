@@ -3,37 +3,42 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>OBM - @ViewBag.Title</title>
+    <link href="~/OKicon.ico" rel="shortcut icon" type="image/x-icon" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
+
+
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img alt="OK" width="75" src="@Url.Content("~/OKsign.png")">
+                @Html.ActionLink("OK Bracket Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </a>
+            <div class="navbar-collapse collapse" id="navbarSupportedContent">
+
+                <ul class="nav navbar-nav mr-auto">
+                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
+                    <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-link" })</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
-    </div>
+    </nav>
+
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+        <footer style="width:100%;" align="center">
+            <img src="~/OKlogo.png" style="width:25%;height:25%;" alt="OK Computer" />
+            <p>&copy; @DateTime.Now.Year</p>
         </footer>
     </div>
 
