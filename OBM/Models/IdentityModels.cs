@@ -21,7 +21,7 @@ namespace OBM.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("EventContext", throwIfV1Schema: false)
         {
         }
 
