@@ -6,6 +6,23 @@
     width:75px;
 }
 
+.navbar-brand, .nav-link {
+    color: #E7E8E9 !important;
+    padding: 4%;
+    font-size: 200%;
+}
+
+#registerLink, #loginLink, #logoutLink, #accountLink {
+    color: #E7E8E9;
+    font-size: 100%;
+    padding: 0 1em;
+    text-align: center;
+}
+
+#loginLink, #logoutLink {
+    border-left: 1px solid #ccc;
+}
+
 body {
     padding-top: 50px;
     padding-bottom: 20px;
@@ -21,8 +38,7 @@ body {
 }
 
 .team-logo {
-    width: 25%;
-    height: 25%;
+    width: 75%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 

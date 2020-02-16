@@ -1,4 +1,6 @@
-namespace OBM.Models
+using OBM.Models;
+
+namespace OBM.DAL
 {
     using System;
     using System.Data.Entity;
@@ -8,7 +10,7 @@ namespace OBM.Models
     public partial class EventContext : DbContext
     {
         public EventContext()
-            : base("name=EventContext")
+            : base("name=OBMDB")
         {
         }
 

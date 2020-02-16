@@ -16,9 +16,23 @@ namespace OBM.Controllers
 
         public ActionResult Error(int statusCode, Exception exception)
         {
+            if(statusCode == 404)
+            {
+                ViewBag.Message = "Could not find this page.";
+            }
+            else if (statusCode == 500)
+            {
+                ViewBag.Message = "Server made a mistake.";
+            }
+            else
+            {
+                ViewBag.Message = "This is an unexpeced error.";
+            }
+
             Response.StatusCode = statusCode;
+            ViewBag.Title = statusCode + " Error";
             ViewBag.StatusCode = statusCode + " Error";
-            ViewBag.Exception = exception;
+
             return View();
         }
     }

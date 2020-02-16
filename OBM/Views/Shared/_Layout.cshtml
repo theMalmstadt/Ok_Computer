@@ -19,13 +19,13 @@
             <img class="nav-logo" alt="OK" src="@Url.Content("~/Media/OKsign.png")">
         </a>
         <i>
-            @Html.ActionLink("OK Bracket Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", style = "color:#E7E8E9;padding:4%;font-size:200%;" })
+            @Html.ActionLink("OK Bracket Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
         </i>
 
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
-                <li class="nav-item"><i>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link", style = "color:#E7E8E9;font-size:200%;" })</i></li>
-                <li class="nav-item"><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", style = "color:#E7E8E9;font-size:200%;" })</i></li>
+                <li class="nav-item"><i>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</i></li>
+                <li class="nav-item"><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })</i></li>
             </ul>
             @Html.Partial("_LoginPartial")
         </div>
@@ -34,9 +34,16 @@
     <div class="container body-content">
         @RenderBody()
         <hr />
-        <footer style="width:100%;" align="center">
-            <img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer" />
-            <p>&copy; @DateTime.Now.Year</p>
+        <footer class="row" style="width:100%">
+            <div class="col">
+            </div>
+            <div class="col">
+                <img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer" />
+                <p>&copy; @DateTime.Now.Year</p>
+            </div>
+            <div class="col">
+                <p><a class="git-link" href="https://github.com/theMalmstadt/Ok_Computer/">Our Github Repo &raquo;</a></p>
+            </div>
         </footer>
     </div>
 
