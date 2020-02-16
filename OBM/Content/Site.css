@@ -1,12 +1,28 @@
-﻿body {
+﻿nav {
+    background-color: #2a363b;
+}
+
+.nav-logo {
+    width:75px;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #E7E8E9;
+    color: #58585A;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
+    padding-top: 75px;
     padding-left: 15px;
     padding-right: 15px;
+}
+
+.team-logo {
+    width: 25%;
+    height: 25%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -21,4 +37,11 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }

@@ -4,32 +4,30 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OBM - @ViewBag.Title</title>
-    <link href="~/OKicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="~/Media/OKicon.ico" rel="shortcut icon" type="image/x-icon" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-
+    @Styles.Render("~/Content/Site.css")
 </head>
 
-
 <body>
-    <nav class="navbar navbar-expand-sm navbar-dark fixed-top bg-dark">
-        <div class="container">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-                <img alt="OK" width="75" src="@Url.Content("~/OKsign.png")">
-                @Html.ActionLink("OK Bracket Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </a>
-            <div class="navbar-collapse collapse" id="navbarSupportedContent">
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <a href="@Url.Action("Index", "Home")">
+            <img class="nav-logo" alt="OK" src="@Url.Content("~/Media/OKsign.png")">
+        </a>
+        <i>
+            @Html.ActionLink("OK Bracket Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", style = "color:#E7E8E9;padding:4%;font-size:200%;" })
+        </i>
 
-                <ul class="nav navbar-nav mr-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("About", "About", "Home", null, new { @class = "nav-link" })</li>
-                    <li class="nav-item">@Html.ActionLink("Contact", "Contact", "Home", null, new { @class = "nav-link" })</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav mr-auto">
+                <li class="nav-item"><i>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link", style = "color:#E7E8E9;font-size:200%;" })</i></li>
+                <li class="nav-item"><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", style = "color:#E7E8E9;font-size:200%;" })</i></li>
+            </ul>
+            @Html.Partial("_LoginPartial")
         </div>
     </nav>
 
@@ -37,7 +35,7 @@
         @RenderBody()
         <hr />
         <footer style="width:100%;" align="center">
-            <img src="~/OKlogo.png" style="width:25%;height:25%;" alt="OK Computer" />
+            <img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer" />
             <p>&copy; @DateTime.Now.Year</p>
         </footer>
     </div>
