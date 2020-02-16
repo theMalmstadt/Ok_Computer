@@ -1,4 +1,4 @@
-﻿-- #######################################
+-- #######################################
 -- #             Identity Tables         #
 -- #######################################
 
@@ -21,8 +21,6 @@ CREATE TABLE [dbo].[AspNetUsers]
     [EmailConfirmed]       BIT            NOT NULL,
     [PasswordHash]         NVARCHAR (MAX) NULL,
     [SecurityStamp]        NVARCHAR (MAX) NULL,
-    [ApiKey]               NVARCHAR (MAX) NULL,
-    [Subdomain]            NVARCHAR(256)  NULL,
     [PhoneNumber]          NVARCHAR (MAX) NULL,
     [PhoneNumberConfirmed] BIT            NOT NULL,
     [TwoFactorEnabled]     BIT            NOT NULL,
@@ -79,14 +77,46 @@ CREATE NONCLUSTERED INDEX [IX_RoleId] ON [dbo].[AspNetUserRoles]([RoleId] ASC);
 -- #             Data Tables			 #
 -- #######################################
 
--- ############# Event #############
-CREATE TABLE [dbo].[Event](
-	[EventID] INT IDENTITY (1,1) PRIMARY KEY,
-	[OrganizerID] NVARCHAR(128) NOT NULL,
-	[EventName] NVARCHAR(128) NOT NULL,
-	[Description] NVARCHAR(256) NULL,
-	[Location] NVARCHAR(256) NULL,
-	[Public] BIT NOT NULL,
-	CONSTRAINT [FK_dbo.Events_dbo.AspNetUsers_Id] Foreign KEY ([OrganizerID]) REFERENCES [dbo].[AspNetUsers] ([ID])
+-- ############# Team #############
+CREATE TABLE [dbo].[Teams]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+    [TeamName] NVARCHAR (256) NOT NULL
+);
+GO
+
+-- ############# Athlete #############
+CREATE TABLE [dbo].[Athletes]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+    [AthleteName] NVARCHAR (256) NOT NULL
+);
+GO
+
+-- ############# Team_Athlete #############
+CREATE TABLE [dbo].[team_athlete]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+	Team_Id INT FOREIGN KEY REFERENCES Teams([Id]),
+	Athlete_Id INT FOREIGN KEY REFERENCES Athletes([Id])
+);
+GO
+
+-- ############# Events #############
+CREATE TABLE [dbo].[Events]
+(
+    [Id] INT IDENTITY (1,1) PRIMARY KEY,
+    [EventName] NVARCHAR (256) NOT NULL
+);
+GO
+
+-- ############# Event_Result #############
+CREATE TABLE [dbo].[Event_Results]
+(
+    [Id] INT IDENTITY(1,1) PRIMARY KEY,
+	[Athlete_Id] INT FOREIGN KEY REFERENCES Athletes([Id]),
+	[Event_Id] INT FOREIGN KEY REFERENCES Events([Id]),
+	[RecordedTime] FLOAT (5) NOT NULL,
+	[EventDate] Datetime NOT NULL,  
 );
 GO

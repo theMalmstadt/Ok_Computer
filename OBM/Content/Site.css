@@ -1,12 +1,44 @@
-﻿body {
+﻿nav {
+    background-color: #2a363b;
+}
+
+.nav-logo {
+    width:75px;
+}
+
+.navbar-brand, .nav-link {
+    color: #E7E8E9 !important;
+    padding: 4%;
+    font-size: 200%;
+}
+
+#registerLink, #loginLink, #logoutLink, #accountLink {
+    color: #E7E8E9;
+    font-size: 100%;
+    padding: 0 1em;
+    text-align: center;
+}
+
+#loginLink, #logoutLink {
+    border-left: 1px solid #ccc;
+}
+
+body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #E7E8E9;
+    color: #58585A;
 }
 
 /* Set padding to keep content from hitting the edges */
 .body-content {
+    padding-top: 75px;
     padding-left: 15px;
     padding-right: 15px;
+}
+
+.team-logo {
+    width: 75%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -21,4 +53,11 @@ input,
 select,
 textarea {
     max-width: 280px;
+}
+
+.center-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
 }
