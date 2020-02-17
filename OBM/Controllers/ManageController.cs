@@ -55,7 +55,8 @@ namespace OBM.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                message == ManageMessageId.ChangeUsernameSuccess ? "Your Username has been changed." 
+                : message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
                 : message == ManageMessageId.Error ? "An error has occurred."
@@ -66,6 +67,7 @@ namespace OBM.Controllers
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
+                HasUsername = HasUsername(),
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -244,6 +246,23 @@ namespace OBM.Controllers
             return View(model);
         }
 
+        // GET: /Manage/SetUsername
+        public ActionResult SetUsername()
+        {
+            return View();
+        }
+
+        // POST: /Manage/SetUsername
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SetUsername(SetUsernameViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await
+            }
+        }
+
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
@@ -363,6 +382,16 @@ namespace OBM.Controllers
             return false;
         }
 
+        private bool HasUsername()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                return user.UserName != null;
+            }
+            return false;
+        }
+
         private bool HasPhoneNumber()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -375,6 +404,7 @@ namespace OBM.Controllers
 
         public enum ManageMessageId
         {
+            ChangeUsernameSuccess,
             AddPhoneSuccess,
             ChangePasswordSuccess,
             SetTwoFactorSuccess,
