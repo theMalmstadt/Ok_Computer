@@ -34,6 +34,14 @@ namespace OBM.Models
         public string SetUsername { get; set; }
     }
 
+    public class ChangeUsernameViewModel
+    {
+        [Required]
+        [StringLength(24, ErrorMessage = "The {0} must be between [{0}-{1}] characters in length.", MinimumLength = 4)]
+        [Display(Name = "New Username")]
+        public string NewUsername { get; set; }
+    }
+
     public class SetPasswordViewModel
     {
         [Required]

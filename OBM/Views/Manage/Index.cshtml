@@ -1,4 +1,6 @@
 ﻿@model OBM.Models.IndexViewModel
+@using Microsoft.AspNet.Identity
+
 @{
     ViewBag.Title = "Manage";
 }
@@ -12,7 +14,13 @@
     <dl class="dl-horizontal">
         <dt>Username:</dt>
         <dd>
-            
+            @User.Identity.GetUserName().ToString()
+            [
+            @if (Model.HasUsername)
+            {
+                @Html.ActionLink("Change your Username", "ChangeUsername")
+            }
+            ]
         </dd>
         <dt>Password:</dt>
         <dd>
@@ -34,13 +42,13 @@
         </dd>
         @*
             Phone Numbers can used as a second factor of verification in a two-factor authentication system.
-             
+
              See <a href="https://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
                 for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-             
+
              Uncomment the following block after you have set up two-factor authentication
         *@
-        @*  
+        @*
             <dt>Phone Number:</dt>
             <dd>
                 @(Model.PhoneNumber ?? "None")
