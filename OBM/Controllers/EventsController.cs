@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using OBM.Models;
+using OBM.DAL;
 using Microsoft.AspNet.Identity;
 
 namespace OBM.Controllers

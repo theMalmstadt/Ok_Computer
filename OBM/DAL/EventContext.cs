@@ -1,4 +1,6 @@
-namespace OBM.Models
+using OBM.Models;
+
+namespace OBM.DAL
 {
     using System;
     using System.Data.Entity;
