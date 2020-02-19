@@ -16,11 +16,23 @@ namespace OBM.Controllers
     {
         private EventContext db = new EventContext();
 
+
         // GET: Events
         public ActionResult Index()
         {
             return View(db.Events.ToList());
         }
+
+
+
+        // GET: Events Search
+        [HttpGet]
+
+        public ActionResult EventsSearch(string searchTerm)
+        {
+            return View(db.Events.Where(x => x.EventName.Contains(searchTerm)));
+        }
+
 
         // GET: Events/Details/5
         public ActionResult Details(int? id)
