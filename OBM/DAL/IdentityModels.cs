@@ -22,8 +22,9 @@ namespace OBM.DAL
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("OBMDB", throwIfV1Schema: false)
+            : base("OBMDB_Azure", throwIfV1Schema: false)
         {
+            Database.SetInitializer<ApplicationDbContext>(null);
         }
 
         public static ApplicationDbContext Create()
