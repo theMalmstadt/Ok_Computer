@@ -87,6 +87,49 @@ CREATE TABLE [dbo].[Event](
 	[Description] NVARCHAR(256) NULL,
 	[Location] NVARCHAR(256) NULL,
 	[Public] BIT NOT NULL,
-	CONSTRAINT [FK_dbo.Events_dbo.AspNetUsers_Id] Foreign KEY ([OrganizerID]) REFERENCES [dbo].[AspNetUsers] ([ID])
+	CONSTRAINT [FK_dbo.Event_dbo.AspNetUsers_Id] Foreign KEY ([OrganizerID]) REFERENCES [dbo].[AspNetUsers] ([ID])
 );
 GO
+
+-- ############# Tournament #############
+CREATE TABLE [dbo].[Tournament](
+    [TournamentID] INT IDENTITY (1,1) PRIMARY KEY,
+    [TournamentName] NVARCHAR(128) NOT NULL,
+    [EventID] INT NOT NULL,
+    [Description] NVARCHAR(256) NULL,
+    [Game] NVARCHAR(256) NULL,
+    [ApiId] INT NULL,
+    [UrlString] NVARCHAR(256) NOT NULL,
+    [IsTeams] BIT NOT NULL
+    CONSTRAINT [FK_dbo.Tournament_dbo.Event_EventID] Foreign KEY ([EventID]) REFERENCES [dbo].[Event] ([EventID])
+);
+GO
+
+-- ############# Competitor #############
+CREATE TABLE [dbo].[Competitor](
+    [CompetitorID] INT IDENTITY (1,1) PRIMARY KEY,
+    [CompetitorName] NVARCHAR (128) NOT NULL,
+    [EventID] INT NOT NULL,
+    [BusyState] NVARCHAR(1) NULL,
+    CONSTRAINT [FK_dbo.Competitor_dbo.Event_EventID] Foreign KEY ([EventID]) REFERENCES [dbo].[Event] ([EventID])
+);
+GO
+
+-- ############# Match #############
+CREATE TABLE [dbo].[Match](
+    [MatchID] INT IDENTITY (1,1) PRIMARY KEY,
+    [TournamentID] INT NOT NULL,
+    [Competitor1ID] INT NULL,
+    [Competitor2ID] INT NULL,
+    [Identifier] NVARCHAR(16),
+    [Round] INT,
+    [ApiID] INT NOT NULL,
+    [PrereqMatch1ID] INT NULL,
+    [PrereqMatch2ID] INT NULL,
+    [Time] DATETIME NULL
+    CONSTRAINT [FK_dbo.Match_dbo.Tournament_TournamentID] Foreign KEY ([TournamentID]) REFERENCES [dbo].[Tournament] ([TournamentID]),
+    CONSTRAINT [FK_dbo.Match_dbo.Competitor_Competitor1ID] Foreign KEY ([Competitor1ID]) REFERENCES [dbo].[Competitor] ([CompetitorID]),
+    CONSTRAINT [FK_dbo.Match_dbo.Competitor_Competitor2ID] Foreign KEY ([Competitor2ID]) REFERENCES [dbo].[Competitor] ([CompetitorID]),
+    CONSTRAINT [FK_dbo.Match_dbo.Match_PrereqMatch1ID] Foreign KEY ([PrereqMatch1ID]) REFERENCES [dbo].[Match] ([MatchID]),
+    CONSTRAINT [FK_dbo.Match_dbo.Match_PrereqMatch2ID] Foreign KEY ([PrereqMatch2ID]) REFERENCES [dbo].[Match] ([MatchID])
+);

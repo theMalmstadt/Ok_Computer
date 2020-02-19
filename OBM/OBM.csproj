@@ -186,9 +186,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\down.sql" />
-    <Content Include="App_Data\OBMDB_Local.mdf" />
+    <None Include="App_Data\OBMDBmdf" />
     <Content Include="App_Data\OBMDB_Local_log.ldf">
-      <DependentUpon>OBMDB_Local.mdf</DependentUpon>
+      <DependentUpon>OBMDBmdf</DependentUpon>
     </Content>
     <Content Include="App_Data\seed.sql" />
     <Content Include="App_Data\up.sql" />

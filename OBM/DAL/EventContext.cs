@@ -8,7 +8,7 @@ namespace OBM.Models
     public partial class EventContext : DbContext
     {
         public EventContext()
-            : base("name=EventContext")
+            : base("name=OBMDB")
         {
         }
 

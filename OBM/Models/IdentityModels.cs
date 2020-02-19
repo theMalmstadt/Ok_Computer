@@ -21,7 +21,7 @@ namespace OBM.Models
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("EventContext", throwIfV1Schema: false)
+            : base("OBMDB", throwIfV1Schema: false)
         {
         }
 
