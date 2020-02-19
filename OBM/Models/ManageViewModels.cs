@@ -7,6 +7,7 @@ namespace OBM.Models
 {
     public class IndexViewModel
     {
+        public bool HasUsername { get; set; }
         public bool HasPassword { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
@@ -25,10 +26,26 @@ namespace OBM.Models
         public string Purpose { get; set; }
     }
 
+    public class SetUsernameViewModel
+    {
+        [Required]
+        [StringLength(24, ErrorMessage = "The {0} must be between {0} and {1} characters in length.", MinimumLength = 4)]
+        [Display(Name = "Username")]
+        public string SetUsername { get; set; }
+    }
+
+    public class ChangeUsernameViewModel
+    {
+        [Required]
+        [StringLength(24, ErrorMessage = "The {0} must be between [{0}-{1}] characters in length.", MinimumLength = 4)]
+        [Display(Name = "New Username")]
+        public string NewUsername { get; set; }
+    }
+
     public class SetPasswordViewModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
@@ -47,7 +64,7 @@ namespace OBM.Models
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 8)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }

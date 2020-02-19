@@ -24,6 +24,7 @@ namespace OBM.DAL
         public ApplicationDbContext()
             : base("OBMDB", throwIfV1Schema: false)
         {
+            Database.SetInitializer<ApplicationDbContext>(null);
         }
 
         public static ApplicationDbContext Create()

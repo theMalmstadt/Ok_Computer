@@ -55,7 +55,8 @@ namespace OBM.Controllers
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
+                message == ManageMessageId.ChangeUsernameSuccess ? "Your Username has been changed." 
+                : message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
                 : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
                 : message == ManageMessageId.Error ? "An error has occurred."
@@ -66,6 +67,7 @@ namespace OBM.Controllers
             var userId = User.Identity.GetUserId();
             var model = new IndexViewModel
             {
+                HasUsername = HasUsername(),
                 HasPassword = HasPassword(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
@@ -212,6 +214,67 @@ namespace OBM.Controllers
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
+
+        //
+        // GET: /Manage/ChangeUsername
+        public ActionResult ChangeUsername()
+        {
+            return View();
+        }
+
+        //
+        // POST: /Manage/ChangeUsername
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeUsername(ChangeUsernameViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            bool checkUSN = false;
+            if (model.NewUsername != User.Identity.GetUserName())
+            {
+                checkUSN = true;
+            }
+            else
+                checkUSN = false;
+            if(checkUSN)
+            {
+                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                user.UserName = model.NewUsername;
+                var result = await UserManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUsernameSuccess });
+                }
+            }
+            return View(model);
+        }
+
+        //// GET: /Manage/SetUsername
+        //public ActionResult SetUsername()
+        //{
+        //    return View();
+        //}
+
+        //// POST: /Manage/SetUsername
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> SetUsername(SetUsernameViewModel model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+        //        if (user != null)
+        //        {
+                    
+        //        }
+        //    }
+        //}
 
         //
         // GET: /Manage/ChangePassword
@@ -363,6 +426,16 @@ namespace OBM.Controllers
             return false;
         }
 
+        private bool HasUsername()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                return user.UserName != null;
+            }
+            return false;
+        }
+
         private bool HasPhoneNumber()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -375,6 +448,7 @@ namespace OBM.Controllers
 
         public enum ManageMessageId
         {
+            ChangeUsernameSuccess,
             AddPhoneSuccess,
             ChangePasswordSuccess,
             SetTwoFactorSuccess,

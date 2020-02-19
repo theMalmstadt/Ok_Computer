@@ -6,9 +6,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using OBM.Models;
 using OBM.DAL;
-using Microsoft.AspNet.Identity;
+using OBM.Models;
 
 namespace OBM.Controllers
 {
@@ -16,12 +15,14 @@ namespace OBM.Controllers
     {
         private EventContext db = new EventContext();
 
-
         // GET: Events
         public ActionResult Index()
         {
             return View(db.Events.ToList());
         }
+
+
+
 
 
 
@@ -32,6 +33,8 @@ namespace OBM.Controllers
         {
             return View(db.Events.Where(x => x.EventName.Contains(searchTerm)));
         }
+
+
 
 
         // GET: Events/Details/5
