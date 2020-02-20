@@ -1,5 +1,5 @@
-﻿DROP TABLE [dbo].[Competitor]
-DROP TABLE [dbo].[Match]
+﻿DROP TABLE [dbo].[Match]
+DROP TABLE [dbo].[Competitor]
 DROP TABLE [dbo].[Tournament]
 DROP TABLE [dbo].[Event]
 DROP INDEX [IX_RoleId] ON [dbo].[AspNetUserRoles]

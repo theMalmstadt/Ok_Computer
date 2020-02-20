@@ -1,0 +1,32 @@
+﻿@model OBM.Models.ViewModels.EventViewModel
+
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>@Html.DisplayFor(model => model.EventName)</h2>
+
+@if (ViewBag.Access == true)
+{
+    <div>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
+            <tr>
+                <th>Competitors</th>
+            </tr>
+        </table>
+    </div>
+    <p>
+        @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+else
+{
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+}
+
