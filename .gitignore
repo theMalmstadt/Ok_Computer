@@ -354,3 +354,4 @@ MigrationBackup/
 
 PrivateKey.config
 Web_deploy.config
+AppSettingsSecrets.config
