@@ -34,6 +34,27 @@ namespace OBM.Controllers
             return View(eventViewList);
         }
 
+        public ActionResult Manage(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            if (eventView == null)
+            {
+                return HttpNotFound();
+            }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == eventView.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+
+            return View(eventView);
+        }
+
         // GET: Events/Details/5
         public ActionResult Details(int? id)
         {
@@ -41,18 +62,18 @@ namespace OBM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
-            if (@event == null)
+            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            if (eventView == null)
             {
                 return HttpNotFound();
             }
-            if ((@event.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            if ((eventView.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == eventView.OrganizerID)))
             {
                 ViewBag.Access = true;
             }
             else
                 ViewBag.Access = false;
-            var eventView = new EventViewModel(@event, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(@event.OrganizerID).UserName);
+            
             return View(eventView);
         }
 
@@ -74,7 +95,7 @@ namespace OBM.Controllers
             {
                 db.Events.Add(@event);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
             ViewBag.OrganizerID = User.Identity.GetUserId();
             return View(@event);

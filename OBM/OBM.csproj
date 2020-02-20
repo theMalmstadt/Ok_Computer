@@ -366,6 +366,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\ErrorPage\Error.cshtml" />
     <Content Include="Views\Manage\ChangeUsername.cshtml" />
+    <Content Include="Views\Events\Manage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
