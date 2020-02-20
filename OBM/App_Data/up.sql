@@ -131,3 +131,4 @@ CREATE TABLE [dbo].[Match](
     CONSTRAINT [FK_dbo.Match_dbo.Match_PrereqMatch1ID] Foreign KEY ([PrereqMatch1ID]) REFERENCES [dbo].[Match] ([MatchID]),
     CONSTRAINT [FK_dbo.Match_dbo.Match_PrereqMatch2ID] Foreign KEY ([PrereqMatch2ID]) REFERENCES [dbo].[Match] ([MatchID])
 );
+GO
