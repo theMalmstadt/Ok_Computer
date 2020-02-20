@@ -32,9 +32,9 @@
                     @Html.DisplayFor(modelItem => item.Location)
                 </td>
                 <td>
-                    @Html.ActionLink("Manage", "Manage", "Events", new { id = item.EventID }) | 
-                    @Html.ActionLink("Edit", "Edit", "Events", new { id = item.EventID }) | 
-                    @Html.ActionLink("Delete", "Delete", "Events", new { id = item.EventID })
+                    @Html.ActionLink("Manage", "Manage", "Events", new { id = item.EventID }, null) | 
+                    @Html.ActionLink("Edit Details", "Edit", "Events", new { id = item.EventID }, null) | 
+                    @Html.ActionLink("Delete", "Delete", "Events", new { id = item.EventID }, null)
                 </td>
             </tr>
         }
