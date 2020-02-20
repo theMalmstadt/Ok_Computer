@@ -4,22 +4,34 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using OBM.Models;
+using OBM.Models.ViewModels;
 using OBM.DAL;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 
 namespace OBM.Controllers
 {
+
     public class EventsController : Controller
     {
+
         private EventContext db = new EventContext();
 
         // GET: Events
         public ActionResult Index()
         {
-            return View(db.Events.ToList());
+            var eventViewList = new List<EventViewModel>();
+            foreach(var i in db.Events.ToList())
+            {
+                if(i.Public == true)
+                    eventViewList.Add(new EventViewModel(i, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(@i.OrganizerID).UserName));
+            }
+            return View(eventViewList);
         }
 
         // GET: Events/Details/5
@@ -34,12 +46,20 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
-            return View(@event);
+            if ((@event.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+            var eventView = new EventViewModel(@event, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(@event.OrganizerID).UserName);
+            return View(eventView);
         }
 
         // GET: Events/Create
         public ActionResult Create()
         {
+            ViewBag.OrganizerID = User.Identity.GetUserId();
             return View();
         }
 
@@ -56,7 +76,7 @@ namespace OBM.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.OrganizerID = User.Identity.GetUserId();
             return View(@event);
         }
 
@@ -72,6 +92,13 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+            ViewBag.OrganizerID = User.Identity.GetUserId();
             return View(@event);
         }
 
@@ -88,6 +115,12 @@ namespace OBM.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
             return View(@event);
         }
 
@@ -103,6 +136,12 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
             return View(@event);
         }
 

@@ -1,23 +1,22 @@
-﻿@model OBM.Models.Event
-@using Microsoft.AspNet.Identity
+﻿@model OBM.Models.ViewModels.EventViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
-@if ((Model.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == Model.OrganizerID)))
+@if (ViewBag.Access == true)
 {
     <div>
         <h4>Event</h4>
         <hr />
         <dl class="dl-horizontal">
             <dt>
-                @Html.DisplayNameFor(model => model.OrganizerID)
+                @Html.DisplayNameFor(model => model.OrganizerName)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.OrganizerID)
+                @Html.DisplayFor(model => model.OrganizerName)
             </dd>
 
             <dt>
