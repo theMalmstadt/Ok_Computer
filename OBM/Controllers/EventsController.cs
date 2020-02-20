@@ -185,5 +185,50 @@ namespace OBM.Controllers
             }
             base.Dispose(disposing);
         }
+
+        [HttpGet]
+        public ActionResult GetTournament()
+        {
+            var search = Request.QueryString["search"];
+            ViewBag.Found = "";
+            if (search == string.Empty)
+            {
+                ViewBag.Found = "No search term entered.";
+            }
+            else if (search != null)
+            {
+                var searchSegments = new Uri(search).Segments;
+                if (searchSegments != null)
+                {
+                    string tournamentRoute = searchSegments[searchSegments.Length-1];
+
+                    string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
+                    tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json";
+                    ViewBag.Found = tournamentRoute;
+                }
+            }
+
+
+            string myResponse = "";
+            /*
+            string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
+            string test_url = @"https://api.challonge.com/v1/tournaments.json";
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(test_url);
+            request.Method = "Get";
+            //request.ContentType = "application/json";
+            request.Headers.Add("api_key", test_api_key);
+
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            
+            using (System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream()))
+            {
+                myResponse = sr.ReadToEnd();
+            }
+            Response.Write(myResponse);
+            */
+            ViewBag.response = myResponse;
+            return View();
+        }
     }
 }
