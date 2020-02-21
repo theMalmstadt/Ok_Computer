@@ -189,21 +189,21 @@ namespace OBM.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetTournament()
+        public ActionResult NewTournament()
 // ADD THIS TO EVENT DETAILS VIEW
         {
             string myResponse = "";
 
             var challongURL = Request.QueryString["search"];
             var api_key = Request.QueryString["api_key"];
-            ViewBag.Found = "";
+            ViewBag.Success = "";
             if (challongURL == string.Empty)
             {
-                ViewBag.Found = "No search term entered.";
+                ViewBag.Success = "No url entered.";
             }
             else if (api_key == string.Empty)
             {
-                ViewBag.Found = "No api key entered.";
+                ViewBag.Success = "No api key entered.";
             }
             else if (challongURL != null && api_key != string.Empty)
             {
@@ -213,7 +213,7 @@ namespace OBM.Controllers
                 {
                     string tournamentRoute = searchSegments[searchSegments.Length - 1];
                     tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json?api_key=" + api_key;
-                    ViewBag.Found = tournamentRoute;
+                    //ViewBag.Found = tournamentRoute;
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tournamentRoute);
                     request.Method = "Get";
                     request.Headers.Add("api_key", api_key);

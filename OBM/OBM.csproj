@@ -374,7 +374,7 @@
     <Content Include="Views\ErrorPage\Error.cshtml" />
     <Content Include="Views\Manage\ChangeUsername.cshtml" />
     <Content Include="Views\Events\Manage.cshtml" />
-    <Content Include="Views\Events\GetTournament.cshtml" />
+    <Content Include="Views\Events\NewTournament.cshtml" />
     <Content Include="Views\Events\Tournament.cshtml" />
   </ItemGroup>
   <ItemGroup>
