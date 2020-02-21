@@ -229,19 +229,23 @@ namespace OBM.Controllers
                 JObject jsonResponse = JObject.Parse(myResponse);
                 //ViewBag.Found = tournamentName + tournamentDesc + tournamentGame + tournamentAPI + tournamentURL + tournamentTeams;
 
-                /*
+                
                 Tournament newTournament = new Tournament();
                 newTournament.TournamentName = (string)jsonResponse["tournament"]["name"];
-                newTournament.EventID = 0;
+                newTournament.EventID = 1;
                 newTournament.Description = (string)jsonResponse["tournament"]["description"];
                 newTournament.Game = (string)jsonResponse["tournament"]["game_name"];
                 newTournament.ApiId = null;
                 newTournament.UrlString = (string)jsonResponse["tournament"]["url"];
                 newTournament.IsTeams = (bool)jsonResponse["tournament"]["teams"];
 
-                EventContext DB = new EventContext();
-                DB.Tournaments.Add(newTournament);
-                */
+                if (ModelState.IsValid)
+                {
+                    EventContext DB = new EventContext();
+                    DB.Tournaments.Add(newTournament);
+                    DB.SaveChanges();
+                    ViewBag.Success = "Tournament was added.";
+                }
             }
 
             return View();
