@@ -10,11 +10,13 @@ namespace OBM.DAL
     public partial class EventContext : DbContext
     {
         public EventContext()
-            : base("name=OBMDB_Azure_Dev")
+            : base("name=OBMDB")
         {
         }
 
         public virtual DbSet<Event> Events { get; set; }
+
+        public virtual DbSet<Competitor> Competitors { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

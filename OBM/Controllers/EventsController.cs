@@ -13,6 +13,7 @@ using OBM.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json.Linq;
 
 namespace OBM.Controllers
 {
@@ -184,6 +185,22 @@ namespace OBM.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public JsonResult CompetitorList(int? id)
+        {
+            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
+                foreach(var i in db.Competitors.Where(p => p.EventID == id).ToList())
+            {
+                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
+            }
+            compStr += "</table>";
+            var data = new
+            {
+                compTable = compStr
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

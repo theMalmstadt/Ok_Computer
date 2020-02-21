@@ -8,15 +8,14 @@
 
 @if (ViewBag.Access == true)
 {
+    <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
     <div>
         <table class="table table-bordered table-striped">
             <tr>
                 <th>Brackets</th>
             </tr>
-            <tr>
-                <th>Competitors</th>
-            </tr>
         </table>
+        <div id="Competitors"></div>
     </div>
     <p>
         @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
@@ -30,3 +29,7 @@ else
     </div>
 }
 
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+}
