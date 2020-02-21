@@ -13,6 +13,7 @@ using OBM.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json.Linq;
 
 namespace OBM.Controllers
 {
@@ -189,8 +190,9 @@ namespace OBM.Controllers
         [HttpGet]
         public ActionResult GetTournament()
         {
-            string challongUsername = "sudo_whoami";
-            string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
+            //string challongUsername = "sudo_whoami";
+            string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
+            string myResponse = "";
 
             var search = Request.QueryString["search"];
             ViewBag.Found = "";
@@ -201,6 +203,7 @@ namespace OBM.Controllers
             else if (search != null)
             {
                 var searchSegments = new Uri(search).Segments;
+// NEED TO ADD ERROR CHECKING FOR BAD SEARCH STRINGS
                 if (searchSegments != null)
                 {
                     string tournamentRoute = searchSegments[searchSegments.Length - 1];
@@ -208,12 +211,11 @@ namespace OBM.Controllers
                     ViewBag.Found = tournamentRoute;
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tournamentRoute);
                     request.Method = "Get";
-                    //request.Headers.Add("username", challongUsername);
                     request.Headers.Add("api_key", test_api_key);
                     try
                     {
                         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                        string myResponse = "";
+
                         using (System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream()))
                         {
                             myResponse = sr.ReadToEnd();
@@ -221,9 +223,27 @@ namespace OBM.Controllers
                         ViewBag.response = myResponse;
                     }
                     catch { }
+// NEED TO ADD ERROR CHECKING FOR BAD REQUESTS
                 }
+
+                JObject jsonResponse = JObject.Parse(myResponse);
+                //ViewBag.Found = tournamentName + tournamentDesc + tournamentGame + tournamentAPI + tournamentURL + tournamentTeams;
+
+                /*
+                Tournament newTournament = new Tournament();
+                newTournament.TournamentName = (string)jsonResponse["tournament"]["name"];
+                newTournament.EventID = 0;
+                newTournament.Description = (string)jsonResponse["tournament"]["description"];
+                newTournament.Game = (string)jsonResponse["tournament"]["game_name"];
+                newTournament.ApiId = null;
+                newTournament.UrlString = (string)jsonResponse["tournament"]["url"];
+                newTournament.IsTeams = (bool)jsonResponse["tournament"]["teams"];
+
+                EventContext DB = new EventContext();
+                DB.Tournaments.Add(newTournament);
+                */
             }
-            
+
             return View();
         }
     }
