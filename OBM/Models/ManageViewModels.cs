@@ -9,6 +9,7 @@ namespace OBM.Models
     {
         public bool HasUsername { get; set; }
         public bool HasPassword { get; set; }
+        public bool HasApiKey { get; set; }
         public IList<UserLoginInfo> Logins { get; set; }
         public string PhoneNumber { get; set; }
         public bool TwoFactor { get; set; }
@@ -24,6 +25,13 @@ namespace OBM.Models
     public class FactorViewModel
     {
         public string Purpose { get; set; }
+    }
+
+    public class ChangeApiKeyViewModel 
+    {
+        [Required]
+        [Display(Name = "New Api Key")]
+        public string NewApiKey { get; set; }
     }
 
     public class SetUsernameViewModel

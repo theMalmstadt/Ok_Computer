@@ -62,6 +62,8 @@ namespace OBM.Controllers
                 : message == ManageMessageId.Error ? "An error has occurred."
                 : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
                 : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
+                : message == ManageMessageId.ChangeApiKeySuccess ? "Your Api Key has been changed."
+                : message == ManageMessageId.DeleteApiKeySuccess ? "Your Api Key has been removed."
                 : "";
 
             var userId = User.Identity.GetUserId();
@@ -69,6 +71,7 @@ namespace OBM.Controllers
             {
                 HasUsername = HasUsername(),
                 HasPassword = HasPassword(),
+                HasApiKey = HasApiKey(),
                 PhoneNumber = await UserManager.GetPhoneNumberAsync(userId),
                 TwoFactor = await UserManager.GetTwoFactorEnabledAsync(userId),
                 Logins = await UserManager.GetLoginsAsync(userId),
@@ -239,16 +242,20 @@ namespace OBM.Controllers
             }
             else
                 checkUSN = false;
+
             if(checkUSN)
             {
                 var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                user.UserName = model.NewUsername;
-                var result = await UserManager.UpdateAsync(user);
-
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUsernameSuccess });
+                    user.UserName = model.NewUsername;
+                    var result = await UserManager.UpdateAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        return RedirectToAction("Index", new { Message = ManageMessageId.ChangeUsernameSuccess });
+                    }
                 }
             }
             return View(model);
@@ -271,10 +278,67 @@ namespace OBM.Controllers
         //        var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
         //        if (user != null)
         //        {
-                    
+
         //        }
         //    }
         //}
+
+        //
+        // GET: /Manage/ChangeUsername
+        public ActionResult ChangeApiKey()
+        {
+            return View();
+        }
+
+        //POST: /Manage/ChangeApiKey
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeApiKey(ChangeApiKeyViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
+            {
+                user.ApiKey = model.NewApiKey;
+                var result = await UserManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", new { Message = ManageMessageId.ChangeApiKeySuccess });
+                }
+            }
+            return View(model);
+        }
+
+        //
+        // GET: /Manage/DeleteApiKey
+        //public ActionResult DeleteApiKey()
+        //{
+        //    return View();
+        //}
+
+        //POST: /Manage/DeleteApiKey
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteApiKey()
+        {
+            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            if (user != null)
+            {
+                user.ApiKey = null;
+                var result = await UserManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    return RedirectToAction("Index", new { Message = ManageMessageId.DeleteApiKeySuccess });
+                }
+            }
+            return View();
+        }
 
         //
         // GET: /Manage/ChangePassword
@@ -416,6 +480,16 @@ namespace OBM.Controllers
             }
         }
 
+        private bool HasApiKey()
+        {
+            var user = UserManager.FindById(User.Identity.GetUserId());
+            if (user != null)
+            {
+                return user.ApiKey != null;
+            }
+            return false;
+        }
+
         private bool HasPassword()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());
@@ -455,6 +529,8 @@ namespace OBM.Controllers
             SetPasswordSuccess,
             RemoveLoginSuccess,
             RemovePhoneSuccess,
+            ChangeApiKeySuccess,
+            DeleteApiKeySuccess,
             Error
         }
 
