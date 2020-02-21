@@ -103,6 +103,22 @@ CREATE TABLE [dbo].[Tournament](
 );
 GO
 
+Create Table [dbo].[Station](
+    [StationID] INT IDENTITY (1,1) PRIMARY KEY,
+    [StationName] NVARCHAR(128) NOT NULL,
+    [Description] NVARCHAR(256) NULL
+);
+GO
+
+Create Table [dbo].[tournament_station](
+    [ID] INT IDENTITY (1,1) PRIMARY KEY,
+    [TournamentID] INT NOT NULL,
+    [StationID] INT NOT NULL,
+    CONSTRAINT [FK_dbo.tournament_station_dbo.Tournament_TournamentID] Foreign KEY ([TournamentID]) REFERENCES [dbo].[Tournament] ([TournamentID]),
+    CONSTRAINT [FK_dbo.tournament_station_dbo.Station_StationID] Foreign KEY ([StationID]) REFERENCES [dbo].[Station] ([StationID])
+);
+GO
+
 -- ############# Competitor #############
 CREATE TABLE [dbo].[Competitor](
     [CompetitorID] INT IDENTITY (1,1) PRIMARY KEY,
