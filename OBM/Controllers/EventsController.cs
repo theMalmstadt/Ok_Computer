@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
 
 namespace OBM.Controllers
 {
@@ -189,6 +190,7 @@ namespace OBM.Controllers
 
         [HttpGet]
         public ActionResult GetTournament()
+// ADD THIS TO EVENT DETAILS VIEW
         {
             string myResponse = "";
 
@@ -246,10 +248,39 @@ namespace OBM.Controllers
                     DB.Tournaments.Add(newTournament);
                     DB.SaveChanges();
                     ViewBag.Success = "Tournament was added.";
+                    //Add link here to event page with tournament showing
+
+                }
+                else
+                {
+                    ViewBag.Success = "Meet was not saved";
                 }
             }
 
             return View();
+        }
+
+        public ActionResult Tournament(int? id)
+        {
+            if (id == null)
+            {
+                //throw new HttpException(404, "No Page Found");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            TournamentViewModel tour = new TournamentViewModel(db.Tournaments.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            if (tour == null)
+            {
+                return HttpNotFound();
+            }
+            if ((tour.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == tour.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+
+            return View(tour);
         }
     }
 }

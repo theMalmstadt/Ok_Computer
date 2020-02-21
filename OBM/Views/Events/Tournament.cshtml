@@ -1,0 +1,51 @@
+﻿@model OBM.Models.ViewModels.TournamentViewModel
+@{
+    ViewBag.Title = "Tournament";
+}
+
+<h5>Tournament Name</h5>
+<h1>@Html.DisplayFor(model => model.TournamentName)</h1>
+@if (ViewBag.Access == true)
+{
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>Description</dt>
+            <dd>@Html.DisplayFor(model => model.Description)</dd>
+
+            <dt>Game</dt>
+            <dd>@Html.DisplayFor(model => model.Game)</dd>
+
+            <dt>Team Based?</dt>
+            <dd>@Html.DisplayFor(model => model.IsTeams)</dd>
+
+            <dt>Ending URL string</dt>
+            <dd>@Html.DisplayFor(model => model.UrlString)</dd>
+
+            <dt>Event</dt>
+            <dd>@Html.ActionLink(Model.EventName.ToString(), "/Details/"+Model.EventID)</dd>
+
+            <dt>Tournament Organizer</dt>
+            <dd>@Html.DisplayFor(model => model.OrganizerName)</dd>
+        </dl>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Bracket</th>
+            </tr>
+            <tr>
+                <th>Competitors</th>
+            </tr>
+        </table>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+else
+{
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+}
+
