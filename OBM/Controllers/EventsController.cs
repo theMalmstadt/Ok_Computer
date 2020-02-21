@@ -22,6 +22,13 @@ namespace OBM.Controllers
             return View(db.Events.ToList());
         }
 
+        [HttpGet]
+        public ActionResult EventSearch(String search)
+        {
+            return View(db.Events.Where(x=>x.EventName.Contains(search)).ToList());
+        }
+
+
         // GET: Events/Details/5
         public ActionResult Details(int? id)
         {

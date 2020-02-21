@@ -26,6 +26,17 @@
             <ul class="nav navbar-nav mr-auto">
                 <li class="nav-item"><i>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</i></li>
                 <li class="nav-item"><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })</i></li>
+
+                @using (Html.BeginForm())
+                {
+                    <p>
+                        Title: @Html.TextBox("search") <br />
+                        <input type="submit" value="search" formmethod="get" formaction="~/Events/EventSearch"/>
+                    </p>
+
+                }
+
+
             </ul>
             @Html.Partial("_LoginPartial")
         </div>
