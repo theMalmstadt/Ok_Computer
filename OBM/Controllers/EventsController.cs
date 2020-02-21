@@ -189,6 +189,9 @@ namespace OBM.Controllers
         [HttpGet]
         public ActionResult GetTournament()
         {
+            string challongUsername = "sudo_whoami";
+            string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
+
             var search = Request.QueryString["search"];
             ViewBag.Found = "";
             if (search == string.Empty)
@@ -200,34 +203,27 @@ namespace OBM.Controllers
                 var searchSegments = new Uri(search).Segments;
                 if (searchSegments != null)
                 {
-                    string tournamentRoute = searchSegments[searchSegments.Length-1];
-
-                    string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
-                    tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json";
+                    string tournamentRoute = searchSegments[searchSegments.Length - 1];
+                    tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json?api_key=" + test_api_key;
                     ViewBag.Found = tournamentRoute;
+                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tournamentRoute);
+                    request.Method = "Get";
+                    //request.Headers.Add("username", challongUsername);
+                    request.Headers.Add("api_key", test_api_key);
+                    try
+                    {
+                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                        string myResponse = "";
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream()))
+                        {
+                            myResponse = sr.ReadToEnd();
+                        }
+                        ViewBag.response = myResponse;
+                    }
+                    catch { }
                 }
             }
-
-
-            string myResponse = "";
-            /*
-            string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
-            string test_url = @"https://api.challonge.com/v1/tournaments.json";
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(test_url);
-            request.Method = "Get";
-            //request.ContentType = "application/json";
-            request.Headers.Add("api_key", test_api_key);
-
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             
-            using (System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream()))
-            {
-                myResponse = sr.ReadToEnd();
-            }
-            Response.Write(myResponse);
-            */
-            ViewBag.response = myResponse;
             return View();
         }
     }
