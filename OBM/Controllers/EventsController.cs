@@ -190,28 +190,31 @@ namespace OBM.Controllers
         [HttpGet]
         public ActionResult GetTournament()
         {
-            //string challongUsername = "sudo_whoami";
-            string test_api_key = "AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3";
             string myResponse = "";
 
-            var search = Request.QueryString["search"];
+            var challongURL = Request.QueryString["search"];
+            var api_key = Request.QueryString["api_key"];
             ViewBag.Found = "";
-            if (search == string.Empty)
+            if (challongURL == string.Empty)
             {
                 ViewBag.Found = "No search term entered.";
             }
-            else if (search != null)
+            else if (api_key == string.Empty)
             {
-                var searchSegments = new Uri(search).Segments;
-// NEED TO ADD ERROR CHECKING FOR BAD SEARCH STRINGS
+                ViewBag.Found = "No api key entered.";
+            }
+            else if (challongURL != null && api_key != string.Empty)
+            {
+                var searchSegments = new Uri(challongURL).Segments;
+// NEED TO ADD ERROR CHECKING FOR BAD SEARCH STRINGS->ones that cannot be segmented
                 if (searchSegments != null)
                 {
                     string tournamentRoute = searchSegments[searchSegments.Length - 1];
-                    tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json?api_key=" + test_api_key;
+                    tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json?api_key=" + api_key;
                     ViewBag.Found = tournamentRoute;
                     HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tournamentRoute);
                     request.Method = "Get";
-                    request.Headers.Add("api_key", test_api_key);
+                    request.Headers.Add("api_key", api_key);
                     try
                     {
                         HttpWebResponse response = (HttpWebResponse)request.GetResponse();
@@ -220,15 +223,13 @@ namespace OBM.Controllers
                         {
                             myResponse = sr.ReadToEnd();
                         }
-                        ViewBag.response = myResponse;
+                        //ViewBag.response = myResponse;
                     }
                     catch { }
 // NEED TO ADD ERROR CHECKING FOR BAD REQUESTS
                 }
 
                 JObject jsonResponse = JObject.Parse(myResponse);
-                //ViewBag.Found = tournamentName + tournamentDesc + tournamentGame + tournamentAPI + tournamentURL + tournamentTeams;
-
                 
                 Tournament newTournament = new Tournament();
                 newTournament.TournamentName = (string)jsonResponse["tournament"]["name"];

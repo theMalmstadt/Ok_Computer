@@ -10,8 +10,10 @@
 <div>
     <form method="get">
         @Html.TextBox("search", null, new { @placeholder = "Enter URL for tournament..." })
+        @Html.TextBox("api_key", null, new { @placeholder = "Enter Challong api key..." })
         <input class="button" type="submit" value="Search" />
     </form>
 </div>
+
 
 <b>@ViewBag.Found</b>
