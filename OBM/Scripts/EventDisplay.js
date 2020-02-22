@@ -3,11 +3,23 @@
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: '/Events/EventList?location='+location_search_string,
+        url: '/Events/EventList?location='+$('#location_search').val(),
         success: EventList,
         error: errorOnAjax
     });
+
+    $('#next_page').click(function () {
+        if (current_page < number_of_pages)
+            current_page = current_page + 1;
+    });
+    $('#previous_page').click(function () {
+        if (current_page > 0)
+            current_page = current_page - 1;
+    });
+
+
 }
+
 
 var ajax_call_tournaments = function (ID) {
 
@@ -18,7 +30,15 @@ var ajax_call_tournaments = function (ID) {
         success: MoreDetails,
         error: errorOnAjax
     });
+
+
 }
+
+
+
+
+
+
 
 
 
@@ -37,7 +57,7 @@ function EventList(data) {
     console.log(data);
     eventlist=data = JSON.parse(data);
 
-
+    console.log(data);
     number_of_pages = data.length / 10;
     //console.log(number_of_pages);
     //console.log(data.length);
@@ -45,10 +65,7 @@ function EventList(data) {
     for (var i = current_page*10; i < current_page*10+10 && i<data.length  ;i++)
     {
 
-        if ($('#location_search').val() != null)
-        {
-
-        }
+        
         console.log(i);
         $('#Events').append("<tr id=" + i + "><td>" + data[i].EventName + "</td></tr>");
         $('#' + i).click(data[i], EventDetails);
@@ -56,14 +73,7 @@ function EventList(data) {
         
     }
 
-    $('#next_page').click(function(){
-        if(current_page<number_of_pages)
-        current_page=current_page + 1;
-    });
-    $('#previous_page').click(function(){
-        if(current_page>0)
-        current_page=current_page - 1;
-    });
+    
 }
 
 
@@ -123,6 +133,6 @@ function prev()
 
 
 
-var interval = 1000 * 5;
+var interval = 100 * 9;
 
 window.setInterval(ajax_call_events, interval);

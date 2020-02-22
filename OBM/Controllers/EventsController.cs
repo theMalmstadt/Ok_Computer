@@ -213,7 +213,7 @@ namespace OBM.Controllers
             JArray TournamentList = new JArray();
 
             Debug.WriteLine("LOCATION IS: " + location);
-            if (location != null||location=="")
+            if (location != null&&location!="")
             {
                 foreach (var i in db.Events.Where(p => p.Public && p.Location.Contains(location)).ToList())
                 {
