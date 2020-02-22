@@ -21,8 +21,6 @@ CREATE TABLE [dbo].[AspNetUsers]
     [EmailConfirmed]       BIT            NOT NULL,
     [PasswordHash]         NVARCHAR (MAX) NULL,
     [SecurityStamp]        NVARCHAR (MAX) NULL,
-    [ApiKey]               NVARCHAR (MAX) NULL,
-    [Subdomain]            NVARCHAR(256)  NULL,
     [PhoneNumber]          NVARCHAR (MAX) NULL,
     [PhoneNumberConfirmed] BIT            NOT NULL,
     [TwoFactorEnabled]     BIT            NOT NULL,
@@ -133,3 +131,4 @@ CREATE TABLE [dbo].[Match](
     CONSTRAINT [FK_dbo.Match_dbo.Match_PrereqMatch1ID] Foreign KEY ([PrereqMatch1ID]) REFERENCES [dbo].[Match] ([MatchID]),
     CONSTRAINT [FK_dbo.Match_dbo.Match_PrereqMatch2ID] Foreign KEY ([PrereqMatch2ID]) REFERENCES [dbo].[Match] ([MatchID])
 );
+GO

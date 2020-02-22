@@ -27,24 +27,16 @@
                 <li class="nav-item"><i>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</i></li>
                 <li class="nav-item"><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })</i></li>
 
-                @using (Html.BeginForm())
-                {
-                    <p>
-                        Title: @Html.TextBox("search") <br />
-                        <input type="submit" value="search" formmethod="get" formaction="~/Events/EventSearch"/>
-                    </p>
 
-                }
 
 
             </ul>
 
 
             <!-- Search form -->
-            <form  action="~/Events/EventsSearch" method="get"  >
-                <input class="form-control" type="text" placeholder="Search" aria-label="Search Events">
-            </form>
-
+            @using (Html.BeginForm("EventSearch", "Events", FormMethod.Get))
+            {
+                @Html.TextBox("search", null, new { @class = "form-control" })}
 
             @Html.Partial("_LoginPartial")
         </div>

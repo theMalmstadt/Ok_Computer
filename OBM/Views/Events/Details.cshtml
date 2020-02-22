@@ -1,58 +1,78 @@
-﻿@model OBM.Models.Event
+﻿@model OBM.Models.ViewModels.EventViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
 <h2>Details</h2>
+@if (ViewBag.Access == true)
+{
+    <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+    <div>
+        <h4>Event</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.OrganizerName)
+            </dt>
 
-<div>
-    <h4>Event</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.OrganizerID)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.OrganizerName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.OrganizerID)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.EventName)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.EventName)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.EventName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.EventName)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Location)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Location)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Location)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Location)
-        </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Public)
+            </dt>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Public)
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Public)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.Public)
-        </dd>
+        </dl>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
+        </table>
+        <div id="Competitors"></div>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}
+else
+{
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+}
 
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+}

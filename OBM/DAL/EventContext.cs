@@ -16,6 +16,10 @@ namespace OBM.DAL
 
         public virtual DbSet<Event> Events { get; set; }
 
+        public virtual DbSet<Competitor> Competitors { get; set; }
+
+        public virtual DbSet<Tournament> Tournaments { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
         }

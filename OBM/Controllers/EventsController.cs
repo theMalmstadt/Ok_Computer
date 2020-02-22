@@ -4,29 +4,70 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Web;
+using System.Diagnostics;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 using OBM.DAL;
 using OBM.Models;
+using OBM.Models.ViewModels;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using Newtonsoft.Json.Linq;
 
 namespace OBM.Controllers
 {
+
     public class EventsController : Controller
     {
+
         private EventContext db = new EventContext();
 
         // GET: Events
         public ActionResult Index()
         {
-            return View(db.Events.ToList());
+            var eventViewList = new List<EventViewModel>();
+            foreach(var i in db.Events.ToList())
+            {
+                if(i.Public == true)
+                    eventViewList.Add(new EventViewModel(i, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(@i.OrganizerID).UserName));
+            }
+            return View(eventViewList);
+        }
+
+       
+
+        public ActionResult Manage(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            if (eventView == null)
+            {
+                return HttpNotFound();
+            }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == eventView.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+
+            return View(eventView);
         }
 
         [HttpGet]
         public ActionResult EventSearch(String search)
         {
-            return View(db.Events.Where(x=>x.EventName.Contains(search)).ToList());
+            ViewBag.search = search;
+            return View(db.Events.Where(x=>x.EventName.Contains(search) && x.Public).ToList());
         }
 
+       
 
 
         // GET: Events/Details/5
@@ -36,17 +77,25 @@ namespace OBM.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
-            if (@event == null)
+            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            if (eventView == null)
             {
                 return HttpNotFound();
             }
-            return View(@event);
+            if ((eventView.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == eventView.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+            
+            return View(eventView);
         }
 
         // GET: Events/Create
         public ActionResult Create()
         {
+            ViewBag.OrganizerID = User.Identity.GetUserId();
             return View();
         }
 
@@ -61,9 +110,9 @@ namespace OBM.Controllers
             {
                 db.Events.Add(@event);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
-
+            ViewBag.OrganizerID = User.Identity.GetUserId();
             return View(@event);
         }
 
@@ -79,6 +128,13 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+            ViewBag.OrganizerID = User.Identity.GetUserId();
             return View(@event);
         }
 
@@ -95,6 +151,12 @@ namespace OBM.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
             return View(@event);
         }
 
@@ -110,6 +172,12 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
             return View(@event);
         }
 
@@ -131,6 +199,69 @@ namespace OBM.Controllers
                 db.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        public ActionResult ResponsiveEvents()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult EventList(String location)
+        {
+            List<Event> eventList = new List<Event>();
+            JArray TournamentList = new JArray();
+
+            Debug.WriteLine("LOCATION IS: " + location);
+            if (location != null||location=="")
+            {
+                foreach (var i in db.Events.Where(p => p.Public && p.Location.Contains(location)).ToList())
+                {
+                    eventList.Add(i);
+                }
+            }
+
+
+            else
+            {
+                foreach (var i in db.Events.Where(p => p.Public).ToList())
+                {
+                    eventList.Add(i);
+                }
+            }
+
+            return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult TournamentList(int? id)
+        {
+            List<Tournament> TournamentList = new List<Tournament>();
+
+            foreach (var i in db.Tournaments.Where(x=>x.EventID==id).ToList())
+            {
+                TournamentList.Add(i);
+            }
+
+
+            return Json(JsonConvert.SerializeObject(TournamentList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+        public JsonResult CompetitorList(int? id)
+        {
+            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
+                foreach(var i in db.Competitors.Where(p => p.EventID == id).ToList())
+            {
+                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
+            }
+            compStr += "</table>";
+            var data = new
+            {
+                compTable = compStr
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }

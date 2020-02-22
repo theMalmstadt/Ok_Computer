@@ -186,17 +186,19 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\TournamentModel.cs" />
+    <Compile Include="Models\Competitor.cs" />
     <Compile Include="DAL\EventContext.cs" />
     <Compile Include="DAL\IdentityModels.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Model1.cs" />
+    <Compile Include="Models\ViewModels\EventViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\down.sql" />
-
     <Content Include="App_Data\seed.sql" />
     <Content Include="App_Data\up.sql" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -219,6 +221,7 @@
     <Content Include="Scripts\esm\popper-utils.min.js" />
     <Content Include="Scripts\esm\popper.js" />
     <Content Include="Scripts\esm\popper.min.js" />
+    <Content Include="Scripts\EventDisplay.js" />
     <Content Include="Scripts\index.js.flow" />
     <Content Include="Scripts\esm\popper.min.js.map" />
     <Content Include="Scripts\esm\popper.js.map" />
@@ -244,6 +247,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\CompDisplay.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
@@ -361,7 +365,6 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\ErrorPage\Error.cshtml" />
-
     <Content Include="Views\Events\EventsSearch.cshtml" />
     <Content Include="Views\Manage\ChangeUsername.cshtml" />
     <Content Include="Views\Events\Create.cshtml" />
@@ -369,6 +372,8 @@
     <Content Include="Views\Events\Details.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
+    <Content Include="Views\Events\Manage.cshtml" />
+    <Content Include="Views\Events\ResponsiveEvents.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
