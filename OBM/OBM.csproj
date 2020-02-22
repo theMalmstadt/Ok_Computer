@@ -367,6 +367,7 @@
     <Content Include="Views\ErrorPage\Error.cshtml" />
     <Content Include="Views\Manage\ChangeUsername.cshtml" />
     <Content Include="Views\Events\Manage.cshtml" />
+    <Content Include="Views\Manage\ChangeApiKey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
