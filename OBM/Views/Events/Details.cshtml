@@ -57,13 +57,16 @@
             <th>Tournaments</th>
 
         </tr>
-        @if (1 == 0)
+        @for (int i = 0; i < 0; i++)
         {
             <tr>
+                <!--add a row for each tournament, or put 3 columns and then a new row-->
+                <!--This may be ajax, which is cool but I need the action linkt to be here-->
+
             </tr>
         }
         <tr>
-            <td>@Html.ActionLink("Add Tournament", "NewTournament")</td>
+            <td>@Html.ActionLink("Add Tournament", "NewTournament/"+Model.EventID)</td>
         </tr>
 
     </table>

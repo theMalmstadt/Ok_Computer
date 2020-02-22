@@ -19,19 +19,38 @@
             <dt>Team Based?</dt>
             <dd>@Html.DisplayFor(model => model.IsTeams)</dd>
 
-            <dt>Ending URL string</dt>
-            <dd>@Html.DisplayFor(model => model.UrlString)</dd>
-
             <dt>Event</dt>
-            <dd>@Html.ActionLink(Model.EventName.ToString(), "/Details/"+Model.EventID)</dd>
+            <dd>@Html.ActionLink(Model.EventName.ToString(), "/Details/" + Model.EventID)</dd>
 
             <dt>Tournament Organizer</dt>
             <dd>@Html.DisplayFor(model => model.OrganizerName)</dd>
+
+            <dt>Ending URL string</dt>
+            <dd>@Html.DisplayFor(model => model.UrlString)</dd>
         </dl>
         <table class="table table-bordered table-striped">
             <tr>
-                <th>Bracket</th>
+                <th>Tournaments</th>
+
             </tr>
+            @for (int i = 0; i < 0; i++)
+            {
+                <tr>
+                    <!--add a row for each tournament, or put 3 columns and then a new row-->
+                </tr>
+            }
+            <tr>
+                <td>@Html.ActionLink("Add Tournament", "NewTournament")</td>
+            </tr>
+
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
+
+        </table>
+        <table class="table table-bordered table-striped">
             <tr>
                 <th>Competitors</th>
             </tr>

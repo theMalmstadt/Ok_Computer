@@ -103,6 +103,7 @@ CREATE TABLE [dbo].[Tournament](
 );
 GO
 
+-- ############# Station #############
 Create Table [dbo].[Station](
     [StationID] INT IDENTITY (1,1) PRIMARY KEY,
     [StationName] NVARCHAR(128) NOT NULL,
@@ -110,6 +111,7 @@ Create Table [dbo].[Station](
 );
 GO
 
+-- ############# tournament_station #############
 Create Table [dbo].[tournament_station](
     [ID] INT IDENTITY (1,1) PRIMARY KEY,
     [TournamentID] INT NOT NULL,

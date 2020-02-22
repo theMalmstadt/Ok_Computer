@@ -189,14 +189,19 @@ namespace OBM.Controllers
         }
 
         [HttpGet]
-        public ActionResult NewTournament()
+        public ActionResult NewTournament(int? id)
 // ADD THIS TO EVENT DETAILS VIEW
         {
-            string myResponse = "";
+            if (id == null)
+            {
+                //throw new HttpException(404, "No Page Found");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
             var challongURL = Request.QueryString["search"];
             var api_key = Request.QueryString["api_key"];
             ViewBag.Success = "";
+
             if (challongURL == string.Empty)
             {
                 ViewBag.Success = "No url entered.";
@@ -208,52 +213,51 @@ namespace OBM.Controllers
             else if (challongURL != null && api_key != string.Empty)
             {
                 var searchSegments = new Uri(challongURL).Segments;
-// NEED TO ADD ERROR CHECKING FOR BAD SEARCH STRINGS->ones that cannot be segmented
+                // NEED TO ADD ERROR CHECKING FOR BAD SEARCH STRINGS->ones that cannot be segmented
                 if (searchSegments != null)
                 {
-                    string tournamentRoute = searchSegments[searchSegments.Length - 1];
-                    tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + tournamentRoute + ".json?api_key=" + api_key;
-                    //ViewBag.Found = tournamentRoute;
-                    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(tournamentRoute);
-                    request.Method = "Get";
-                    request.Headers.Add("api_key", api_key);
+                    string urlEnd = searchSegments[searchSegments.Length - 1];
+                    string tournamentRoute = @"https://api.challonge.com/v1/tournaments/" + urlEnd + ".json?api_key=" + api_key;
+                    //ViewBag.Found = participantsRoute;
+                    string responseTournament = "";
+
                     try
                     {
-                        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-
-                        using (System.IO.StreamReader sr = new System.IO.StreamReader(response.GetResponseStream()))
+                        HttpWebRequest requestTournaments = (HttpWebRequest)WebRequest.Create(tournamentRoute);
+                        requestTournaments.Method = "Get";
+                        requestTournaments.Headers.Add("api_key", api_key);
+                        HttpWebResponse response1 = (HttpWebResponse)requestTournaments.GetResponse();
+                        using (System.IO.StreamReader sr = new System.IO.StreamReader(response1.GetResponseStream()))
                         {
-                            myResponse = sr.ReadToEnd();
+                            responseTournament = sr.ReadToEnd();
                         }
                         //ViewBag.response = myResponse;
                     }
                     catch { }
-// NEED TO ADD ERROR CHECKING FOR BAD REQUESTS
-                }
+                    // NEED TO ADD ERROR CHECKING FOR BAD REQUESTS
 
-                JObject jsonResponse = JObject.Parse(myResponse);
-                
-                Tournament newTournament = new Tournament();
-                newTournament.TournamentName = (string)jsonResponse["tournament"]["name"];
-                newTournament.EventID = 1;
-                newTournament.Description = (string)jsonResponse["tournament"]["description"];
-                newTournament.Game = (string)jsonResponse["tournament"]["game_name"];
-                newTournament.ApiId = null;
-                newTournament.UrlString = (string)jsonResponse["tournament"]["url"];
-                newTournament.IsTeams = (bool)jsonResponse["tournament"]["teams"];
+                    JObject jsonTournament = JObject.Parse(responseTournament);
+                    Tournament newTournament = new Tournament();
+                    newTournament.TournamentName = (string)jsonTournament["tournament"]["name"];
+                    newTournament.EventID = id ?? default(int);
+                    newTournament.Description = (string)jsonTournament["tournament"]["description"];
+                    newTournament.Game = (string)jsonTournament["tournament"]["game_name"];
+                    newTournament.ApiId = (int)jsonTournament["tournament"]["id"];
+                    newTournament.UrlString = (string)jsonTournament["tournament"]["url"];
+                    newTournament.IsTeams = (bool)jsonTournament["tournament"]["teams"];   
 
-                if (ModelState.IsValid)
-                {
-                    EventContext DB = new EventContext();
-                    DB.Tournaments.Add(newTournament);
-                    DB.SaveChanges();
-                    ViewBag.Success = "Tournament was added.";
-                    //Add link here to event page with tournament showing
-
-                }
-                else
-                {
-                    ViewBag.Success = "Meet was not saved";
+                    if (ModelState.IsValid)
+                    {
+                        EventContext DB = new EventContext();
+                        DB.Tournaments.Add(newTournament);
+                        DB.SaveChanges();
+                        ViewBag.Success = "Tournament was added.";
+                        //Add link here to event page with tournament showing
+                    }
+                    else
+                    {
+                        ViewBag.Success = "Tournament was not saved";
+                    }
                 }
             }
 
