@@ -315,30 +315,30 @@ namespace OBM.Controllers
         }
 
         //
-        // GET: /Manage/DeleteApiKey
+        //GET: /Manage/DeleteApiKey
         //public ActionResult DeleteApiKey()
         //{
         //    return View();
         //}
 
         //POST: /Manage/DeleteApiKey
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteApiKey()
-        {
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            if (user != null)
-            {
-                user.ApiKey = null;
-                var result = await UserManager.UpdateAsync(user);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                    return RedirectToAction("Index", new { Message = ManageMessageId.DeleteApiKeySuccess });
-                }
-            }
-            return View();
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteApiKey()
+        //{
+        //    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+        //    if (user != null)
+        //    {
+        //        user.ApiKey = null;
+        //        var result = await UserManager.UpdateAsync(user);
+        //        if (result.Succeeded)
+        //        {
+        //            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+        //            return RedirectToAction("Index", new { Message = ManageMessageId.DeleteApiKeySuccess });
+        //        }
+        //    }
+        //    return View();
+        //}
 
         //
         // GET: /Manage/ChangePassword
