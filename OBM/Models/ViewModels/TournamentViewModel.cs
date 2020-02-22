@@ -29,6 +29,7 @@ namespace OBM.Models.ViewModels
             OrganizerName = org;
             Description = tour.Description;
             Game = tour.Game;
+            ApiId = tour.ApiId;
             UrlString = tour.UrlString;
             IsTeams = tour.IsTeams ? "Yes" : "No";
             Public = motherEvent.Public;
