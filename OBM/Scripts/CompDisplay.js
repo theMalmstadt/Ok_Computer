@@ -1,4 +1,7 @@
-﻿var ajax_call = function () {
+﻿
+var interval = 1000 * 5;
+
+var ajax_call = function () {
     var eventID = $('#eventID').val();
     console.log(eventID);
     $.ajax({
@@ -6,6 +9,7 @@
         dataType: 'json',
         url: '/Events/CompetitorList?id=' + eventID,
         success: CompetitorList,
+        complete: setTimeout(ajax_call, interval),
         error: errorOnAjax
     });
 }
@@ -18,7 +22,4 @@ function errorOnAjax() {
     console.log("ERROR in ajax request.");
 }
 
-
-var interval = 1000 * 5;
-
-window.setInterval(ajax_call, interval);
+window.setTimeout(ajax_call, 0);
