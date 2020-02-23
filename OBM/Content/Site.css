@@ -38,7 +38,7 @@ body {
 }
 
 .team-logo {
-    width: 75%;
+    width: 15%;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -49,11 +49,7 @@ body {
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
+
 
 .center-image {
     display: block;

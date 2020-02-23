@@ -52,6 +52,7 @@
                 @Html.DisplayFor(model => model.Public)
             </dd>
 
+<<<<<<< HEAD
         </dl>
         <table class="table table-bordered table-striped">
             <tr>
@@ -60,6 +61,42 @@
         </table>
         <div id="Competitors"></div>
     </div>
+=======
+    </dl>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Tournaments</th>
+
+        </tr>
+        @for (int i = 0; i < 0; i++)
+        {
+            <tr>
+                <!--add a row for each tournament, or put 3 columns and then a new row-->
+                <!--This may be ajax, which is cool but I need the action linkt to be here-->
+
+            </tr>
+        }
+        @if(ViewBag.Access == true)
+        {
+            <tr>
+                <td>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</td>
+            </tr>
+        }
+
+    </table>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Brackets</th>
+        </tr>
+
+    </table>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Competitors</th>
+        </tr>
+    </table>
+</div>
+>>>>>>> 53493f9f937068fdd704f2739b406e39a2f63a13
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
         @Html.ActionLink("Back to List", "Index")
