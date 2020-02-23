@@ -207,13 +207,14 @@ namespace OBM.Controllers
         }
 
         [HttpGet]
-        public JsonResult EventList(String location)
+        public JsonResult EventList(String location, String name)   //ONCE AN EVENT DATE IS PROPERLY IMPLEMENTED IN THE DATABASE, IT WILL BE USED TO SORT THE RESULTS OF THESE QUERIES (.Orderby(x=>x.DateTime))
         {
             List<Event> eventList = new List<Event>();
             JArray TournamentList = new JArray();
 
             Debug.WriteLine("LOCATION IS: " + location);
-            if (location != null&&location!="")
+            Debug.WriteLine("NAME IS: " + name);
+            if (location != null&&location!="")// if we know the location of event, get the events at the location
             {
                 foreach (var i in db.Events.Where(p => p.Public && p.Location.Contains(location)).ToList())
                 {
@@ -222,7 +223,7 @@ namespace OBM.Controllers
             }
 
 
-            else
+            else// if the event field is null, or empty, return all events
             {
                 foreach (var i in db.Events.Where(p => p.Public).ToList())
                 {
@@ -230,6 +231,21 @@ namespace OBM.Controllers
                 }
             }
 
+            //NOW THE SEARCH BY NAME
+            if (name != null && name != "")
+            {
+                var eventListTemp =new List<Event>(eventList);
+                foreach (var i in eventListTemp)
+                {
+                    if(!i.EventName.Contains(name))
+                    {
+                        eventList.Remove(i);
+                    }
+                }
+            }
+
+
+    
             return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented), JsonRequestBehavior.AllowGet);
         }
         public JsonResult TournamentList(int? id)

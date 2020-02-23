@@ -3,13 +3,13 @@
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: '/Events/EventList?location='+$('#location_search').val(),
+        url: '/Events/EventList?location='+$('#location_search').val()+"&name="+$('#name_search').val(),
         success: EventList,
         error: errorOnAjax
     });
 
     $('#next_page').click(function () {
-        if (current_page < number_of_pages)
+        if (current_page <= number_of_pages)
             current_page = current_page + 1;
     });
     $('#previous_page').click(function () {
@@ -57,7 +57,7 @@ function EventList(data) {
     console.log(data);
     eventlist=data = JSON.parse(data);
 
-    console.log(data);
+    //console.log(data);
     number_of_pages = data.length / 10;
     //console.log(number_of_pages);
     //console.log(data.length);
@@ -66,7 +66,7 @@ function EventList(data) {
     {
 
         
-        console.log(i);
+        //console.log(i);
         $('#Events').append("<tr id=" + i + "><td>" + data[i].EventName + "</td></tr>");
         $('#' + i).click(data[i], EventDetails);
         index_key[i] = data[i].EventID;
@@ -92,7 +92,7 @@ function MoreDetails(data)
     $('#Tournament_List').empty();
 
     data = JSON.parse(data);
-    console.log(data);
+   // console.log(data);
     
 
 

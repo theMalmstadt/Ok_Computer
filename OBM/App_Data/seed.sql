@@ -7,7 +7,7 @@ INSERT INTO [dbo].Event (EventName, OrganizerID, [Public])VALUES
 	('LittleJims tournament', 'd93857cd-912d-435e-b530-474e15028fbc', 1);
 
 INSERT INTO [dbo].Event (EventName, OrganizerID, [Public],Location)VALUES
-	('MediumJims tournament','d93857cd-912d-435e-b530-474e15028fbc', 1, 97333);
+	('HUGEJims tournament','d93857cd-912d-435e-b530-474e15028fbc', 1, 97333);
 
 
 	  
