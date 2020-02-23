@@ -16,11 +16,11 @@ namespace OBM.Controllers
 
         public ActionResult Error(int statusCode, Exception exception)
         {
-            if(statusCode == 404)
+            if(statusCode > 399 && statusCode < 500)
             {
                 ViewBag.Message = "Could not find this page.";
             }
-            else if (statusCode == 500)
+            else if (statusCode > 499 && statusCode < 600)
             {
                 ViewBag.Message = "Server made a mistake.";
             }

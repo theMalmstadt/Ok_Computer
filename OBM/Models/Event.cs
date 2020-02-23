@@ -9,6 +9,13 @@ namespace OBM.Models
     [Table("Event")]
     public partial class Event
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Event()
+        {
+            Competitors = new HashSet<Competitor>();
+            Tournaments = new HashSet<Tournament>();
+        }
+
         public int EventID { get; set; }
 
         [Required]
@@ -26,5 +33,11 @@ namespace OBM.Models
         public string Location { get; set; }
 
         public bool Public { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Competitor> Competitors { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Tournament> Tournaments { get; set; }
     }
 }
