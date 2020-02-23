@@ -40,12 +40,12 @@ namespace OBM.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
             if (eventView == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Page not Found");
             }
             if ((Request.IsAuthenticated && (User.Identity.GetUserId() == eventView.OrganizerID)))
             {
@@ -62,12 +62,12 @@ namespace OBM.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
             if (eventView == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Page not Found");
             }
             if ((eventView.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == eventView.OrganizerID)))
             {
@@ -108,12 +108,12 @@ namespace OBM.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Event @event = db.Events.Find(id);
             if (@event == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Page not Found");
             }
             if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
             {
@@ -152,12 +152,12 @@ namespace OBM.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Event @event = db.Events.Find(id);
             if (@event == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Page not Found");
             }
             if ((Request.IsAuthenticated && (User.Identity.GetUserId() == @event.OrganizerID)))
             {
@@ -193,8 +193,7 @@ namespace OBM.Controllers
         {
             if (id == null)
             {
-                //throw new HttpException(404, "No Page Found");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             else if (db.Events.Find(id).OrganizerID == User.Identity.GetUserId())
             {
@@ -288,8 +287,7 @@ namespace OBM.Controllers
         {
             if (id == null)
             {
-                //throw new HttpException(404, "No Page Found");
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(404, "Page not Found");
             }
 
             try
@@ -299,7 +297,7 @@ namespace OBM.Controllers
             
                 if (tour == null)
                 {
-                    return HttpNotFound();
+                    throw new HttpException(404, "Page not Found");
                 }
                 if ((tour.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == db.Events.Find(found.EventID).OrganizerID)))
                 {
@@ -314,7 +312,7 @@ namespace OBM.Controllers
             }
             catch 
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Page not Found");
             }
         }
     }

@@ -212,9 +212,12 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Media\cat-gif-1.gif" />
+    <Content Include="Media\koi.gif" />
     <Content Include="Media\OKicon.ico" />
     <Content Include="Media\OKlogo.png" />
     <Content Include="Media\OKsign.png" />
+    <Content Include="Media\space.gif" />
+    <Content Include="Media\swan.gif" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
