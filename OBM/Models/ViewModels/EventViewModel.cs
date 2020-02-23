@@ -5,6 +5,7 @@ using System.Web;
 using System.Security.Claims;
 using OBM.DAL;
 using OBM.Models;
+using OBM.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;

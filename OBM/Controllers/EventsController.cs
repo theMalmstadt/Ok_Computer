@@ -6,10 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Web;
+using System.Diagnostics;
 using System.Web.Mvc;
+using Newtonsoft.Json;
+using OBM.DAL;
 using OBM.Models;
 using OBM.Models.ViewModels;
-using OBM.DAL;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -38,6 +40,8 @@ namespace OBM.Controllers
             return View(eventViewList);
         }
 
+       
+
         public ActionResult Manage(int? id)
         {
             if (id == null)
@@ -58,6 +62,16 @@ namespace OBM.Controllers
 
             return View(eventView);
         }
+
+        [HttpGet]
+        public ActionResult EventSearch(String search)
+        {
+            ViewBag.search = search;
+            return View(db.Events.Where(x=>x.EventName.Contains(search) && x.Public).ToList());
+        }
+
+       
+
 
         // GET: Events/Details/5
         public ActionResult Details(int? id)
@@ -190,6 +204,68 @@ namespace OBM.Controllers
             base.Dispose(disposing);
         }
 
+        public ActionResult ResponsiveEvents()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public JsonResult EventList(String location, String name)   //ONCE AN EVENT DATE IS PROPERLY IMPLEMENTED IN THE DATABASE, IT WILL BE USED TO SORT THE RESULTS OF THESE QUERIES (.Orderby(x=>x.DateTime))
+        {
+            List<Event> eventList = new List<Event>();
+            JArray TournamentList = new JArray();
+
+            Debug.WriteLine("LOCATION IS: " + location);
+            Debug.WriteLine("NAME IS: " + name);
+            if (location != null&&location!="")// if we know the location of event, get the events at the location
+            {
+                foreach (var i in db.Events.Where(p => p.Public && p.Location.Contains(location)).ToList())
+                {
+                    eventList.Add(i);
+                }
+            }
+
+
+            else// if the event field is null, or empty, return all events
+            {
+                foreach (var i in db.Events.Where(p => p.Public).ToList())
+                {
+                    eventList.Add(i);
+                }
+            }
+
+            //NOW THE SEARCH BY NAME
+            if (name != null && name != "")
+            {
+                var eventListTemp =new List<Event>(eventList);
+                foreach (var i in eventListTemp)
+                {
+                    if(!i.EventName.Contains(name))
+                    {
+                        eventList.Remove(i);
+                    }
+                }
+            }
+
+
+    
+            return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult TournamentList(int? id)
+        {
+            List<Tournament> TournamentList = new List<Tournament>();
+
+            foreach (var i in db.Tournaments.Where(x=>x.EventID==id).ToList())
+            {
+                TournamentList.Add(i);
+            }
+
+
+            return Json(JsonConvert.SerializeObject(TournamentList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+        }
+
+
+
         [HttpGet]
         public ActionResult NewTournament(int? id)
         {
@@ -251,7 +327,7 @@ namespace OBM.Controllers
                                     EventID = id ?? default,
                                     Description = (string)jsonTournament["tournament"]["description"],
                                     Game = (string)jsonTournament["tournament"]["game_name"],
-                                    ApiId = (int)jsonTournament["tournament"]["id"],
+                                    ApiId = (string)jsonTournament["tournament"]["id"],
                                     UrlString = (string)jsonTournament["tournament"]["url"],
                                     IsTeams = (bool)jsonTournament["tournament"]["teams"]
                                 };

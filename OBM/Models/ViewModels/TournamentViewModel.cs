@@ -43,7 +43,7 @@ namespace OBM.Models.ViewModels
         public string OrganizerName { get; set; }
         public string Description { get; set; }
         public string Game { get; set; }
-        public int? ApiId { get; set; }
+        public string ApiId { get; set; }
         public string UrlString { get; set; }
         public string IsTeams { get; set; }
         public bool Public { get; set; }
