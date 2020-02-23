@@ -8,7 +8,7 @@
 
 
 @if (ViewBag.Access == false)
-{ 
+{
     <div class="form-horizontal">
         <h4>Access Denied</h4>
     </div>
@@ -20,22 +20,18 @@ else if (Request.IsAuthenticated)
             <label for="search">Challong Tournament URL</label>
             <input class="form-control" id="search" name="search" type="text" placeholder="Enter URL...">
         </div>
-        <div class="form-group">
-            <label for="api_key">Challong Account Api Key</label>
-            <a class="font-weight-light" href="https://challonge.com/settings/developer">Can be found here</a>
-            <input class="form-control" id="api_key" name="api_key" type="text" placeholder="Enter Api Key...">
-        </div>
         <div class="form-check">
             <input class="button" type="submit" value="Search" />
         </div>
     </form>
 
     <b>@ViewBag.Success</b>
-    <a href="~/Events/Tournament/@ViewBag.Link" />
+    <a href=@ViewBag.Link1 />
     @ViewBag.Link2
+
 }
 else if (ViewBag.Access == false)
-{ 
+{
     <div class="form-horizontal">
         <h4>Access Denied</h4>
     </div>
