@@ -8,35 +8,34 @@
 
 @if (ViewBag.Access == true)
 {
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Tournaments</th>
-
-        </tr>
-        @for (int i = 0; i < 0; i++)
-        {
+    <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+    <div>
+        <table class="table table-bordered table-striped">
             <tr>
-                <!--add a row for each tournament, or put 3 columns and then a new row-->
-                <!--This may be ajax, which is cool but I need the action linkt to be here-->
+                <th>Tournaments</th>
 
             </tr>
-        }
-        <tr>
-            <td>@Html.ActionLink("Add Tournament", "NewTournament/"+Model.EventID)</td>
-        </tr>
+            @for (int i = 0; i < 0; i++)
+            {
+                <tr>
+                    <!--add a row for each tournament, or put 3 columns and then a new row-->
+                    <!--This may be ajax, which is cool but I need the action linkt to be here-->
 
-    </table>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Brackets</th>
-        </tr>
+                </tr>
+            }
+            <tr>
+                <td>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</td>
+            </tr>
 
-    </table>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Competitors</th>
-        </tr>
-    </table>
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
+
+        </table>
+        <div id="Competitors"></div>
+    </div>
     <p>
         @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
         @Html.ActionLink("Back to List", "Index")
@@ -49,3 +48,7 @@ else
     </div>
 }
 
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+}

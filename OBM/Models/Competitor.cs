@@ -1,4 +1,4 @@
-namespace OBM.Models
+﻿namespace OBM.Models
 {
     using System;
     using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace OBM.Models
         [StringLength(128)]
         public string CompetitorName { get; set; }
 
+        [Required]
         public int EventID { get; set; }
 
         [StringLength(1)]
