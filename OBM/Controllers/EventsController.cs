@@ -202,18 +202,23 @@ namespace OBM.Controllers
             {
                 ViewBag.Access = true;
                 var challongURL = Request.QueryString["search"];
-                var api_key = Request.QueryString["api_key"];
+                //var api_key = Request.QueryString["api_key"];
+                var api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(User.Identity.GetUserId()).ApiKey;
+                ViewBag.Found = api_key;
+
                 ViewBag.Success = "";
 
                 if (challongURL == string.Empty)
                 {
                     ViewBag.Success = "No url entered.";
                 }
-                else if (api_key == string.Empty)
+                else if (api_key == null || api_key == string.Empty)
                 {
-                    ViewBag.Success = "No api key entered.";
+                    ViewBag.Success = "No api key associated with your account. Don't have one? You can find yours ";
+                    ViewBag.Link1 = "https://challonge.com/settings/developer";
+                    ViewBag.Link2 = "here.";
                 }
-                else if (challongURL != null && api_key != string.Empty)
+                else if (challongURL != null && api_key != null)
                 {
                     if (!Uri.IsWellFormedUriString(challongURL, UriKind.Absolute))
                     {
@@ -258,7 +263,7 @@ namespace OBM.Controllers
                                     DB.Tournaments.Add(newTournament);
                                     DB.SaveChanges();
                                     ViewBag.Success = "Tournament was added ";
-                                    ViewBag.Link = newTournament.TournamentID;
+                                    ViewBag.Link1 = "/Events/Tournament/" + newTournament.TournamentID;
                                     ViewBag.Link2 = "here.";
                                     //Add link here to event page with tournament showing
                                 }
