@@ -1,13 +1,13 @@
 ﻿
 
 INSERT INTO [dbo].Event (EventName, OrganizerID, [Public])VALUES
-	('BigJims tournament', 'd93857cd-912d-435e-b530-474e15028fbc', 1);
+	('BigJims tournament', '162030eb-d860-437b-9fbf-e95e5603172e', 1);
 
 INSERT INTO [dbo].Event (EventName, OrganizerID, [Public])VALUES
-	('LittleJims tournament', 'd93857cd-912d-435e-b530-474e15028fbc', 1);
+	('LittleJims tournament', '162030eb-d860-437b-9fbf-e95e5603172e', 1);
 
 INSERT INTO [dbo].Event (EventName, OrganizerID, [Public],Location)VALUES
-	('HUGEJims tournament','d93857cd-912d-435e-b530-474e15028fbc', 1, 97333);
+	('HUGEJims tournament','162030eb-d860-437b-9fbf-e95e5603172e', 1, 97333);
 
 
 	  
@@ -23,5 +23,4 @@ INSERT INTO [dbo].[Tournament] (TournamentName, EventID, isTeams, UrlString)VALU
 	('MediumJims minecraft minetality', 12, 0, '123123123123');
 	INSERT INTO [dbo].[Tournament] (TournamentName, EventID, isTeams, UrlString)VALUES
 	('MediumJims minecraft minetality', 9, 0, '123123123123');
-﻿INSERT INTO [dbo].[Competitor] (CompetitorName, EventID)VALUES
-	('MediumJim', 1);
+

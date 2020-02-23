@@ -25,11 +25,10 @@
 
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
-
-                <li class="nav-item"><i>@Html.ActionLink("Home", "Index", "Home", null, new { @class = "nav-link" })</i></li>
-                <li class="nav-item"><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link" })</i></li>
-                <li class="nav-item"><i>@Html.ActionLink("Advanced Event Search", "ResponsiveEvents", "Events", null, new { @class = "nav-link" })</i></li>
-
+              
+                <li ><i>@Html.ActionLink("Home", "Index", "Home", null, new {@class = "nav-link", id="nav-item" })</i></li>
+                <li ><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", id="nav-item" })</i></li>
+                <li ><i>@Html.ActionLink("Advanced Event Search", "ResponsiveEvents", "Events", null, new { @class = "nav-link", id="nav-item" })</i></li>
 
 
 
@@ -40,7 +39,7 @@
             <!-- Search form -->
             @using (Html.BeginForm("EventSearch", "Events", FormMethod.Get))
             {
-                @Html.TextBox("search", null, new { @class = "form-control" })}
+                @Html.TextBox("search", null , new { @class = "form-control", placeholder="Search events:" })}
 
             @Html.Partial("_LoginPartial")
         </div>
