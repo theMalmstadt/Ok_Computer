@@ -374,6 +374,7 @@
     <Content Include="Views\Events\Index.cshtml" />
     <Content Include="Views\Events\Manage.cshtml" />
     <Content Include="Views\Events\ResponsiveEvents.cshtml" />
+    <Content Include="Views\Manage\ChangeApiKey.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
