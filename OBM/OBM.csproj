@@ -195,7 +195,6 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Match.cs" />
     <Compile Include="Models\Station.cs" />
-    <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\ViewModels\EventViewModel.cs" />
     <Compile Include="Models\ViewModels\TournamentViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

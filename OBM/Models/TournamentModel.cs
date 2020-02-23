@@ -25,8 +25,9 @@
 
         public String UrlString { get; set; }
 
-
-        public Boolean isTeams { get; set; }
+        [StringLength(256)]
+        public string Description { get; set; }
+        public Boolean IsTeams { get; set; }
 
 
     }

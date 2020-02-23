@@ -327,7 +327,7 @@ namespace OBM.Controllers
                                     EventID = id ?? default,
                                     Description = (string)jsonTournament["tournament"]["description"],
                                     Game = (string)jsonTournament["tournament"]["game_name"],
-                                    ApiId = (int)jsonTournament["tournament"]["id"],
+                                    ApiId = (string)jsonTournament["tournament"]["id"],
                                     UrlString = (string)jsonTournament["tournament"]["url"],
                                     IsTeams = (bool)jsonTournament["tournament"]["teams"]
                                 };
