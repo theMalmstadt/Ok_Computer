@@ -15,6 +15,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
+using System.Diagnostics;
+using System.IO;
 
 namespace OBM.Controllers
 {
@@ -188,22 +190,6 @@ namespace OBM.Controllers
             base.Dispose(disposing);
         }
 
-        public JsonResult CompetitorList(int? id)
-        {
-            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
-            foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
-            {
-                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
-            }
-            compStr += "</table>";
-            var data = new
-            {
-                compTable = compStr
-            };
-
-            return Json(data, JsonRequestBehavior.AllowGet);
-        }
-
         [HttpGet]
         public ActionResult NewTournament(int? id)
         {
@@ -327,6 +313,78 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
+        }
+
+        public void CompetitorUpdate(int? id)
+        {
+            //Temp
+            string api_key = "vPWOezVjTtWNndYKvUMilHKz7PbhNukG1A3byil2";
+            foreach (var i in db.Tournaments.Where(p => p.EventID == id).ToList())
+            {
+                string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
+                string data = SendRequest(uri);
+                var participantsObject = JToken.Parse(data);
+                foreach (var p in participantsObject)
+                {
+                    Boolean InDB = false;
+                    var participant = (string)p["participant"]["name"];
+                    foreach (var c in db.Competitors.Where(x => x.EventID == id))
+                    {
+                        if (c.CompetitorName == participant)
+                        {
+                            InDB = true;
+                            break;
+                        }
+                    }
+                    if (InDB == false)
+                    {
+                        Competitor newCompetitor = new Competitor
+                        {
+                            CompetitorName = participant,
+                            EventID = id ?? default,
+                            BusyState = null
+                        };
+                        db.Competitors.Add(newCompetitor);
+                        db.SaveChanges();
+                    }
+
+                }
+            }
+        }
+
+        private string SendRequest(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.Accept = "application/json";
+
+            string jsonString = null;
+            // TODO: You should handle exceptions here
+            using (WebResponse response = request.GetResponse())
+            {
+                Stream stream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(stream);
+                jsonString = reader.ReadToEnd();
+                reader.Close();
+                stream.Close();
+            }
+            return jsonString;
+        }
+
+        public JsonResult CompetitorList(int? id)
+        {
+            CompetitorUpdate(id);
+            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
+            foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
+            {
+                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
+            }
+            compStr += "</table>";
+            var data = new
+            {
+                compTable = compStr
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }
