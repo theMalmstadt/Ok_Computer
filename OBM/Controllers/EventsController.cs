@@ -322,39 +322,61 @@ namespace OBM.Controllers
 
         public void CompetitorUpdate(int? id)
         {
-            //Temp
-            string api_key = "vPWOezVjTtWNndYKvUMilHKz7PbhNukG1A3byil2";
+            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(User.Identity.GetUserId()).ApiKey;
             foreach (var i in db.Tournaments.Where(p => p.EventID == id).ToList())
             {
-                string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
-                string data = SendRequest(uri);
-                var participantsObject = JToken.Parse(data);
-                foreach (var p in participantsObject)
+                string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + ".json?api_key=" + api_key;
+                string startData = SendRequest(uri);
+                var startObject = JToken.Parse(startData);
+                if(startObject["started_at"] == null)
                 {
-                    Boolean InDB = false;
-                    var participant = (string)p["participant"]["name"];
-                    foreach (var c in db.Competitors.Where(x => x.EventID == id))
+                    uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
+                    string participantData = SendRequest(uri);
+                    var participantsObject = JToken.Parse(participantData);
+                    foreach (var p in participantsObject)
                     {
-                        if (c.CompetitorName == participant)
+                        Boolean InDB = false;
+                        var participant = (string)p["participant"]["name"];
+                        foreach (var c in db.Competitors.Where(x => x.EventID == id))
                         {
-                            InDB = true;
-                            break;
+                            if (c.CompetitorName == participant)
+                            {
+                                InDB = true;
+                                break;
+                            }
                         }
-                    }
-                    if (InDB == false)
-                    {
-                        Competitor newCompetitor = new Competitor
+                        if (InDB == false)
                         {
-                            CompetitorName = participant,
-                            EventID = id ?? default,
-                            BusyState = null
-                        };
-                        db.Competitors.Add(newCompetitor);
-                        db.SaveChanges();
-                    }
+                            Competitor newCompetitor = new Competitor
+                            {
+                                CompetitorName = participant,
+                                EventID = id ?? default,
+                                BusyState = null
+                            };
+                            db.Competitors.Add(newCompetitor);
+                            db.SaveChanges();
+                        }
 
-                }
+                    }
+                }   
             }
+        }
+
+        public JsonResult CompetitorList(int? id)
+        {
+            CompetitorUpdate(id);
+            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
+            foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
+            {
+                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
+            }
+            compStr += "</table>";
+            var data = new
+            {
+                compTable = compStr
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
 
         private string SendRequest(string uri)
@@ -373,23 +395,6 @@ namespace OBM.Controllers
                 stream.Close();
             }
             return jsonString;
-        }
-
-        public JsonResult CompetitorList(int? id)
-        {
-            CompetitorUpdate(id);
-            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
-            foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
-            {
-                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
-            }
-            compStr += "</table>";
-            var data = new
-            {
-                compTable = compStr
-            };
-
-            return Json(data, JsonRequestBehavior.AllowGet);
         }
     }
 }
