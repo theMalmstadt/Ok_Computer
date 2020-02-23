@@ -1,5 +1,5 @@
 ﻿nav {
-    background-color: #2a363b;
+    background-color: #444b53;
 }
 
 .nav-logo {
@@ -12,11 +12,20 @@
     font-size: 200%;
 }
 
+.nav-link:hover, nav:hover {
+    color: #4ac959;
+}
+
 #registerLink, #loginLink, #logoutLink, #accountLink {
     color: #E7E8E9;
     font-size: 100%;
     padding: 0 1em;
     text-align: center;
+}
+
+#registerLink:hover, #loginLink:hover, #logoutLink:hover, #accountLink:hover, #nav-item:hover {
+    color: #4ac959 !important;
+    text-decoration: none;
 }
 
 #loginLink, #logoutLink {
@@ -38,7 +47,13 @@ body {
 }
 
 .team-logo {
-    width: 75%;
+    width: 150px;
+    float: none;
+}
+
+.cp {
+    font-size: 13px;
+    float: right;
 }
 
 /* Override the default bootstrap behavior where horizontal description lists 
@@ -49,11 +64,6 @@ body {
 }
 
 /* Set width on the form input elements since they're 100% wide by default */
-input,
-select,
-textarea {
-    max-width: 280px;
-}
 
 .center-image {
     display: block;

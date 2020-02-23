@@ -1,0 +1,44 @@
+﻿
+@{
+    ViewBag.Title = "GetTournament";
+}
+
+<h2>Get Tournament From Challong</h2>
+<p>@ViewBag.response</p>
+
+
+@if (ViewBag.Access == false)
+{
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+}
+else if (Request.IsAuthenticated)
+{
+    <form method="get">
+        <div class="form-group">
+            <label for="search">Challonge Tournament URL</label>
+            <input class="form-control" id="search" name="search" type="text" placeholder="Enter URL...">
+        </div>
+        <div class="form-check">
+            <input class="button" type="submit" value="Add" />
+        </div>
+    </form>
+
+    <b>@ViewBag.Success</b>
+    <a href=@ViewBag.Link1 />
+    @ViewBag.Link2
+
+}
+else if (ViewBag.Access == false)
+{
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+}
+else
+{
+    <div class="form-horizontal">
+        <h4>Please Log In</h4>
+    </div>
+}

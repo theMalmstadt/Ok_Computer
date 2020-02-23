@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿
 
 INSERT INTO [dbo].Event (EventName, OrganizerID, [Public])VALUES
@@ -23,3 +24,7 @@ INSERT INTO [dbo].[Tournament] (TournamentName, EventID, isTeams, UrlString)VALU
 	('MediumJims minecraft minetality', 12, 0, '123123123123');
 	INSERT INTO [dbo].[Tournament] (TournamentName, EventID, isTeams, UrlString)VALUES
 	('MediumJims minecraft minetality', 9, 0, '123123123123');
+=======
+﻿INSERT INTO [dbo].[Competitor] (CompetitorName, EventID)VALUES
+	('MediumJim', 1);
+>>>>>>> 805ea19fb8330a2720be45d3d036ecfed0f198be
