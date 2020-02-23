@@ -65,9 +65,12 @@
 
             </tr>
         }
-        <tr>
-            <td>@Html.ActionLink("Add Tournament", "NewTournament/"+Model.EventID)</td>
-        </tr>
+        @if(ViewBag.Access == true)
+        {
+            <tr>
+                <td>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</td>
+            </tr>
+        }
 
     </table>
     <table class="table table-bordered table-striped">
