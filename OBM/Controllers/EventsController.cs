@@ -190,7 +190,7 @@ namespace OBM.Controllers
         public JsonResult CompetitorList(int? id)
         {
             string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
-                foreach(var i in db.Competitors.Where(p => p.EventID == id).ToList())
+                foreach(var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
                 compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
             }
