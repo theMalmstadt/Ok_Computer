@@ -19,14 +19,17 @@ namespace OBM.Controllers
             if(statusCode > 399 && statusCode < 500)
             {
                 ViewBag.Message = "Could not find this page.";
+                ViewBag.Image = "swan.gif";
             }
             else if (statusCode > 499 && statusCode < 600)
             {
                 ViewBag.Message = "Server made a mistake.";
+                ViewBag.Image = "koi.gif";
             }
             else
             {
                 ViewBag.Message = "This is an unexpeced error.";
+                ViewBag.Image = "space.gif";
             }
 
             Response.StatusCode = statusCode;
