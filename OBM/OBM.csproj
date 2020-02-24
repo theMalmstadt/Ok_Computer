@@ -202,10 +202,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\down.sql" />
-    <Content Include="App_Data\OBMDB.mdf" />
-    <Content Include="App_Data\OBMDB_log.ldf">
-      <DependentUpon>OBMDB.mdf</DependentUpon>
-    </Content>
     <Content Include="App_Data\seed.sql" />
     <Content Include="App_Data\up.sql" />
     <Content Include="Content\bootstrap-grid.css" />
@@ -247,6 +243,7 @@
     <Content Include="Content\bootstrap-reboot.css.map" />
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
+    <None Include="Properties\PublishProfiles\OBM-zk - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\okbrackets-dev - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\okbracketsdev - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
