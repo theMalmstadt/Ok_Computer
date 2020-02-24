@@ -9,7 +9,7 @@
     });
 
     $('#next_page').click(function () {
-        if (current_page <= number_of_pages)
+        if (current_page < number_of_pages)
             current_page = current_page + 1;
     });
     $('#previous_page').click(function () {

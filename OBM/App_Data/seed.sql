@@ -10,6 +10,15 @@ INSERT INTO [dbo].Event (EventName, OrganizerID, [Public],Location)VALUES
 	('HUGEJims tournament','162030eb-d860-437b-9fbf-e95e5603172e', 1, 97333);
 
 
+INSERT INTO [dbo].Event (EventName, OrganizerID, [Public])VALUES
+	('BigJims tournament', '162030eb-d860-437b-9fbf-e95e5603172e', 1);
+
+INSERT INTO [dbo].Event (EventName, OrganizerID, [Public])VALUES
+	('LittleJims tournament', '162030eb-d860-437b-9fbf-e95e5603172e', 1);
+
+INSERT INTO [dbo].Event (EventName, OrganizerID, [Public],Location)VALUES
+	('HUGEJims tournament','162030eb-d860-437b-9fbf-e95e5603172e', 1, 97333);
+
 	  
 INSERT INTO [dbo].[Competitor] (CompetitorName, EventID)VALUES
 	('MediumJim', 7);

@@ -204,8 +204,9 @@ namespace OBM.Controllers
             base.Dispose(disposing);
         }
 
-        public ActionResult ResponsiveEvents()
+        public ActionResult ResponsiveEvents(String search)
         {
+            ViewBag.search = search;
             return View();
         }
 
@@ -214,14 +215,9 @@ namespace OBM.Controllers
         {
             Debug.WriteLine(location, name);
 
-            if(location==null)
-            {
-                location = "";
-            }
-            if(name==null)
-            {
-                name = "";
-            }
+         
+            
+           
 
 
             List<Event> eventList = new List<Event>();
