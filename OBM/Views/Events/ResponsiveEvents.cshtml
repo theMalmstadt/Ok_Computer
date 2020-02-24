@@ -18,7 +18,7 @@
                     <span class="input-group-text">Search by Event Name</span>
 
                 </div>
-                <textarea class="form-control" id="name_search" aria-label="With textarea" value=""></textarea>
+                <textarea class="form-control" id="name_search" aria-label="With textarea">@ViewBag.search</textarea>
             </div>
         </div>
 
@@ -42,10 +42,10 @@
         <div class="row">
             
                 <div class="col-md-2">
-                    <li class="page-item" id="previous_page"><a class="page-link">Previous</a></li>
+                    <div class="row" id="previous_page"><a class="page-link">Previous</a></div>
                 </div>
                 <div class="col-md-2">
-                    <li class="page-item"id="next_page"><a class="page-link">Next</a></li>
+                    <div class="page-item"id="next_page"><a class="page-link">Next</a></div>
                  </div>
            
         </div>
