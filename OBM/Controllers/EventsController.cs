@@ -212,6 +212,18 @@ namespace OBM.Controllers
         [HttpGet]
         public JsonResult EventList(String location, String name)   //ONCE AN EVENT DATE IS PROPERLY IMPLEMENTED IN THE DATABASE, IT WILL BE USED TO SORT THE RESULTS OF THESE QUERIES (.Orderby(x=>x.DateTime))
         {
+            Debug.WriteLine(location, name);
+
+            if(location==null)
+            {
+                location = "";
+            }
+            if(name==null)
+            {
+                name = "";
+            }
+
+
             List<Event> eventList = new List<Event>();
             JArray TournamentList = new JArray();
 
@@ -327,7 +339,7 @@ namespace OBM.Controllers
                                     EventID = id ?? default,
                                     Description = (string)jsonTournament["tournament"]["description"],
                                     Game = (string)jsonTournament["tournament"]["game_name"],
-                                    ApiId = (string)jsonTournament["tournament"]["id"],
+                                    ApiId = (int)jsonTournament["tournament"]["id"],
                                     UrlString = (string)jsonTournament["tournament"]["url"],
                                     IsTeams = (bool)jsonTournament["tournament"]["teams"]
                                 };
