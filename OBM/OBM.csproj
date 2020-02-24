@@ -188,7 +188,6 @@
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\Competitor.cs" />
-    <Compile Include="Models\Model1.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="DAL\IdentityModels.cs" />
     <Compile Include="DAL\EventContext.cs" />
