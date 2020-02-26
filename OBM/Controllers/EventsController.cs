@@ -17,7 +17,6 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
-using System.Diagnostics;
 using System.IO;
 
 namespace OBM.Controllers
@@ -410,7 +409,7 @@ namespace OBM.Controllers
                 string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + ".json?api_key=" + api_key;
                 string startData = SendRequest(uri);
                 var startObject = JToken.Parse(startData);
-                if(startObject["started_at"] == null)
+                if(i.IsStarted == false)
                 {
                     uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
                     string participantData = SendRequest(uri);
@@ -440,6 +439,11 @@ namespace OBM.Controllers
                         }
 
                     }
+                    if (startObject["started_at"] != null)
+                    {
+                        i.IsStarted = true;
+                        MatchSetup(i.TournamentID);
+                    }
                 }   
             }
         }
@@ -459,6 +463,11 @@ namespace OBM.Controllers
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public void MatchSetup(int? id)
+        {
+
         }
 
         private string SendRequest(string uri)
