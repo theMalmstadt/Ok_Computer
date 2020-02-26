@@ -332,7 +332,7 @@ namespace OBM.Controllers
                                 Tournament newTournament = new Tournament
                                 {
                                     TournamentName = (string)jsonTournament["tournament"]["name"],
-                                    EventID = id ?? default,
+                                    EventID = id ?? default(int),
                                     Description = (string)jsonTournament["tournament"]["description"],
                                     Game = (string)jsonTournament["tournament"]["game_name"],
                                     ApiId = (int)jsonTournament["tournament"]["id"],
@@ -432,7 +432,7 @@ namespace OBM.Controllers
                             Competitor newCompetitor = new Competitor
                             {
                                 CompetitorName = participant,
-                                EventID = id ?? default,
+                                EventID = id ?? default(int),
                                 BusyState = null
                             };
                             db.Competitors.Add(newCompetitor);
