@@ -10,7 +10,7 @@ namespace OBM.DAL
     public partial class EventContext : DbContext
     {
         public EventContext()
-            : base("name=OBMDB_Azure_Dev")
+            : base("name=OBMDB_Azure")
         {
         }
 
