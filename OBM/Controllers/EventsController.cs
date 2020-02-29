@@ -257,7 +257,9 @@ namespace OBM.Controllers
 
 
     
-            return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+            return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented, new JsonSerializerSettings()
+            {
+            }), JsonRequestBehavior.AllowGet);
         }
         public JsonResult TournamentList(int? id)
         {

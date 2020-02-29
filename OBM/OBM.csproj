@@ -182,10 +182,12 @@
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TournamentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetUser.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\Competitor.cs" />
     <Compile Include="Models\Event.cs" />
@@ -384,6 +386,9 @@
     <Content Include="Views\Events\NewTournament.cshtml" />
     <Content Include="Views\Events\Tournament.cshtml" />
     <Content Include="Views\Manage\ChangeApiKey.cshtml" />
+    <Content Include="Views\Tournaments\Details.cshtml" />
+    <Content Include="Views\Tournaments\Index.cshtml" />
+    <Content Include="Views\Tournaments\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
