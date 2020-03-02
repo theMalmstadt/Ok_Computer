@@ -18,6 +18,7 @@ using Microsoft.Owin.Security;
 using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.IO;
+using static MoreLinq.Extensions.MaxByExtension;
 
 namespace OBM.Controllers
 {
@@ -450,16 +451,71 @@ namespace OBM.Controllers
             }
         }
 
+        public void MatchSetup(int? id, JToken participantsObject)
+        {
+            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
+            string uri = "https://api.challonge.com/v1/tournaments/" + db.Tournaments.Find(id).ApiId + "/matches.json?api_key=" + api_key;
+            string matchData = SendRequest(uri);
+            var matchObject = JToken.Parse(matchData);
+            foreach (var m in matchObject)
+            {
+                Match newMatch = new Match
+                {
+                    TournamentID = id ?? default(int),
+                    Identifier = (string)m["match"]["identifier"],
+                    Round = (int?)m["match"]["round"],
+                    ApiID = (int)m["match"]["id"],
+                    Competitor1ID = null,
+                    Competitor2ID = null,
+                    PrereqMatch1ID = null,
+                    PrereqMatch2ID = null
+                };
+                if (m["match"]["player1_id"].ToString() != "")
+                {
+                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
+                    newMatch.Competitor1ID = db.Competitors.Where(x => x.CompetitorName == temp).First().CompetitorID;
+                }
+                if (m["match"]["player2_id"].ToString() != "")
+                {
+                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
+                    newMatch.Competitor2ID = db.Competitors.Where(x => x.CompetitorName == temp).First().CompetitorID;
+                }
+                if (m["match"]["player1_prereq_match_id"].ToString() != "")
+                {
+                    int prereqID = (int)m["match"]["player1_prereq_match_id"];
+                    newMatch.PrereqMatch1ID = db.Matches.Where(x => x.TournamentID == id).Where(x => x.ApiID == prereqID).First().MatchID;
+                }
+                if (m["match"]["player2_prereq_match_id"].ToString() != "")
+                {
+                    int prereqID = (int)m["match"]["player2_prereq_match_id"];
+                    newMatch.PrereqMatch2ID = db.Matches.Where(x => x.TournamentID == id).Where(x => x.ApiID == prereqID).First().MatchID;
+                }
+                db.Matches.Add(newMatch);
+                db.SaveChanges();
+            }
+        }
+
         public JsonResult CompetitorList(int? id)
         {
             CompetitorUpdate(id);
             string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Brackets</th></tr>";
             foreach(var t in db.Tournaments.Where(x => x.EventID == id).ToList())
             {
-                compStr += "<tr><td>" + t.TournamentName + "</td></tr>";
+                compStr += "<tr><th>" + t.TournamentName + "</th></tr>";
+                //For Later
+                //int? GFinal = db.Matches.MaxBy(x => x.Round).First().Round;
                 foreach(var m in db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList())
                 {
-                    compStr += "<tr><th>" + m.Identifier + " " + m.Round + " " + m.Competitor1ID + " " + m.Competitor2ID + "</th></tr>";
+                    compStr += "<tr><td>" + m.Identifier + " | " + m.Round + " | ";
+                    if (m.Competitor1ID != null)
+                        compStr += db.Competitors.Find(m.Competitor1ID).CompetitorName + " | ";
+                    else
+                        compStr += db.Matches.Find(m.PrereqMatch1ID).Identifier + " | ";
+                    if (m.Competitor2ID != null)
+                        compStr += db.Competitors.Find(m.Competitor2ID).CompetitorName;
+                    else
+                        compStr += db.Matches.Find(m.PrereqMatch2ID).Identifier;
+                    compStr += "</td></tr>";
                 }
             }
             compStr += "</table>";
@@ -493,48 +549,6 @@ namespace OBM.Controllers
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
-        }
-
-        public void MatchSetup(int? id, JToken participantsObject)
-        {
-            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
-            string uri = "https://api.challonge.com/v1/tournaments/" + db.Tournaments.Find(id).ApiId + "/matches.json?api_key=" + api_key;
-            string matchData = SendRequest(uri);
-            var matchObject = JToken.Parse(matchData);
-            foreach(var m in matchObject)
-            {
-                Match newMatch = new Match
-                {
-                    TournamentID = id ?? default(int),
-                    Identifier = (string)m["match"]["identifier"],
-                    Round = (int?)m["match"]["round"],
-                    ApiID = (int)m["match"]["id"],
-                    Competitor1ID = null,
-                    Competitor2ID = null,
-                    PrereqMatch1ID = null,
-                    PrereqMatch2ID = null
-                };
-                if (m["match"]["player1_id"].ToString() != "")
-                {
-                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
-                    newMatch.Competitor1ID = db.Competitors.Where(x => x.CompetitorName == temp).First().CompetitorID;
-                }
-                if (m["match"]["player2_id"].ToString() != "")
-                {
-                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
-                    newMatch.Competitor2ID = db.Competitors.Where(x => x.CompetitorName == temp).First().CompetitorID;
-                }
-                if (m["match"]["player1_prereq_match_id"].ToString() != "")
-                {
-                    //STUFF
-                }
-                if (m["match"]["player2_prereq_match_id"].ToString() != "")
-                {
-                    //STUFF
-                }
-                db.Matches.Add(newMatch);
-                db.SaveChanges();
-            }
         }
 
         private string SendRequest(string uri)
