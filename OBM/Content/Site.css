@@ -1,4 +1,31 @@
-﻿nav {
+﻿.titleok {
+    text-transform: uppercase;
+}
+.titleok, .wordsok {
+    display: inline-block;
+    line-height: 1em;
+    font-weight: 100;
+    font-size: 7em;
+}
+
+.wordsbm {
+    font-size: 3em;
+}
+
+.titledesc {
+    font-weight: 200;
+    font-size: 2em;
+}
+
+.eventdata {
+    color: #E7E8E9 !important;
+}
+
+.paginate_button {
+    background: #4ac959 !important;
+}
+
+nav {
     background-color: #444b53;
 }
 
@@ -23,7 +50,7 @@
     text-align: center;
 }
 
-#registerLink:hover, #loginLink:hover, #logoutLink:hover, #accountLink:hover, #nav-item:hover {
+#registerLink:hover, #loginLink:hover, #logoutLink:hover, #accountLink:hover, #nav-item:hover, .eventdata:hover {
     color: #4ac959 !important;
     text-decoration: none;
 }
@@ -37,6 +64,8 @@ body {
     padding-bottom: 20px;
     background-color: #E7E8E9;
     color: #58585A;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* Set padding to keep content from hitting the edges */
