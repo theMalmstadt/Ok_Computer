@@ -100,7 +100,8 @@ CREATE TABLE [dbo].[Tournament](
     [Game] NVARCHAR(256) NULL,
     [ApiId] INT NULL,
     [UrlString] NVARCHAR(256) NOT NULL,
-    [IsTeams] BIT NOT NULL
+    [IsTeams] BIT NOT NULL,
+    [IsStarted] BIT NOT NULL,
     CONSTRAINT [FK_dbo.Tournament_dbo.Event_EventID] Foreign KEY ([EventID]) REFERENCES [dbo].[Event] ([EventID])
 );
 GO

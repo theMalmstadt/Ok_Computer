@@ -336,7 +336,8 @@ namespace OBM.Controllers
                                     Game = (string)jsonTournament["tournament"]["game_name"],
                                     ApiId = (int)jsonTournament["tournament"]["id"],
                                     UrlString = (string)jsonTournament["tournament"]["url"],
-                                    IsTeams = (bool)jsonTournament["tournament"]["teams"]
+                                    IsTeams = (bool)jsonTournament["tournament"]["teams"],
+                                    IsStarted = false
                                 };
 
                                 if (ModelState.IsValid)
@@ -403,17 +404,14 @@ namespace OBM.Controllers
 
         public void CompetitorUpdate(int? id)
         {
-            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(User.Identity.GetUserId()).ApiKey;
+            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
             foreach (var i in db.Tournaments.Where(p => p.EventID == id).ToList())
             {
-                string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + ".json?api_key=" + api_key;
-                string startData = SendRequest(uri);
-                var startObject = JToken.Parse(startData);
                 if(i.IsStarted == false)
                 {
-                    uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
-                    string participantData = SendRequest(uri);
-                    var participantsObject = JToken.Parse(participantData);
+                    string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
+                    string participantsData = SendRequest(uri);
+                    var participantsObject = JToken.Parse(participantsData);
                     foreach (var p in participantsObject)
                     {
                         Boolean InDB = false;
@@ -435,14 +433,18 @@ namespace OBM.Controllers
                                 BusyState = null
                             };
                             db.Competitors.Add(newCompetitor);
-                            db.SaveChanges();
+                            db.SaveChanges();//Move to save only once?
                         }
 
                     }
-                    if (startObject["started_at"] != null)
+                    uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + ".json?api_key=" + api_key;
+                    string startData = SendRequest(uri);
+                    var startObject = JToken.Parse(startData);
+                    if (startObject["tournament"]["started_at"].ToString() != "")
                     {
+                        MatchSetup(i.TournamentID, participantsObject);
                         i.IsStarted = true;
-                        MatchSetup(i.TournamentID);
+                        db.SaveChanges();
                     }
                 }   
             }
@@ -451,7 +453,35 @@ namespace OBM.Controllers
         public JsonResult CompetitorList(int? id)
         {
             CompetitorUpdate(id);
-            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
+            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Brackets</th></tr>";
+            foreach(var t in db.Tournaments.Where(x => x.EventID == id).ToList())
+            {
+                compStr += "<tr><td>" + t.TournamentName + "</td></tr>";
+                foreach(var m in db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList())
+                {
+                    compStr += "<tr><th>" + m.Identifier + " " + m.Round + " " + m.Competitor1ID + " " + m.Competitor2ID + "</th></tr>";
+                }
+            }
+            compStr += "</table>";
+
+
+            compStr += "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
+            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
+            foreach (var t in db.Tournaments.Where(x => x.EventID == id))
+            {
+                compStr += "<tr><td>" + t.ApiId + " is";
+                if (t.IsStarted == true)
+                    compStr += " started ";
+                else
+                    compStr += " not started ";
+                string uri = "https://api.challonge.com/v1/tournaments/" + t.ApiId + ".json?api_key=" + api_key;
+                string startData = SendRequest(uri);
+                var startObject = JToken.Parse(startData);
+                compStr += startObject["tournament"]["started_at"].ToString() + "</td></tr>";
+                uri = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
+                string participantsData = SendRequest(uri);
+                var participantsObject = JToken.Parse(participantsData);
+            }
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
                 compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
@@ -465,9 +495,46 @@ namespace OBM.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
-        public void MatchSetup(int? id)
+        public void MatchSetup(int? id, JToken participantsObject)
         {
-
+            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
+            string uri = "https://api.challonge.com/v1/tournaments/" + db.Tournaments.Find(id).ApiId + "/matches.json?api_key=" + api_key;
+            string matchData = SendRequest(uri);
+            var matchObject = JToken.Parse(matchData);
+            foreach(var m in matchObject)
+            {
+                Match newMatch = new Match
+                {
+                    TournamentID = id ?? default(int),
+                    Identifier = (string)m["match"]["identifier"],
+                    Round = (int?)m["match"]["round"],
+                    ApiID = (int)m["match"]["id"],
+                    Competitor1ID = null,
+                    Competitor2ID = null,
+                    PrereqMatch1ID = null,
+                    PrereqMatch2ID = null
+                };
+                if (m["match"]["player1_id"].ToString() != "")
+                {
+                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
+                    newMatch.Competitor1ID = db.Competitors.Where(x => x.CompetitorName == temp).First().CompetitorID;
+                }
+                if (m["match"]["player2_id"].ToString() != "")
+                {
+                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
+                    newMatch.Competitor2ID = db.Competitors.Where(x => x.CompetitorName == temp).First().CompetitorID;
+                }
+                if (m["match"]["player1_prereq_match_id"].ToString() != "")
+                {
+                    //STUFF
+                }
+                if (m["match"]["player2_prereq_match_id"].ToString() != "")
+                {
+                    //STUFF
+                }
+                db.Matches.Add(newMatch);
+                db.SaveChanges();
+            }
         }
 
         private string SendRequest(string uri)
