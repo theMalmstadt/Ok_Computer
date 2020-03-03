@@ -25,7 +25,7 @@ namespace OBM
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/datatables.min.css",
                       "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+                      "~/Content/Site.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/HomePage").Include(
                 "~/Scripts/datatables.min.js",

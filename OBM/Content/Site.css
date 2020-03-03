@@ -8,6 +8,27 @@
     font-size: 7em;
 }
 
+.custom-select option:hover {
+    background-color: #4ac959 !important;
+    color: #4ac959 !important;
+    cursor: pointer !important;
+}
+
+label input:focus, label .custom-select:focus {
+    border-color: #4ac959 !important;
+    box-shadow: 0 0 2px 1px #4ac959 !important;
+}
+
+option:checked, .page-item.active .page-link {
+    background-color: #4ac959 !important;
+    cursor: pointer !important;
+    border-color: #4ac959 !important;
+}
+
+.custom-select .custom-select.active {
+    border-color: #4ac959 !important;
+}
+
 .wordsbm {
     font-size: 3em;
 }
