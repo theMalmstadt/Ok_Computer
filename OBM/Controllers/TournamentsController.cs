@@ -41,18 +41,18 @@ namespace OBM.Controllers
 
         // GET: Tournaments/Create
         public ActionResult Create()
-        {
+        {           //FETCH NEEDED USER DATA
+
             var userid = HttpContext.User.Identity.GetUserId();
             var UserEventsList = db.Events.Where(x=>x.OrganizerID== userid);
-            
-            //Debug.WriteLine(UserEventsList);
-
-            foreach(var i in UserEventsList)
-            {
-                Debug.WriteLine(i);
-            }
-            
             ViewBag.UserEventsList = UserEventsList;
+
+            var userApiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+            Debug.WriteLine(userApiKey);
+            ViewBag.ApiKey = userApiKey;
+            
+
+
             return View();
         }
 
