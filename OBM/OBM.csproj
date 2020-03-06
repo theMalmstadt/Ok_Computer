@@ -237,7 +237,6 @@
     <Content Include="Scripts\esm\popper.js" />
     <Content Include="Scripts\esm\popper.min.js" />
     <Content Include="Scripts\EventDisplay.js" />
-    <Content Include="Scripts\getTournaments.js" />=======
     <Content Include="Scripts\HomePage.js" />
     <Content Include="Scripts\index.js.flow" />
     <Content Include="Scripts\esm\popper.min.js.map" />
