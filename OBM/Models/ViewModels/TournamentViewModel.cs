@@ -32,6 +32,7 @@ namespace OBM.Models.ViewModels
             ApiId = tour.ApiId;
             UrlString = tour.UrlString;
             IsTeams = tour.IsTeams ? "Yes" : "No";
+            IsStarted = tour.IsStarted ? "Yes" : "No";
             Public = motherEvent.Public;
         }
 
@@ -46,6 +47,9 @@ namespace OBM.Models.ViewModels
         public int? ApiId { get; set; }
         public string UrlString { get; set; }
         public string IsTeams { get; set; }
+        
+        public string IsStarted { get; set; }
+
         public bool Public { get; set; }
     }
 }
