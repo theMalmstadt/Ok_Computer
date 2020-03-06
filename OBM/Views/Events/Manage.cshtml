@@ -10,30 +10,28 @@
 {
     <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
     <div>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Tournaments</th>
-
-            </tr>
-            @for (int i = 0; i < 0; i++)
-            {
-                <tr>
-                    <!--add a row for each tournament, or put 3 columns and then a new row-->
-                    <!--This may be ajax, which is cool but I need the action linkt to be here-->
-
-                </tr>
-            }
-            <tr>
-                <td>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</td>
-            </tr>
-
-        </table>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Brackets</th>
-            </tr>
-
-        </table>
+        @*<h4>Brackets</h4>
+        <h5>Bracket Name</h5>
+        <div>
+            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
+                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
+                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
+            </table>
+            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
+                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
+                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
+            </table>
+            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
+                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
+                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
+            </table>
+            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
+                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
+                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
+            </table>
+        </div>*@
+        
+        <div id="Matches"></div>
         <div id="Competitors"></div>
     </div>
     <p>
@@ -49,6 +47,7 @@ else
 }
 
 @section scripts {
+    <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
     <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
     <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 }

@@ -71,3 +71,11 @@ body {
     margin-right: auto;
     width: 50%;
 }
+
+table.table-bordered  > tr > th {
+    border: 1px solid darkgrey;
+}
+
+table.table-bordered > tbody > tr > td {
+    border: 1px solid darkgrey;
+}

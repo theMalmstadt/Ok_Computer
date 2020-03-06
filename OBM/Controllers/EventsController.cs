@@ -19,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.IO;
 using static MoreLinq.Extensions.MaxByExtension;
+using static MoreLinq.Extensions.MinByExtension;
 
 namespace OBM.Controllers
 {
@@ -498,46 +499,30 @@ namespace OBM.Controllers
         public JsonResult CompetitorList(int? id)
         {
             CompetitorUpdate(id);
-            string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Brackets</th></tr>";
-            foreach(var t in db.Tournaments.Where(x => x.EventID == id).ToList())
-            {
-                compStr += "<tr><th>" + t.TournamentName + "</th></tr>";
-                //For Later
-                //int? GFinal = db.Matches.MaxBy(x => x.Round).First().Round;
-                foreach(var m in db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList())
-                {
-                    compStr += "<tr><td>" + m.Identifier + " | " + m.Round + " | ";
-                    if (m.Competitor1ID != null)
-                        compStr += db.Competitors.Find(m.Competitor1ID).CompetitorName + " | ";
-                    else
-                        compStr += db.Matches.Find(m.PrereqMatch1ID).Identifier + " | ";
-                    if (m.Competitor2ID != null)
-                        compStr += db.Competitors.Find(m.Competitor2ID).CompetitorName;
-                    else
-                        compStr += db.Matches.Find(m.PrereqMatch2ID).Identifier;
-                    compStr += "</td></tr>";
-                }
-            }
-            compStr += "</table>";
+            //string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Brackets</th></tr>";
+            //foreach(var t in db.Tournaments.Where(x => x.EventID == id).ToList())
+            //{
+            //    compStr += "<tr><th>" + t.TournamentName + "</th></tr>";
+            //    //For Later
+            //    //int? GFinal = db.Matches.MaxBy(x => x.Round).First().Round;
+            //    foreach(var m in db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList())
+            //    {
+            //        compStr += "<tr><td>" + m.Identifier + " | " + m.Round + " | ";
+            //        if (m.Competitor1ID != null)
+            //            compStr += db.Competitors.Find(m.Competitor1ID).CompetitorName + " | ";
+            //        else
+            //            compStr += db.Matches.Find(m.PrereqMatch1ID).Identifier + " | ";
+            //        if (m.Competitor2ID != null)
+            //            compStr += db.Competitors.Find(m.Competitor2ID).CompetitorName;
+            //        else
+            //            compStr += db.Matches.Find(m.PrereqMatch2ID).Identifier;
+            //        compStr += "</td></tr>";
+            //    }
+            //}
+            //compStr += "</table>";
 
 
-            compStr += "<table class=\"table table-bordered table - striped\"><tr><th>Competitors</th></tr>";
-            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
-            foreach (var t in db.Tournaments.Where(x => x.EventID == id))
-            {
-                compStr += "<tr><td>" + t.ApiId + " is";
-                if (t.IsStarted == true)
-                    compStr += " started ";
-                else
-                    compStr += " not started ";
-                string uri = "https://api.challonge.com/v1/tournaments/" + t.ApiId + ".json?api_key=" + api_key;
-                string startData = SendRequest(uri);
-                var startObject = JToken.Parse(startData);
-                compStr += startObject["tournament"]["started_at"].ToString() + "</td></tr>";
-                uri = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
-                string participantsData = SendRequest(uri);
-                var participantsObject = JToken.Parse(participantsData);
-            }
+            string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
                 compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
@@ -546,6 +531,99 @@ namespace OBM.Controllers
             var data = new
             {
                 compTable = compStr
+            };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult MatchList(int? id)
+        {
+            string matchStr = "<h4>Brackets</h4>";
+
+            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList())
+            {
+                var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
+                var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
+                var LFinal = (int)matchList.MinBy(x => x.Round).First().Round;
+                matchStr += "<h5>" + t.TournamentName +"</h5><div>";
+                foreach(var m in matchList)
+                {
+                    matchStr += "<table class=\"table table-bordered\" style=\"display: inline-block; border: solid; border - color:black; width:350px\">";
+                    matchStr += "<tr style=\"height:30px\"><td width=\"20%\">";
+                    matchStr += m.Identifier;
+                    matchStr += "</td><td width=\"55%\">";
+
+                    if (m.Competitor1ID != null)
+                        matchStr += db.Competitors.Find(m.Competitor1ID).CompetitorName;
+                    else
+                    {
+                        if ((m.Round > 0) || ((m.Round < 0) && (db.Matches.Find(m.PrereqMatch1ID).Round < 0)))
+                            matchStr += "Winner of ";
+                        else
+                            matchStr += "Loser of ";
+                        matchStr += db.Matches.Find(m.PrereqMatch1ID).Identifier;
+                    }
+
+                    matchStr += "</td><td width=\"25%\">";
+
+                    if (m.Score1 == null)
+                        matchStr += "<button id=\"start" + m.Identifier + "\" style=\"width: 100 % \">Start</button>";
+                    else
+                        matchStr += m.Score1;
+                    matchStr += "</td></tr>";
+
+                    matchStr += "<tr><td>";
+                    if ((m.Round > 0) && (m.Round < (GFinal - 3)))
+                        matchStr += "W" + m.Round;
+                    else if ((m.Round < 0) && (m.Round > LFinal + 2))
+                        matchStr += "L" + Math.Abs((int)m.Round);
+                    else if (m.Round == GFinal)
+                    {
+                        if (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal)
+                            matchStr += "GFR";
+                        else
+                            matchStr += "GF";
+                    }
+                    else if (m.Round == GFinal - 1)
+                        matchStr += "WF";
+                    else if (m.Round == GFinal - 2)
+                        matchStr += "WSF";
+                    else if (m.Round == GFinal - 3)
+                        matchStr += "WQF";
+                    else if (m.Round == LFinal)
+                        matchStr += "LF";
+                    else if (m.Round == LFinal + 1)
+                        matchStr += "LSF";
+                    else if (m.Round == LFinal + 2)
+                        matchStr += "LQF";
+                    matchStr += "</td><td>";
+
+                    if (m.Competitor2ID != null)
+                        matchStr += db.Competitors.Find(m.Competitor2ID).CompetitorName;
+                    else
+                    {
+                        if ((m.Round > 0) || ((m.Round < 0) && (db.Matches.Find(m.PrereqMatch2ID).Round < 0)))
+                            matchStr += "Winner of ";
+                        else
+                            matchStr += "Loser of ";
+                        matchStr += db.Matches.Find(m.PrereqMatch2ID).Identifier;
+                    }
+
+                    matchStr += "</td><td>";
+
+                    if (m.Score2 == null)
+                        matchStr += "<button id=\"submit" + m.Identifier + "\" style=\"width: 100 % \">Submit</button>";
+                    else
+                        matchStr += m.Score2;
+                    matchStr += "</td></tr></table>";
+                    matchStr += "<div style = \"display: inline-block; width: 5px\"></div>";
+                }
+                matchStr += "</div>";
+            }
+
+            var data = new
+            {
+                matchTable = matchStr
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);

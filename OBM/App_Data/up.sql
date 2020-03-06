@@ -140,6 +140,8 @@ CREATE TABLE [dbo].[Match](
     [TournamentID] INT NOT NULL,
     [Competitor1ID] INT NULL,
     [Competitor2ID] INT NULL,
+    [Score1] INT NULL,
+    [Score2] INT NULL,
     [Identifier] NVARCHAR(16),
     [Round] INT,
     [ApiID] INT NOT NULL,

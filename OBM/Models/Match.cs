@@ -17,6 +17,10 @@ namespace OBM.Models
 
         public int? Competitor2ID { get; set; }
 
+        public int? Score1 { get; set; }
+
+        public int? Score2 { get; set; }
+
         [StringLength(16)]
         public string Identifier { get; set; }
 
