@@ -368,6 +368,7 @@ namespace OBM.Controllers
             return View();
         }
 
+        [HttpGet]
         public ActionResult Tournament(int? id)
         {
             if (id == null)
@@ -399,6 +400,16 @@ namespace OBM.Controllers
             {
                 throw new HttpException(404, "Page not Found");
             }
+        }
+
+        [HttpPost]
+        public ActionResult Tournament(int id)
+        {
+            System.Console.WriteLine(id + "hello");
+            Tournament found = db.Tournaments.Find(id);
+            db.Tournaments.Remove(found);
+            db.SaveChanges();
+            return View();
         }
 
         public void CompetitorUpdate(int? id)
