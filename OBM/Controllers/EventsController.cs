@@ -543,11 +543,11 @@ namespace OBM.Controllers
             foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList())
             {
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
+                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\">" + t.TournamentName + "</h5><div>";
                 if (matchList.Any())
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
                     var LFinal = (int)matchList.MinBy(x => x.Round).First().Round;
-                    matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\">" + t.TournamentName + "</h5><div>";
                     foreach (var m in matchList)
                     {
                         matchStr += "<table class=\"table table-bordered\" style=\"display: inline-block; border: solid; border-color:black; width:350px\">";
