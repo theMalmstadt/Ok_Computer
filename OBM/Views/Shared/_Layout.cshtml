@@ -14,7 +14,7 @@
     <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-            <span class="navbar-toggler-icon"></span>
+
         </button>
         <a href="@Url.Action("Index", "Home")">
             <img class="nav-logo" alt="OK" src="@Url.Content("~/Media/OKsign.png")">
@@ -40,23 +40,21 @@
             @Html.Partial("_LoginPartial")
         </div>
     </nav>
-
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer style="width:100%">
-            <div class="row justify-content-center">
-                <div class="col-md-auto">
-                    <a href="~/Home/About"><img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer" /></a>
-                    <p class="cp">&copy; @DateTime.Now.Year</p>
-                </div>
-            </div>
-        </footer>
-    </div>
-
-
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <div class="container-fluid body-content">
+        @RenderBody()
+    </div>
+    <hr />
+    <footer>
+        <div class="row justify-content-center">
+            <div class="col-md-auto">
+                <a href="~/Home/About"><img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer" /></a>
+                <p class="cp">&copy; @DateTime.Now.Year</p>
+            </div>
+        </div>
+    </footer>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>
