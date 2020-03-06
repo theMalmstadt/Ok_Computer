@@ -5,6 +5,22 @@
 
 
 
+function sendRequest() {
+    var name = $('#TournamentName').val();
+    var description = $('#Description').val();
+    var api_key = myApiKey;
+    var subdomain = $('#Sub-Domain').val();
+    var game = $('#Game').val();
+    var private = $('#Private').val();
+    data = JSON.stringify(name, description, api_key, subdomain, game, private);
+    console.log(data);
+
+    $.post('https://api.challonge.com/v1/tournaments?', data);
+}
+
+
+
+
 function drawForm() {
     $("#scriptContainer").append('<div class="col-sm" required="true">')
     $("#scriptContainer").append('<row><input type="String" class="form-control" id="TournamentName" placeholder="Tournament Name" required="true"></row>');
@@ -31,14 +47,15 @@ var ajax_call = function () {
     var api_key = myApiKey;
     var subdomain = $('#Sub-Domain').val();
     var game = $('#Game').val();
-    var private =('#Private');
-
+    var private = ('#Private');
+    data = JSON(name, description, api_key, subdomain, game, private);
+    console.log(data);
     console.log(eventID);
     $.ajax({
         type: 'POST',
         data:data,
         dataType: 'json',
-        url: 'https://api.challonge.com/v1/tournaments/create?' + api_key + '&' + name + '&' + description + '&' + subdomain + '&' + game + '&' + private,
+        url: 'https://api.challonge.com/v1/tournaments/',
         success: ProcessReturnedTournament(data),
         complete: console.log("asdasd"),
         error: errorOnAjax()
@@ -47,15 +64,4 @@ var ajax_call = function () {
 
 
 
-function sendRequest()
-{
-    var name = $('#TournamentName').val();
-    var description = $('#Description').val();
-    var api_key = myApiKey;
-    var subdomain = $('#Sub-Domain').val();
-    var game = $('#Game').val();
-    var private = $('#Private').val();
-       
-    $.post('https://api.challonge.com/v1/tournaments?', { name, description, api_key, subdomain, game, private }, JSON);
-}
 
