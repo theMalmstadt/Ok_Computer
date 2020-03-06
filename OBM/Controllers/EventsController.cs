@@ -581,7 +581,7 @@ namespace OBM.Controllers
                             matchStr += "L" + Math.Abs((int)m.Round);
                         else if (m.Round == GFinal)
                         {
-                            if (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal)
+                            if ((m.PrereqMatch1ID != null) && (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal))
                                 matchStr += "GFR";
                             else
                                 matchStr += "GF";
