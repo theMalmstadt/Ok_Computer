@@ -5,32 +5,12 @@
 }
 
 <h2>@Html.DisplayFor(model => model.EventName)</h2>
+<p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
 
 @if (ViewBag.Access == true)
 {
     <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
     <div>
-        @*<h4>Brackets</h4>
-        <h5>Bracket Name</h5>
-        <div>
-            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
-                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
-                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
-            </table>
-            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
-                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
-                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
-            </table>
-            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
-                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
-                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
-            </table>
-            <table class="table table-bordered" style="display: inline-block; border:solid; border-color:black; width:350px">
-                <tr><td width="10%">W1</td><td width="60%">card stuff</td><td width="30%"><button style="width:100%">button</button></td></tr>
-                <tr><td width="10%">A</td><td width="60%">card stuff 2</td><td width="30%">button 2</td></tr>
-            </table>
-        </div>*@
-        
         <div id="Matches"></div>
         <div id="Competitors"></div>
     </div>

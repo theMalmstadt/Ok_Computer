@@ -52,28 +52,9 @@
                 @Html.DisplayFor(model => model.Public)
             </dd>
         </dl>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Tournaments</th>
-
-            </tr>
-            @for (int i = 0; i < 0; i++)
-            {
-                <tr>
-                    <!--add a row for each tournament, or put 3 columns and then a new row-->
-                    <!--This may be ajax, which is cool but I need the action linkt to be here-->
-
-                </tr>
-            }
-        </table>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Brackets</th>
-            </tr>
-
-        </table>
+        <div id="Matches"></div>
         <div id="Competitors"></div>
-    </div>   
+    </div>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
         @Html.ActionLink("Back to List", "Index")
@@ -87,6 +68,7 @@ else
 }
 
 @section scripts {
+    <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
     <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
     <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 }
