@@ -405,11 +405,20 @@ namespace OBM.Controllers
         [HttpPost]
         public ActionResult Tournament(int id)
         {
-            System.Console.WriteLine(id + "hello");
-            Tournament found = db.Tournaments.Find(id);
-            db.Tournaments.Remove(found);
-            db.SaveChanges();
-            return View();
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Tournament found = db.Tournaments.Find(id);
+                    db.Tournaments.Remove(found);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                throw new HttpException(401, "Tournament does not exist");
+            }
         }
 
         public void CompetitorUpdate(int? id)
