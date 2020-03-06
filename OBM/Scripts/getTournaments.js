@@ -26,8 +26,9 @@ function getTournamentList(jsonString) {
         var date = new Date(tour["tournament"].start_at);
         var url = tour["tournament"].url;
         var dispDate = months[date.getMonth()] + ' ' + date.getDay();
-        $('#tourList').append('<p id="' + i + '">' + name + ' - ' + dispDate + ' - <a href="https://challonge.com/' + url + '">Add &raquo;</a></p>');
-        $('#tourList').append('<input name="submit" class="button" type="submit" value="Add" />');
+        $('#tourList').append('<form method="get"><p id="' + i + '">' + name + ' - ' + dispDate +
+            ' - <input class="form-control" id="search" name="search" type="hidden" value="https://challonge.com/' + url +
+            '" ><input name="submit" class="button" type="submit" value=Add /></p></form>');
     }
 }
 
