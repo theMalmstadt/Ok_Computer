@@ -499,29 +499,6 @@ namespace OBM.Controllers
         public JsonResult CompetitorList(int? id)
         {
             CompetitorUpdate(id);
-            //string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Brackets</th></tr>";
-            //foreach(var t in db.Tournaments.Where(x => x.EventID == id).ToList())
-            //{
-            //    compStr += "<tr><th>" + t.TournamentName + "</th></tr>";
-            //    //For Later
-            //    //int? GFinal = db.Matches.MaxBy(x => x.Round).First().Round;
-            //    foreach(var m in db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList())
-            //    {
-            //        compStr += "<tr><td>" + m.Identifier + " | " + m.Round + " | ";
-            //        if (m.Competitor1ID != null)
-            //            compStr += db.Competitors.Find(m.Competitor1ID).CompetitorName + " | ";
-            //        else
-            //            compStr += db.Matches.Find(m.PrereqMatch1ID).Identifier + " | ";
-            //        if (m.Competitor2ID != null)
-            //            compStr += db.Competitors.Find(m.Competitor2ID).CompetitorName;
-            //        else
-            //            compStr += db.Matches.Find(m.PrereqMatch2ID).Identifier;
-            //        compStr += "</td></tr>";
-            //    }
-            //}
-            //compStr += "</table>";
-
-
             string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
@@ -581,7 +558,7 @@ namespace OBM.Controllers
                             matchStr += "L" + Math.Abs((int)m.Round);
                         else if (m.Round == GFinal)
                         {
-                            if (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal)
+                            if ((m.PrereqMatch1ID != null) && (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal))
                                 matchStr += "GFR";
                             else
                                 matchStr += "GF";
