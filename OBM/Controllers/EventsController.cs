@@ -538,7 +538,7 @@ namespace OBM.Controllers
 
         public JsonResult MatchList(int? id)
         {
-            string matchStr = "<h4>Brackets</h4>";
+            string matchStr = "<h4 align=\"left\">Brackets</h4>";
 
             foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList())
             {
@@ -547,7 +547,7 @@ namespace OBM.Controllers
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
                     var LFinal = (int)matchList.MinBy(x => x.Round).First().Round;
-                    matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5>" + t.TournamentName + "</h5><div>";
+                    matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\">" + t.TournamentName + "</h5><div>";
                     foreach (var m in matchList)
                     {
                         matchStr += "<table class=\"table table-bordered\" style=\"display: inline-block; border: solid; border-color:black; width:350px\">";

@@ -52,23 +52,25 @@
                 @Html.DisplayFor(model => model.Public)
             </dd>
         </dl>
-        <div id="Matches"></div>
-        <div id="Competitors"></div>
+        <div class="col-md-10" align="center">
+            <div id="Matches"></div>
+            <div id="Competitors"></div>
+        </div>
     </div>
     <p>
         @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
-}
-else
-{
+    }
+    else
+    {
     <div class="form-horizontal">
         <h4>Access Denied</h4>
     </div>
-}
+    }
 
-@section scripts {
-    <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
-    <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
-    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-}
+    @section scripts {
+        <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
+        <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
+        <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    }
