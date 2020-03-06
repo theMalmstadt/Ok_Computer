@@ -287,7 +287,7 @@ namespace OBM.Controllers
                 //var api_key = Request.QueryString["api_key"];
                 var api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(User.Identity.GetUserId()).ApiKey;
                 ViewBag.Found = api_key;
-
+                ViewBag.api_key = api_key.ToString();
                 ViewBag.Success = "";
 
                 if (challongURL == string.Empty)
@@ -302,6 +302,8 @@ namespace OBM.Controllers
                 }
                 else if (challongURL != null && api_key != null)
                 {
+                    ViewBag.api_key = api_key;
+
                     if (!Uri.IsWellFormedUriString(challongURL, UriKind.Absolute))
                     {
                         ViewBag.Success = "Invalid URL";

@@ -2,13 +2,13 @@
     "July", "August", "September", "October", "November", "December"
 ];
 
-var ajaxTournaments = function () {
+function ajaxTournaments(api_key) {
+    var chal = 'https://api.challonge.com/v1/tournaments.json?api_key=';
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'https://api.challonge.com/v1/tournaments.json?api_key=AHbBLmooY7VFlkmGO7DmMUii8tfHWAkDCy4ubAR3',
+        url: chal.concat(api_key),
         success: getTournamentList,
-        complete: setTimeout(ajaxTournaments, 5000),
         error: errorOnAjax
     });
 }
@@ -24,9 +24,11 @@ function getTournamentList(jsonString) {
     for (var tour of jsonString) {
         var name = tour["tournament"].name;
         var date = new Date(tour["tournament"].start_at);
+        var url = tour["tournament"].url;
         var dispDate = months[date.getMonth()] + ' ' + date.getDay();
-        $('#tourList').append('<p id="' + i + '">' + name + ' - ' + dispDate + '</p>');
+        $('#tourList').append('<p id="' + i + '">' + name + ' - ' + dispDate + ' - <a href="https://challonge.com/' + url + '">Add &raquo;</a></p>');
+        $('#tourList').append('<input name="submit" class="button" type="submit" value="Add" />');
     }
 }
 
-window.setTimeout(ajaxTournaments, 0);
+
