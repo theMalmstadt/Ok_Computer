@@ -32,8 +32,8 @@
                     @Html.DisplayFor(modelItem => item.Location)
                 </td>
                 <td>
-                    @Html.ActionLink("Manage", "Manage", "Events", new { id = item.EventID }, null) | 
-                    @Html.ActionLink("Edit Details", "Edit", "Events", new { id = item.EventID }, null) | 
+                    @Html.ActionLink("Manage", "Manage", "Events", new { id = item.EventID }, null) |
+                    @Html.ActionLink("Edit Details", "Edit", "Events", new { id = item.EventID }, null) |
                     @Html.ActionLink("Delete", "Delete", "Events", new { id = item.EventID }, null)
                 </td>
             </tr>
@@ -42,9 +42,101 @@
 }
 else
 {
-    <div class="jumbotron">
-        <h1>Welcome</h1>
-        <p class="lead">Start organizing events with our multi-bracket management system.</p>
-        <p><a href="~/Account/Register" class="btn btn-primary btn-lg">Create an Account &raquo;</a></p>
+    <div class="container-fluid">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="oktitle text-center p-0 m-0">
+                        <text class="wordsok">O</text>
+                        <text class="wordsok">K</text>
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="bmtitle text-center">
+                        <text class="wordsbm">Bracket</text>
+                        <text class="wordsbm">Manager</text>
+                    </h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p class="font-italic text-center titledesc">
+                        Where brackets are made.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <hr />
+                    <h2>
+                        <b>You know you want to join, start creating brackets today!</b>
+                    </h2>
+                    <div class="row justify-content-center">
+                        <div class="col-sm-3">
+                            @using (Html.BeginForm("Login","Account", FormMethod.Get))
+                            {
+                                <input type="submit" value="Create Brackets" class="btn createbtn" />
+                            }
+                        </div>
+                        <div class="col-sm-3">
+                            @using (Html.BeginForm("Register", "Account", FormMethod.Get))
+                            {
+                                <input type="submit" value="Register Account" class="btn registerbtn" />
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 text-center">
+                    <hr />
+                    <h2>
+                        <b class="eventtitle">-Upcoming</b><b class="eventtitle"> Events-</b>
+                    </h2>
+                </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-sm-6">
+                    <div class="card bg-secondary">
+                        <div class="card-body">
+                            <table id="eventtable" class="table table-responsive-md table-dark table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Event Name
+                                        </th>
+                                        <th>
+                                            Organizer
+                                        </th>
+                                        <th>
+                                            Location
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.ActionLink(item.EventName, "Details", "Events", new { id = item.EventID }, new { @class = "eventdata" })
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => item.OrganizerName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(model => item.Location)
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+    @Scripts.Render("~/bundles/HomePage")
 }
