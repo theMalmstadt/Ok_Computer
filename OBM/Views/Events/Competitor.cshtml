@@ -5,6 +5,7 @@
     if (ViewBag.Access == true)
     {
         <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+
     }
     else
     {
@@ -12,4 +13,9 @@
             <h4>Access Denied</h4>
         </div>
     }
+}
+
+section scripts
+{
+    <script type="text/javascript" src="~/Scripts/competitorMatches.js"></script>
 }

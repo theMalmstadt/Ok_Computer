@@ -390,6 +390,27 @@ namespace OBM.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        public ActionResult Tournament(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Tournament found = db.Tournaments.Find(id);
+                    db.Tournaments.Remove(found);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                throw new HttpException(401, "Tournament does not exist");
+            }
+        }
+
         [HttpGet]
         public ActionResult Competitor(int? id)
         {
@@ -419,26 +440,6 @@ namespace OBM.Controllers
             catch
             {
                 throw new HttpException(404, "Page not Found");
-            }
-
-        }
-
-        [HttpPost]
-        public ActionResult Tournament(int id)
-        {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    Tournament found = db.Tournaments.Find(id);
-                    db.Tournaments.Remove(found);
-                    db.SaveChanges();
-                }
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                throw new HttpException(401, "Tournament does not exist");
             }
         }
 
