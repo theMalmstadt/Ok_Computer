@@ -443,6 +443,20 @@ namespace OBM.Controllers
             }
         }
 
+        public JsonResult Matches(int? id)
+        {
+            List<Tournament> tournList = db.Tournaments.Where(x => x.EventID == id).ToList();
+            List<Match> matchList = new List<Match>();
+            foreach (var tourn in tournList)
+            {
+                List<Match> temp = db.Matches.Where(x => x.TournamentID == tourn.TournamentID).ToList();
+                matchList.AddRange(temp);
+            }
+            var data = new { data = matchList };
+
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
         public void CompetitorUpdate(int? id)
         {
             string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
