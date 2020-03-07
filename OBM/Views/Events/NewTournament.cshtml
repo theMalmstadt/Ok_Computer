@@ -1,11 +1,11 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "GetTournament";
 }
 
-<h2>Get Tournament From Challong</h2>
+<h1>Add Challonge Tournament</h1>
 <p>@ViewBag.response</p>
-
+<hr />
+<br />
 
 @if (ViewBag.Access == false)
 {
@@ -15,19 +15,22 @@
 }
 else if (Request.IsAuthenticated)
 {
-    <form method="get">
-        <div class="form-group">
-            <label for="search">Challonge Tournament URL</label>
-            <input class="form-control" id="search" name="search" type="text" placeholder="Enter URL...">
-        </div>
-        <div class="form-check">
-            <input class="button" type="submit" value="Add" />
-        </div>
-    </form>
-
+<form method="get">
+    <h3>Find Challonge Tournament by URL</h3>
+    <input class="form-control" id="search" name="search" type="text" placeholder="Enter URL...">
+    <input name="submit" class="button" id="submit" type="submit" value="Add" />
     <b>@ViewBag.Success</b>
-    <a href=@ViewBag.Link1 />
-    @ViewBag.Link2
+    <a href=@ViewBag.Link1> @ViewBag.Link2</a>
+</form>
+<br />
+<br />
+<h3>-OR-</h3>
+<br />
+<br />
+<h3>Select from your Challonge Tournaments</h3>
+<br />
+<div id="tourList">
+</div>
 
 }
 else if (ViewBag.Access == false)
@@ -41,4 +44,10 @@ else
     <div class="form-horizontal">
         <h4>Please Log In</h4>
     </div>
+}
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/getTournaments.js"></script>
+    <script type="text/javascript">ajaxTournaments("@ViewBag.api_key");</script>
 }
