@@ -398,7 +398,8 @@ namespace OBM.Controllers
                 throw new HttpException(404, "Page not Found");
             }
 
-            
+            try
+            {
                 Competitor comp = db.Competitors.Find(id);
                 Event even = db.Events.Find(comp.EventID);
                 if (comp == null)
@@ -414,6 +415,11 @@ namespace OBM.Controllers
                     ViewBag.Access = false;
                 }
                 return View(comp);
+            }
+            catch
+            {
+                throw new HttpException(404, "Page not Found");
+            }
 
         }
 
