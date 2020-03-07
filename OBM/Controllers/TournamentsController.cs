@@ -164,30 +164,58 @@ namespace OBM.Controllers
 
 
 
-        public   JObject ChallongePost(JObject myJSON)
+        public JObject ChallongePost(JObject myJSON)
         {
+            myJSON.Add("private", myJSON["Private"]);
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                
 
-                streamWriter.Write(myJSON);
-            }
             Debug.WriteLine(myJSON.ToString());
             Debug.WriteLine("api_key is : " + myJSON["api_key"]);
             Debug.WriteLine("url is : " + myJSON["url"]);
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            Debug.WriteLine("name is : " + myJSON["name"]);
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
+
+
+                streamWriter.Write(myJSON);
+            }
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            
+
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
                 var result = streamReader.ReadToEnd();
                 Debug.WriteLine(result);
+                Tournament resultTournament = new Tournament();
 
+
+                resultTournament.EventID = (int)myJSON["event_id"];
+                resultTournament.TournamentName = (string)myJSON["name"];
+                resultTournament.UrlString = (string)myJSON["url"];
+                resultTournament.Description = (string)myJSON["description"];
+                resultTournament.Game = (string)myJSON["game_name"];
+                //resultTournament.Subdomain = (string)myJSON["subdomain"];
+                //resultTournament.ApiId = (string)myJSON["api_key"];
+
+
+                Create(resultTournament);
                 return JObject.Parse(result);
-            }//EXCEPTION HAnDlINGSGINJFDIGSF
-            
+                 }//EXCEPTION HAnDlINGSGINJFDIGSF
+
+            }
+            catch (System.Net.WebException e)
+            {
+                return JObject.FromObject(new { error = "webException", message="please ensure that you have not already create a tournaent with this url, and that the URL, name, and event_id fields are accurate." });    
+            }
+
         }
 
 

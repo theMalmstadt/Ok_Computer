@@ -14,7 +14,7 @@
             Event:
             <div class="col-md-10">
 
-                @Html.DropDownListFor(m => m.EventID, new SelectList(ViewBag.UserEventsList, "EventID", "EventName"), htmlAttributes: new { @class = "form-control",aria_describedby="dropdownMenu1"})
+                @Html.DropDownListFor(m => m.EventID, new SelectList(ViewBag.UserEventsList, "EventID", "EventName"), htmlAttributes: new { @class = "form-control",aria_describedby="dropdownMenu1", id="eventID"})
 
 
 
@@ -25,7 +25,10 @@
      
 
        
-     <script>var myApiKey='@ViewBag.ApiKey'</script>
+     <script>
+         var myApiKey = '@ViewBag.ApiKey'
+         
+    </script>
 
 
 <div class="container-fluid" id="scriptContainer"></div>

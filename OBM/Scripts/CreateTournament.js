@@ -10,12 +10,16 @@ function ProcessReturnedTournament(response)
 {
     console.log("PISSSSSSS");
     console.log(response);
-    }
+    alert(response);
+    $("#scriptContainer").append('<div  class="row" ><button id="tournamentIndex" type="button" class="btn btn-secondary">Tournament Index</button></row>');
+    $("#tournamentIndex").click("Tournaments/Index");
+}
 
 
 
 function drawForm() {
-    $("#scriptContainer").append('<div class="col-sm" required="true">')
+
+    $("#scriptContainer").append('<div class="col-sm" required="true">');
     $("#scriptContainer").append('<row><input type="String" class="form-control" id="TournamentName" placeholder="Tournament Name" required="true"></row>');
     $("#scriptContainer").append('<row><input type="String" class="form-control" id="ApiKey" value='+myApiKey+'></row>');
     $("#scriptContainer").append('<row><input type="SubDomain" class="form-control" id="SubDomain" placeholder="Sub-Domain" required="true"></row>');
@@ -27,6 +31,7 @@ function drawForm() {
     $("#scriptContainer").append('<div  class="row" ><button id="submit" type="button" class="btn btn-secondary">Submit to Challonge</button></row>');
     $("#scriptContainer").append('</div>');
     $("#submit").click(request);
+
 }
 
 
@@ -39,15 +44,15 @@ function errorOnAjax()
 
 var request = function () {
     var tournament = {};
-    tournament.api_key = myApiKey;
+    tournament.api_key = $('#ApiKey').val();
     tournament.myURL = $('#url').val();
     tournament.name = $('#TournamentName').val();
 
-    //  tournament.description = $('#Description').val();
-    //tournament.subdomain = $('#Sub-Domain').val();
-    //tournament.game_name = $('#Game').val();
-   // tournament.private = false;
-
+    tournament.description = $('#Description').val();
+    tournament.subdomain = $('#Sub-Domain').val();
+    tournament.game_name = $('#Game').val();
+    tournament.private = $("#Private").is(":checked");
+    tournament.event_id = $("#eventID").val();
     data = JSON.stringify(tournament, null, '\t');
     console.log(tournament);
     console.log(JSON.stringify(tournament));
@@ -60,7 +65,7 @@ var request = function () {
         data: (tournament),
         //contentType: "application/json; charset=utf-8",
         url: 'ChallongeCreate',
-        success: function (response) { ProcessReturnedTournament(response) },
+        //success: function (response) { ProcessReturnedTournament(response) },
         error: errorOnAjax()
     }).done(function (response) { ProcessReturnedTournament(response) });
 
