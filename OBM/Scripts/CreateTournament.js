@@ -11,8 +11,10 @@ function ProcessReturnedTournament(response)
     console.log("PISSSSSSS");
     console.log(response);
     alert(response);
-    $("#scriptContainer").append('<div  class="row" ><button id="tournamentIndex" type="button" class="btn btn-secondary">Tournament Index</button></row>');
-    $("#tournamentIndex").click("Tournaments/Index");
+    $("#scriptContainer").append('<div  class="row" ><button id="tournamentIndex" type="button" href="Tournaments/Index" class="btn btn-secondary">Tournament Index</button></row>');
+    $("#tournamentIndex").click(function() {
+        window.location = "Index";
+    });;
 }
 
 
