@@ -1,9 +1,7 @@
 ﻿@model OBM.Models.ViewModels.TournamentViewModel
 @{
-    ViewBag.Title = "Tournament";
+    ViewBag.Title = Model.TournamentName;
 
-
-    <h5>Tournament Name</h5>
     <h1>@Html.DisplayFor(model => model.TournamentName)</h1>
 
     if (ViewBag.Access == true)

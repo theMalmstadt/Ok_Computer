@@ -41,8 +41,6 @@ namespace OBM.Controllers
             return View(eventViewList);
         }
 
-       
-
         public ActionResult Manage(int? id)
         {
             if (id == null)
@@ -70,9 +68,6 @@ namespace OBM.Controllers
             ViewBag.search = search;
             return View(db.Events.Where(x=>x.EventName.Contains(search) && x.Public).ToList());
         }
-
-       
-
 
         // GET: Events/Details/5
         public ActionResult Details(int? id)
@@ -216,11 +211,6 @@ namespace OBM.Controllers
         {
             Debug.WriteLine(location, name);
 
-         
-            
-           
-
-
             List<Event> eventList = new List<Event>();
             JArray TournamentList = new JArray();
 
@@ -233,7 +223,6 @@ namespace OBM.Controllers
                     eventList.Add(i);
                 }
             }
-
 
             else// if the event field is null, or empty, return all events
             {
@@ -256,10 +245,9 @@ namespace OBM.Controllers
                 }
             }
 
-
-    
             return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented), JsonRequestBehavior.AllowGet);
         }
+
         public JsonResult TournamentList(int? id)
         {
             List<Tournament> TournamentList = new List<Tournament>();
@@ -269,11 +257,8 @@ namespace OBM.Controllers
                 TournamentList.Add(i);
             }
 
-
             return Json(JsonConvert.SerializeObject(TournamentList, Formatting.Indented), JsonRequestBehavior.AllowGet);
         }
-
-
 
         [HttpGet]
         public ActionResult NewTournament(int? id)
@@ -405,6 +390,33 @@ namespace OBM.Controllers
             }
         }
 
+        [HttpGet]
+        public ActionResult Competitor(int? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(404, "Page not Found");
+            }
+
+            
+                Competitor comp = db.Competitors.Find(id);
+                Event even = db.Events.Find(comp.EventID);
+                if (comp == null)
+                {
+                    throw new HttpException(404, "Page not Found");
+                }
+                if ((even.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == even.OrganizerID)))
+                {
+                    ViewBag.Access = true;
+                }
+                else
+                {
+                    ViewBag.Access = false;
+                }
+                return View(comp);
+
+        }
+
         [HttpPost]
         public ActionResult Tournament(int id)
         {
@@ -519,28 +531,6 @@ namespace OBM.Controllers
         public JsonResult CompetitorList(int? id)
         {
             CompetitorUpdate(id);
-            //string compStr = "<table class=\"table table-bordered table - striped\"><tr><th>Brackets</th></tr>";
-            //foreach(var t in db.Tournaments.Where(x => x.EventID == id).ToList())
-            //{
-            //    compStr += "<tr><th>" + t.TournamentName + "</th></tr>";
-            //    //For Later
-            //    //int? GFinal = db.Matches.MaxBy(x => x.Round).First().Round;
-            //    foreach(var m in db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList())
-            //    {
-            //        compStr += "<tr><td>" + m.Identifier + " | " + m.Round + " | ";
-            //        if (m.Competitor1ID != null)
-            //            compStr += db.Competitors.Find(m.Competitor1ID).CompetitorName + " | ";
-            //        else
-            //            compStr += db.Matches.Find(m.PrereqMatch1ID).Identifier + " | ";
-            //        if (m.Competitor2ID != null)
-            //            compStr += db.Competitors.Find(m.Competitor2ID).CompetitorName;
-            //        else
-            //            compStr += db.Matches.Find(m.PrereqMatch2ID).Identifier;
-            //        compStr += "</td></tr>";
-            //    }
-            //}
-            //compStr += "</table>";
-
 
             string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
