@@ -138,5 +138,15 @@ namespace OBM.Controllers
             }
             base.Dispose(disposing);
         }
+
+
+        [HttpPost]
+        public JsonResult ChallongeCreate(String tournament)
+        {
+            Debug.WriteLine(tournament);
+            Debug.WriteLine("PEWPTIEPOOPTIEPANT");
+            return new JsonResult();
+
+        }
     }
 }
