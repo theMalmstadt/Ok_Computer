@@ -30,5 +30,7 @@
         public string UrlString { get; set; }
 
         public bool IsTeams { get; set; }
+
+        public bool IsStarted { get; set; }
     }
 }

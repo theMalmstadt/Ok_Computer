@@ -5,50 +5,26 @@
 }
 
 <h2>@Html.DisplayFor(model => model.EventName)</h2>
-
-@if (ViewBag.Access == true)
-{
-    <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
-    <div>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Tournaments</th>
-
-            </tr>
-            @for (int i = 0; i < 0; i++)
-            {
-                <tr>
-                    <!--add a row for each tournament, or put 3 columns and then a new row-->
-                    <!--This may be ajax, which is cool but I need the action linkt to be here-->
-
-                </tr>
-            }
-            <tr>
-                <td>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</td>
-            </tr>
-
-        </table>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Brackets</th>
-            </tr>
-
-        </table>
+<p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
+<div class="col-md-10" align="center">
+    @if (ViewBag.Access == true)
+    {
+        <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+        <div id="Matches"></div>
         <div id="Competitors"></div>
-    </div>
-    <p>
-        @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
-        @Html.ActionLink("Back to List", "Index")
-    </p>
-}
-else
-{
-    <div class="form-horizontal">
-        <h4>Access Denied</h4>
-    </div>
-}
+        <p>
+            @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    }
+    else
+    {
+        <div class="form-horizontal">
+            <h4>Access Denied</h4>
+        </div>
+    }
+</div>
 
 @section scripts {
-    <script type="text/javascript" src="~/Scripts/CompDisplay.js"></script>
-    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
 }

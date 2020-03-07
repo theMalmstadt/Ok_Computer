@@ -28,7 +28,14 @@ namespace OBM.Controllers
                 ViewBag.Login = true;
             }
             else
+            {
                 ViewBag.Login = false;
+                foreach (var i in db.Events.ToList())
+                {
+                    if (i.Public == true)
+                        eventViewList.Add(new EventViewModel(i, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(@i.OrganizerID).UserName));
+                }
+            }
             return View(eventViewList);
         }
 

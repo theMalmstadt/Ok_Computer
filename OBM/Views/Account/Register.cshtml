@@ -4,7 +4,7 @@
     ViewBag.Title = "Register";
 }
 
-<h1><b>@ViewBag.Title.</b></h1>
+<h1><b>@ViewBag.Title</b></h1>
 
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
@@ -42,7 +42,7 @@
     <hr />
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <input type="submit" class="btn registerbtn" value="Register" />
         </div>
     </div>
 }

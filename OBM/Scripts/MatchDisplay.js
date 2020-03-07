@@ -1,7 +1,19 @@
-﻿
-var interval = 1000 * 5;
+﻿var interval = 1000 * 5;
 
 var ajax_call = function () {
+    var eventID = $('#eventID').val();
+    console.log(eventID);
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: '/Events/MatchList?id=' + eventID,
+        success: MatchList,
+        complete: setTimeout(ajax_match, 0),
+        error: errorOnAjax
+    });
+}
+
+var ajax_match = function () {
     var eventID = $('#eventID').val();
     console.log(eventID);
     $.ajax({
@@ -16,6 +28,10 @@ var ajax_call = function () {
 
 function CompetitorList(data) {
     $('#Competitors').html(data["compTable"]);
+}
+
+function MatchList(data) {
+    $('#Matches').html(data["matchTable"]);
 }
 
 function errorOnAjax() {

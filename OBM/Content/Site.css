@@ -1,4 +1,85 @@
-﻿nav {
+﻿.titleok {
+    text-transform: uppercase;
+}
+.titleok, .wordsok {
+    display: inline-block;
+    line-height: 1em;
+    font-weight: 100;
+    font-size: 7em;
+}
+
+.eventtitle:hover {
+    color: #4ac959 !important;
+    cursor: default;
+}
+
+.createbtn {
+    background-color: #4ac959 !important;
+    color: white;
+    font-size: 1.5em;
+}
+.createbtn:hover {
+    cursor: pointer;
+    color: #444b53;
+}
+.createbtn:focus {
+    border-color: #328a3c !important;
+    box-shadow: 0 0 2px 1px #4ac959 !important;
+}
+
+.registerbtn {
+    background-color: #444b53;
+    color: white;
+    font-size: 1.5em;
+}
+.registerbtn:hover {
+    color: #4ac959;
+    cursor: pointer;
+}
+.registerbtn:focus {
+    border-color: #328a3c !important;
+    box-shadow: 0 0 2px 1px #4ac959 !important;
+}
+
+.custom-select option:hover {
+    background-color: #4ac959 !important;
+    color: #4ac959 !important;
+    cursor: pointer !important;
+}
+
+label input:focus, label .custom-select:focus {
+    border-color: #4ac959 !important;
+    box-shadow: 0 0 2px 1px #4ac959 !important;
+}
+
+option:checked, .page-item.active .page-link {
+    background-color: #4ac959 !important;
+    cursor: pointer !important;
+    border-color: #4ac959 !important;
+}
+
+.custom-select .custom-select.active {
+    border-color: #4ac959 !important;
+}
+
+.wordsbm {
+    font-size: 3em;
+}
+
+.titledesc {
+    font-weight: 200;
+    font-size: 2em;
+}
+
+.eventdata {
+    color: #E7E8E9 !important;
+}
+
+.paginate_button {
+    background: #4ac959 !important;
+}
+
+nav {
     background-color: #444b53;
 }
 
@@ -23,7 +104,7 @@
     text-align: center;
 }
 
-#registerLink:hover, #loginLink:hover, #logoutLink:hover, #accountLink:hover, #nav-item:hover {
+#registerLink:hover, #loginLink:hover, #logoutLink:hover, #accountLink:hover, #nav-item:hover, .eventdata:hover {
     color: #4ac959 !important;
     text-decoration: none;
 }
@@ -37,6 +118,8 @@ body {
     padding-bottom: 20px;
     background-color: #E7E8E9;
     color: #58585A;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -70,4 +153,12 @@ body {
     margin-left: auto;
     margin-right: auto;
     width: 50%;
+}
+
+table.table-bordered  > tr > th {
+    border: 1px solid darkgrey;
+}
+
+table.table-bordered > tbody > tr > td {
+    border: 1px solid darkgrey;
 }

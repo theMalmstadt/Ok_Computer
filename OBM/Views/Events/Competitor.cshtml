@@ -1,0 +1,15 @@
+﻿@model OBM.Models.Competitor
+@{
+    ViewBag.Title = Model.CompetitorName;
+
+    if (ViewBag.Access == true)
+    {
+        <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+    }
+    else
+    {
+        <div class="form-horizontal">
+            <h4>Access Denied</h4>
+        </div>
+    }
+}
