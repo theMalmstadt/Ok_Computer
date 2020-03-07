@@ -5,6 +5,8 @@
     if (ViewBag.Access == true)
     {
         <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+        <input id="EventID" type="hidden" value="@Model.EventID" />
+        <input id="compID" type="hidden" value="@Model.CompetitorID" />
         <div id="matches"></div>
     }
     else
@@ -15,7 +17,7 @@
     }
 }
 
-section scripts
+@section scripts
 {
     <script type="text/javascript" src="~/Scripts/competitorMatches.js"></script>
 }
