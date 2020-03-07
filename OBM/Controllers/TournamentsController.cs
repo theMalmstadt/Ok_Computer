@@ -10,11 +10,19 @@ using System.Web;
 using System.Web.Mvc;
 using OBM.DAL;
 using OBM.Models;
+using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace OBM.Controllers
 {
+
     public class TournamentsController : Controller
     {
+        private static readonly HttpClient client = new HttpClient();
+
         private EventContext db = new EventContext();
         private ApplicationDbContext userdb = new ApplicationDbContext();
 
@@ -141,12 +149,50 @@ namespace OBM.Controllers
 
 
         [HttpPost]
-        public JsonResult ChallongeCreate(String tournament)
+        public  string ChallongeCreate()
         {
-            Debug.WriteLine(tournament);
-            Debug.WriteLine("PEWPTIEPOOPTIEPANT");
-            return new JsonResult();
+            //PARSE VALUES
+            var myobject = new { api_key = Request.Params["api_key"], name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"] };
+
+           var myJSON= JObject.FromObject(myobject);
+
+           
+           
+            return ChallongePost(myJSON).ToString();
 
         }
+
+
+
+        public   JObject ChallongePost(JObject myJSON)
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments.json");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                
+
+                streamWriter.Write(myJSON);
+            }
+            Debug.WriteLine(myJSON.ToString());
+            Debug.WriteLine("api_key is : " + myJSON["api_key"]);
+            Debug.WriteLine("url is : " + myJSON["url"]);
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+                Debug.WriteLine(result);
+
+                return JObject.Parse(result);
+            }//EXCEPTION HAnDlINGSGINJFDIGSF
+            
+        }
+
+
+
+
+
     }
 }

@@ -40,7 +40,7 @@ function errorOnAjax()
 var request = function () {
     var tournament = {};
     tournament.api_key = myApiKey;
-    tournament.url = $('#url').val();
+    tournament.myURL = $('#url').val();
     tournament.name = $('#TournamentName').val();
 
     //  tournament.description = $('#Description').val();
@@ -50,15 +50,15 @@ var request = function () {
 
     data = JSON.stringify(tournament, null, '\t');
     console.log(tournament);
-    console.log(data);
+    console.log(JSON.stringify(tournament));
 
     ////$.post('https://api.challonge.com/v1/tournaments.json', tournament, "JSON");
 
 
     $.ajax({
         type: 'POST',
-        data: JSON.stringify(tournament, null, '\t'),
-        contentType:'application/json',
+        data: (tournament),
+        //contentType: "application/json; charset=utf-8",
         url: 'ChallongeCreate',
         success: function (response) { ProcessReturnedTournament(response) },
         error: errorOnAjax()
