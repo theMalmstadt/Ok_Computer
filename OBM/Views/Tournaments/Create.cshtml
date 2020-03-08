@@ -8,13 +8,14 @@
 <h2>Create a New Challonge Tournament for your Event</h2>
 
 
-   
+  @if (HttpContext.Current.User.Identity.IsAuthenticated)
+  {
 
         <div class="form-group">
             Event:
             <div class="col-md-10">
 
-                @Html.DropDownListFor(m => m.EventID, new SelectList(ViewBag.UserEventsList, "EventID", "EventName"), htmlAttributes: new { @class = "form-control",aria_describedby="dropdownMenu1", id="eventID"})
+                @Html.DropDownListFor(m => m.EventID, new SelectList(ViewBag.UserEventsList, "EventID", "EventName"), htmlAttributes: new { @class = "form-control", aria_describedby = "dropdownMenu1", id = "eventID" })
 
 
 
@@ -22,9 +23,9 @@
             </div>
         </div>
 
-     
 
-       
+
+
      <script>
          var myApiKey = '@ViewBag.ApiKey'
          
@@ -37,6 +38,11 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/CreateTournament.js")
 }
+  }
+  else
+  {
+      <h1>Please Log in</h1>
+  }
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>

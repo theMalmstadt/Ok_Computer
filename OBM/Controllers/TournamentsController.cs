@@ -50,15 +50,18 @@ namespace OBM.Controllers
         // GET: Tournaments/Create
         public ActionResult Create()
         {           //FETCH NEEDED USER DATA
+            if (HttpContext.User.Identity.IsAuthenticated)
+            {
+                var userid = HttpContext.User.Identity.GetUserId();
+                var UserEventsList = db.Events.Where(x => x.OrganizerID == userid);
+                ViewBag.UserEventsList = UserEventsList;
 
-            var userid = HttpContext.User.Identity.GetUserId();
-            var UserEventsList = db.Events.Where(x=>x.OrganizerID== userid);
-            ViewBag.UserEventsList = UserEventsList;
-
-            var userApiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
-            Debug.WriteLine(userApiKey);
-            ViewBag.ApiKey = userApiKey;
-            
+                var userApiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+                if (userApiKey == null)
+                    userApiKey = "Please_Link_an_API_key_to_your_Account";
+                Debug.WriteLine(userApiKey);
+                ViewBag.ApiKey = userApiKey;
+            }
 
 
             return View();
