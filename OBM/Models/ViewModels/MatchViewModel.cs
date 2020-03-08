@@ -21,12 +21,28 @@ namespace OBM.Models.ViewModels
             Score1 = match.Score1;
             Score2 = match.Score2;
             Identifier = match.Identifier;
-            Round = match.Identifier;
+            Round = match.Round;
             ApiID = match.ApiID;
             PrereqMatch1ID = match.PrereqMatch1ID;
             PrereqMatch2ID = match.PrereqMatch2ID;
-            Time = match.Time;
+            Time = match.Time.ToString();
             Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
+    
+            if ((match.Score1 == null) || (match.Score2 == null))
+            {
+                if ((DateTime.Compare(match.Time, DateTime.Now) > 0) || (match.Time == null))
+                {
+                    Status = "upcoming";
+                }
+                else
+                {
+                    Status = "in progress";
+                }
+            }
+            else
+            {
+                Status = "completed";
+            }
         }
 
         public int MatchID { get; set; }
@@ -38,11 +54,12 @@ namespace OBM.Models.ViewModels
         public int? Score1 { get; set; }
         public int? Score2 { get; set; }
         public string Identifier { get; set; }
-        public string Round { get; set; }
+        public int? Round { get; set; }
         public int ApiID { get; set; }
         public int? PrereqMatch1ID { get; set; }
         public int? PrereqMatch2ID { get; set; }
-        public DateTime? Time { get; set; }
+        public string Time { get; set; }
         public int? Winner { get; set; }
+        public string Status { get; set; }
     }
 }
