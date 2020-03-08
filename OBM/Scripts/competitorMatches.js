@@ -1,4 +1,19 @@
-﻿var interval = 1000 * 30;
+﻿$("#busyState").click(function () {
+    console.log("here");
+    //$("#busyState").toggleClass("btn-outline-danger");
+    if ($('#busyState').val() == "busy") {
+        $("#busyState").toggleClass("btn-outline-danger btn-outline-success");
+        $("#busyState").val("available");
+        $("#busyState").text("available");
+    }
+    else {
+        $("#busyState").toggleClass("btn-outline-success btn-outline-danger");
+        $("#busyState").val("busy");
+        $("#busyState").text("busy");
+    }    
+});
+
+var interval = 1000 * 30;
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
