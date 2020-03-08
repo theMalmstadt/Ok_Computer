@@ -219,8 +219,14 @@ namespace OBM.Controllers
 
         }
 
+        [HttpGet]
+        public JArray getTournamentsJson()
+        {
 
-
+            var tournaments = JArray.FromObject(db.Tournaments);
+            Debug.WriteLine(tournaments);  
+            return tournaments;
+        }
 
 
     }
