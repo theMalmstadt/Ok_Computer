@@ -4,10 +4,13 @@
 
     if (ViewBag.Access == true)
     {
-        <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
-        <input id="EventID" type="hidden" value="@Model.EventID" />
-        <input id="compID" type="hidden" value="@Model.CompetitorID" />
-        <div id="matches"></div>
+        <div>
+            <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+            <input id="EventID" type="hidden" value="@Model.EventID" />
+            <input id="compID" type="hidden" value="@Model.CompetitorID" />
+            <br />
+            <div id="matches"></div>
+        </div>
     }
     else
     {
