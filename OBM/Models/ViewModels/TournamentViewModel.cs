@@ -47,9 +47,7 @@ namespace OBM.Models.ViewModels
         public int? ApiId { get; set; }
         public string UrlString { get; set; }
         public string IsTeams { get; set; }
-        
         public string IsStarted { get; set; }
-
         public bool Public { get; set; }
     }
 }

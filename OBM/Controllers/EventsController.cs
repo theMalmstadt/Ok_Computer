@@ -452,9 +452,14 @@ namespace OBM.Controllers
                 List<Match> temp = db.Matches.Where(x => x.TournamentID == tourn.TournamentID).ToList();
                 matchList.AddRange(temp);
             }
-            var data = new { data = matchList };
 
-            return Json(data, JsonRequestBehavior.AllowGet);
+            List<MatchViewModel> matchVM = new List<MatchViewModel>();
+            foreach (var model in matchList)
+            {
+                matchVM.Add(new MatchViewModel(model));
+            }
+
+            return Json(matchVM, JsonRequestBehavior.AllowGet);
         }
 
         public void CompetitorUpdate(int? id)
