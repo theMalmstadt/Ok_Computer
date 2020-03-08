@@ -395,6 +395,27 @@ namespace OBM.Controllers
             }
         }
 
+
+
+        [HttpPost]
+        public ActionResult Tournament(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    Tournament found = db.Tournaments.Find(id);
+                    db.Tournaments.Remove(found);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                throw new HttpException(401, "Tournament does not exist");
+            }
+        }
+
         [HttpGet]
         public ActionResult Competitor(int? id)
         {
@@ -425,26 +446,27 @@ namespace OBM.Controllers
             {
                 throw new HttpException(404, "Page not Found");
             }
-
         }
 
-        [HttpPost]
-        public ActionResult Tournament(int id)
+        public JsonResult Matches(int? id)
         {
-            try
+            List<Tournament> tournList = db.Tournaments.Where(x => x.EventID == id).ToList();
+            List<Match> matchList = new List<Match>();
+            foreach (var tourn in tournList)
             {
-                if (ModelState.IsValid)
-                {
-                    Tournament found = db.Tournaments.Find(id);
-                    db.Tournaments.Remove(found);
-                    db.SaveChanges();
-                }
-                return RedirectToAction("Index");
+                List<Match> temp = db.Matches.Where(x => x.TournamentID == tourn.TournamentID).ToList();
+                matchList.AddRange(temp);
             }
-            catch
+
+            List<MatchViewModel> matchVM = new List<MatchViewModel>();
+            foreach (var model in matchList)
             {
-                throw new HttpException(401, "Tournament does not exist");
+                matchVM.Add(new MatchViewModel(model));
             }
+
+            List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => DateTime.Parse(y.Time)).ToList();
+
+            return Json(sortedList, JsonRequestBehavior.AllowGet);
         }
 
         public void CompetitorUpdate(int? id)

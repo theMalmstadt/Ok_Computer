@@ -4,7 +4,43 @@
 
     if (ViewBag.Access == true)
     {
-        <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+        <div>
+            <h1 align="center">@Html.DisplayFor(model => model.CompetitorName)'s matches</h1>
+            <input id="EventID" type="hidden" value="@Model.EventID" />
+            <input id="compID" type="hidden" value="@Model.CompetitorID" />
+
+            <hr />
+            <br />
+            <div id="matches">
+                <div class="card text-white border-warning mb-3">
+                    <div class="card-header bg-success" align="center">
+                        <h3>Test</h3>
+                    </div>
+                    <div class="card-body text-white bg-secondary">
+                        <div class="row">
+                            <div class="col-sm" align="center">
+                                <h6>Competitors</h6>
+                                <h3>Comp1</h3>
+                                <h3>Comp2</h3>
+                            </div>
+                            <div class="col-sm" align="center">
+                                <h6>Score</h6>
+                                <h3>0</h3>
+                                <h3>1</h3>
+                            </div>
+                            <div class="col-sm" align="center">
+                                <h6>Round</h6>
+                                <h1>1</h1>
+                            </div>
+                            <div class="col-sm" align="center">
+                                <h6>Time</h6>
+                                <h3>12:00 pm</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     }
     else
     {
@@ -12,4 +48,9 @@
             <h4>Access Denied</h4>
         </div>
     }
+}
+
+@section scripts
+{
+    <script type="text/javascript" src="~/Scripts/competitorMatches.js"></script>
 }

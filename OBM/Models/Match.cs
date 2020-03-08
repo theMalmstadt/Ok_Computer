@@ -32,6 +32,6 @@ namespace OBM.Models
 
         public int? PrereqMatch2ID { get; set; }
 
-        public DateTime? Time { get; set; }
+        public DateTime Time { get; set; }
     }
 }
