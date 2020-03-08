@@ -36,34 +36,7 @@
     </tr>
 
 @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.TournamentName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EventID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Game)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ApiId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UrlString)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.IsTeams)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.TournamentID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.TournamentID }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.TournamentID })
-        </td>
-    </tr>
+ 
 }
 
 </table>

@@ -8,13 +8,24 @@
 
 function ProcessReturnedTournament(response)
 {
-    console.log("PISSSSSSS");
     console.log(response);
-    alert(response);
-    $("#scriptContainer").append('<div  class="row" ><button id="tournamentIndex" type="button" href="Tournaments/Index" class="btn btn-secondary">Tournament Index</button></row>');
-    $("#tournamentIndex").click(function() {
-        window.location = "Index";
-    });;
+    response = JSON.parse(response);
+    console.log(response.tournament.full_challonge_url);
+
+
+    alert(response.tournament.full_challonge_url);
+
+    
+    console.log(response.tournament.full_challonge_url);
+
+
+    $("#linkBox").append('<div  class="row" ><button id="challongeLink" type="button" class="btn btn-secondary">Go to Challonge</button></row>');
+    $("#linkBox").click(function () { gotoChallonge(response.tournament.full_challonge_url) });
+}
+
+function gotoChallonge(url)
+{
+    window.location.replace(url);
 }
 
 
@@ -33,6 +44,7 @@ function drawForm() {
     $("#scriptContainer").append('<div  class="row" ><button id="submit" type="button" class="btn btn-secondary">Submit to Challonge</button></row>');
     $("#scriptContainer").append('</div>');
     $("#submit").click(request);
+    $("#scriptContainer").append('<div id=linkBox></div>');
 
 }
 
