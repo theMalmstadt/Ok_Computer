@@ -32,16 +32,16 @@ namespace OBM.Models.ViewModels
             {
                 if ((DateTime.Compare(match.Time, DateTime.Now) > 0) || (match.Time == null))
                 {
-                    Status = "upcoming";
+                    Status = 2;
                 }
                 else
                 {
-                    Status = "in progress";
+                    Status = 1;
                 }
             }
             else
             {
-                Status = "completed";
+                Status = 3;
             }
         }
 
@@ -60,6 +60,6 @@ namespace OBM.Models.ViewModels
         public int? PrereqMatch2ID { get; set; }
         public string Time { get; set; }
         public int? Winner { get; set; }
-        public string Status { get; set; }
+        public int Status { get; set; }
     }
 }

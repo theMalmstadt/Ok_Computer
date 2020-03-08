@@ -459,7 +459,9 @@ namespace OBM.Controllers
                 matchVM.Add(new MatchViewModel(model));
             }
 
-            return Json(matchVM, JsonRequestBehavior.AllowGet);
+            List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => DateTime.Parse(y.Time)).ToList();
+
+            return Json(sortedList, JsonRequestBehavior.AllowGet);
         }
 
         public void CompetitorUpdate(int? id)

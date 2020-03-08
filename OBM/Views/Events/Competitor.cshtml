@@ -5,9 +5,11 @@
     if (ViewBag.Access == true)
     {
         <div>
-            <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+            <h1 align="center">@Html.DisplayFor(model => model.CompetitorName)'s matches</h1>
             <input id="EventID" type="hidden" value="@Model.EventID" />
             <input id="compID" type="hidden" value="@Model.CompetitorID" />
+
+            <hr />
             <br />
             <div id="matches">
                 <div class="card text-white border-warning mb-3">
