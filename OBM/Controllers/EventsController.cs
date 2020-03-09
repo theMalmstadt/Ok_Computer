@@ -587,6 +587,7 @@ namespace OBM.Controllers
         {
             CompetitorUpdate(id);
 
+            var j = 0;
             string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
@@ -602,8 +603,8 @@ namespace OBM.Controllers
                     col = "success";
                     state = "a";
                 }
-                compStr += "<tr><td><input id=\"compID\" type=\"hidden\" value=\"" + i.CompetitorID + "\" />"
-                              +"<button id=\"busyState\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\"" + state + "\">" + state + "</button>" + i.CompetitorName + "</td></tr>";
+                compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\"" 
+                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td></tr>";
             }
             compStr += "</table>";
             var data = new

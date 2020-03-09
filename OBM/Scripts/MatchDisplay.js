@@ -1,7 +1,6 @@
-﻿$("body").on('click', '#busyState', function () {
-    console.log("hello");
-    var state = $('#busyState').val();
-    var id = $('#compID').val();
+﻿function sharedFunction(id) {
+    //console.log("hello " + id);
+    var state = $('#busyState' + id).val();
 
     if (state == "b") {
         $("#busyState").toggleClass("btn-outline-danger btn-outline-success");
@@ -17,11 +16,12 @@
     $.ajax({
         type: 'POST',
         url: '/Events/Competitor/' + id,
+        success: ajax_match,
         error: errorOnAjax
     });
-});
+}
 
-var interval = 1000 * 500;
+var interval = 1000 * 5;
 
 var ajax_call = function () {
     var eventID = $('#eventID').val();
