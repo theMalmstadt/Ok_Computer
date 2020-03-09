@@ -1,4 +1,4 @@
-﻿var interval = 1000 * 5;
+﻿var interval = 1000 * 500;
 
 var ajax_call = function () {
     var eventID = $('#eventID').val();

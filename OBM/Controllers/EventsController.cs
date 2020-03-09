@@ -603,12 +603,12 @@ namespace OBM.Controllers
 
         public JsonResult MatchList(int? id)
         {
-            string matchStr = "<h4 align=\"left\">Brackets</h4>";
+            string matchStr = "<h4 align=\"left\">Brackets</h4>";                                               ///here here
 
-            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList())
+            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList()) //"@Html.ActionLink(t.TournamentName, \"Manage\", \"Events\")"
             {
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
-                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\">" + t.TournamentName + "</h5><div>";
+                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5><div>";
                 if (matchList.Any())
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
