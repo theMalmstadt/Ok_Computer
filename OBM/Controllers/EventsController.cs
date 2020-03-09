@@ -411,6 +411,7 @@ namespace OBM.Controllers
             }
         }
 
+
         [HttpGet]
         public ActionResult Competitor(int? id)
         {
@@ -440,6 +441,32 @@ namespace OBM.Controllers
             catch
             {
                 throw new HttpException(404, "Page not Found");
+            }
+        }
+
+        [HttpPost]
+        public JsonResult Competitor(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var found = db.Competitors.Find(id);
+                    if (found.BusyState == "a")
+                    {
+                        found.BusyState = "b";
+                    }
+                    else
+                    {
+                        found.BusyState = "a";
+                    }
+                    db.SaveChanges();
+                }
+                return Json(new { success = true, responseText = "Successful Post" }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false, responseText = "Bad Post Request" }, JsonRequestBehavior.AllowGet);
             }
         }
 

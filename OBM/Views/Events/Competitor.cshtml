@@ -1,7 +1,7 @@
 ﻿@model OBM.Models.Competitor
 @{
     ViewBag.Title = Model.CompetitorName;
-
+   
     if (ViewBag.Access == true)
     {
         <div>
@@ -16,20 +16,23 @@
                     @{
                         var state = "";
                         var col = "";
+                        var text = "";
                         if (Model.BusyState == "b".ToString())
                         {
-                            state = "busy";
                             col = "danger";
+                            state = "b";
+                            text = "busy";
 
                         }
                         else
                         {
-                            state = "available";
                             col = "success";
+                            state = "a";
+                            text = "available";
                         }
-                        <button id="busyState" type="button" class="btn btn-outline-@col" value="@state">@state</button>
-                    }
 
+                        <button id="busyState" type="submit" class="btn btn-outline-@col" value="@state">@text</button>
+                    }
                 </div>
             </div>
             <h3>Matches</h3>

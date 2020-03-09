@@ -1,16 +1,23 @@
 ﻿$("#busyState").click(function () {
-    console.log("here");
-    //$("#busyState").toggleClass("btn-outline-danger");
-    if ($('#busyState').val() == "busy") {
+    var state = $('#busyState').val();
+    var id = $('#compID').val();
+
+    if (state == "b") {
         $("#busyState").toggleClass("btn-outline-danger btn-outline-success");
-        $("#busyState").val("available");
+        $("#busyState").val("a");
         $("#busyState").text("available");
     }
     else {
         $("#busyState").toggleClass("btn-outline-success btn-outline-danger");
-        $("#busyState").val("busy");
+        $("#busyState").val("b");
         $("#busyState").text("busy");
-    }    
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Events/Competitor/' + id,
+        error: errorOnAjax
+    });
 });
 
 var interval = 1000 * 30;
