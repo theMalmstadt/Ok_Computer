@@ -504,6 +504,7 @@ namespace OBM.Controllers
                     Identifier = (string)m["match"]["identifier"],
                     Round = (int?)m["match"]["round"],
                     ApiID = (int)m["match"]["id"],
+                    UpdatedAt = DateTime.Parse((string)m["match"]["updated_at"]),
                     Competitor1ID = null,
                     Competitor2ID = null,
                     PrereqMatch1ID = null,
@@ -646,6 +647,70 @@ namespace OBM.Controllers
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public void MatchUpdate(int? id)
+        {
+            string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
+            foreach (var t in db.Tournaments.Where(p => p.EventID == id).ToList())
+            {
+                if (t.IsStarted == true)
+                {
+                    string uriPart = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
+                    string participantsData = SendRequest(uriPart);
+                    var participantsObject = JToken.Parse(participantsData);
+
+                    string uriMatch = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/matches.json?api_key=" + api_key;
+                    string chalMatchData = SendRequest(uriMatch);
+                    var chalMatchObject = JToken.Parse(chalMatchData);
+
+                    var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
+
+                    foreach (var m in chalMatchObject)
+                    {
+                        int matchID = (int)m["match"]["id"];
+                        var temp = db.Matches.Where(x => x.ApiID == matchID).First();
+                        var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
+                        if (temp.UpdatedAt != chalUpdatedTime)
+                        {
+                            temp.UpdatedAt = chalUpdatedTime;
+
+                            if (m["match"]["player1_id"].ToString() != "")
+                            {
+                                string tempPart1 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
+                                temp.Competitor1ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart1).First().CompetitorID;
+                            }
+                            if (m["match"]["player2_id"].ToString() != "")
+                            {
+                                string tempPart2 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
+                                temp.Competitor2ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart2).First().CompetitorID;
+                            } 
+                            if (m["match"]["scores-csv"] == null)
+                            {
+                                temp.Score1 = null;
+                                temp.Score2 = null;
+                            }
+                            else
+                            {
+                                string chalScore = (string)m["match"]["scores-csv"];
+                                int firstHyph = chalScore.IndexOf('-');
+                                if (firstHyph != 0)
+                                {
+                                    temp.Score1 = Int32.Parse(chalScore.Substring(0, chalScore.IndexOf('-')));
+                                    temp.Score2 = Int32.Parse(chalScore.Substring(chalScore.IndexOf('-')+1));
+                                }
+                                else
+                                {
+                                    int secondHyph = chalScore.IndexOf('-', 1);
+                                    temp.Score1 = Int32.Parse(chalScore.Substring(0, secondHyph));
+                                    temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph+1));
+                                }
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
         }
 
         private string SendRequest(string uri)

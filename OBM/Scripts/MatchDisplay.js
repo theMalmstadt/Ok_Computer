@@ -1,5 +1,16 @@
 ﻿var interval = 1000 * 5;
 
+var ajax_match_update = function () {
+    var eventID = $("#eventID").val();
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: '/Events/MatchUpdate?id=' + eventID,
+        complete: setTimeout(ajax_match, 0),
+        error: errorOnAjax
+    });
+}
+
 var ajax_call = function () {
     var eventID = $('#eventID').val();
     console.log(eventID);
@@ -8,7 +19,7 @@ var ajax_call = function () {
         dataType: 'json',
         url: '/Events/MatchList?id=' + eventID,
         success: MatchList,
-        complete: setTimeout(ajax_match, 0),
+        complete: setTimeout(ajax_match_update, 0),
         error: errorOnAjax
     });
 }

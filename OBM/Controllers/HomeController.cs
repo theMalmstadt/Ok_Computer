@@ -16,6 +16,9 @@ namespace OBM.Controllers
     {
         public ActionResult Index()
         {
+            string date = "2015-01-19T16:57:17-05:00";
+            DateTime newDate = DateTime.Parse(date);
+
             EventContext db = new EventContext();
             var eventViewList = new List<EventViewModel>();
             if (Request.IsAuthenticated)

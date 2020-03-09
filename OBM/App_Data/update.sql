@@ -7,3 +7,7 @@ ALTER TABLE [dbo].[Match]
 
 ALTER TABLE [dbo].[Match]
     ADD Score2 INT NULL; 
+
+ALTER TABLE [dbo].[Match]
+	ADD UpdatedAt DATETIME NOT NULL
+	CONSTRAINT df_UpdatedAt DEFAULT (0);
