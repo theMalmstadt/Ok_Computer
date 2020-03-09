@@ -486,7 +486,7 @@ namespace OBM.Controllers
                 matchVM.Add(new MatchViewModel(model));
             }
 
-            List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => DateTime.Parse(y.Time)).ToList();
+            List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => y.Time).ToList();
 
             return Json(sortedList, JsonRequestBehavior.AllowGet);
         }
