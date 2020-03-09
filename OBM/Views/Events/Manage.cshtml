@@ -2,7 +2,7 @@
 
 @{
     ViewBag.Title = "Manage";
-}
+
 
 <h2>@Html.DisplayFor(model => model.EventName)</h2>
 <p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
@@ -24,8 +24,8 @@
         </div>
     }
 </div>
+}
 
 @section scripts {
     <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
-    <script type="text/javascript" src="~/Scripts/competitorMatches.js"></script>
 }

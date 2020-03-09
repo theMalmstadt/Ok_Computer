@@ -590,7 +590,20 @@ namespace OBM.Controllers
             string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
-                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
+                var state = "";
+                var col = "";
+                if (i.BusyState == "b")
+                {
+                    col = "danger";
+                    state = "b";
+                }
+                else
+                {
+                    col = "success";
+                    state = "a";
+                }
+                compStr += "<tr><td><input id=\"compID\" type=\"hidden\" value=\"" + i.CompetitorID + "\" />"
+                              +"<button id=\"busyState\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\"" + state + "\">" + state + "</button>" + i.CompetitorName + "</td></tr>";
             }
             compStr += "</table>";
             var data = new
@@ -603,9 +616,9 @@ namespace OBM.Controllers
 
         public JsonResult MatchList(int? id)
         {
-            string matchStr = "<h4 align=\"left\">Brackets</h4>";                                               ///here here
+            string matchStr = "<h4 align=\"left\">Brackets</h4>";
 
-            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList()) //"@Html.ActionLink(t.TournamentName, \"Manage\", \"Events\")"
+            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList()) 
             {
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
                 matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5><div>";
