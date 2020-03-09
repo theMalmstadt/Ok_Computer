@@ -20,6 +20,8 @@ namespace OBM.DAL
         public virtual DbSet<Tournament> Tournaments { get; set; }
         public virtual DbSet<Station> Stations { get; set; }
 
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
