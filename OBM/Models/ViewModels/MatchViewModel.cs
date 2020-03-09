@@ -25,12 +25,19 @@ namespace OBM.Models.ViewModels
             ApiID = match.ApiID;
             PrereqMatch1ID = match.PrereqMatch1ID;
             PrereqMatch2ID = match.PrereqMatch2ID;
-            Time = match.Time.ToString();
-            Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
     
-            if ((match.Score1 == null) || (match.Score2 == null))
+            Time = match.Time.ToString() ?? null;
+            Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
+
+            if ((match.Score1 != null) || (match.Score2 != null))
             {
-                if ((DateTime.Compare(match.Time, DateTime.Now) > 0) || (match.Time == null))
+                Status = 3;
+            }
+            else
+            {
+                DateTime fakeTime = new DateTime(2999, 9, 9);
+                DateTime timeCheck = match.Time ?? fakeTime;
+                if ((timeCheck == fakeTime) || (timeCheck > DateTime.Now))
                 {
                     Status = 2;
                 }
@@ -38,10 +45,6 @@ namespace OBM.Models.ViewModels
                 {
                     Status = 1;
                 }
-            }
-            else
-            {
-                Status = 3;
             }
         }
 

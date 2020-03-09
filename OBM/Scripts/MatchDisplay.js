@@ -1,4 +1,27 @@
-﻿var interval = 1000 * 5;
+﻿function sharedFunction(id) {
+    //console.log("hello " + id);
+    var state = $('#busyState' + id).val();
+
+    if (state == "b") {
+        $("#busyState").toggleClass("btn-outline-danger btn-outline-success");
+        $("#busyState").val("a");
+        $("#busyState").text("a");
+    }
+    else {
+        $("#busyState").toggleClass("btn-outline-success btn-outline-danger");
+        $("#busyState").val("b");
+        $("#busyState").text("b");
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Events/Competitor/' + id,
+        success: ajax_match,
+        error: errorOnAjax
+    });
+}
+
+var interval = 1000 * 5;
 
 var ajax_call = function () {
     var eventID = $('#eventID').val();
@@ -39,3 +62,4 @@ function errorOnAjax() {
 }
 
 window.setTimeout(ajax_call, 0);
+

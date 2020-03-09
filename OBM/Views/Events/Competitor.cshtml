@@ -1,14 +1,41 @@
 ﻿@model OBM.Models.Competitor
 @{
     ViewBag.Title = Model.CompetitorName;
-
+   
     if (ViewBag.Access == true)
     {
         <div>
-            <h1 align="center">@Html.DisplayFor(model => model.CompetitorName)'s matches</h1>
-            <input id="EventID" type="hidden" value="@Model.EventID" />
-            <input id="compID" type="hidden" value="@Model.CompetitorID" />
+            <div class="row">
+                <div class="col">
+                    <h1>@Html.DisplayFor(model => model.CompetitorName)</h1>
+                    <input id="EventID" type="hidden" value="@Model.EventID" />
+                    <input id="compID" type="hidden" value="@Model.CompetitorID" />
+                    <br />
+                </div>
+                <div class="col">
+                    @{
+                        var state = "";
+                        var col = "";
+                        var text = "";
+                        if (Model.BusyState == "b".ToString())
+                        {
+                            col = "danger";
+                            state = "b";
+                            text = "busy";
 
+                        }
+                        else
+                        {
+                            col = "success";
+                            state = "a";
+                            text = "available";
+                        }
+
+                        <button id="busyState" type="submit" class="btn btn-outline-@col" value="@state">@text</button>
+                    }
+                </div>
+            </div>
+            <h3>Matches</h3>
             <hr />
             <br />
             <div id="matches">
@@ -30,7 +57,7 @@
                             </div>
                             <div class="col-sm" align="center">
                                 <h6>Round</h6>
-                                <h1>1</h1>
+                                <h3>1</h3>
                             </div>
                             <div class="col-sm" align="center">
                                 <h6>Time</h6>

@@ -411,6 +411,7 @@ namespace OBM.Controllers
             }
         }
 
+
         [HttpGet]
         public ActionResult Competitor(int? id)
         {
@@ -443,6 +444,32 @@ namespace OBM.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult Competitor(int id)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var found = db.Competitors.Find(id);
+                    if (found.BusyState == "a")
+                    {
+                        found.BusyState = "b";
+                    }
+                    else
+                    {
+                        found.BusyState = "a";
+                    }
+                    db.SaveChanges();
+                }
+                return Json(new { success = true, responseText = "Successful Post" }, JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json(new { success = false, responseText = "Bad Post Request" }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public JsonResult Matches(int? id)
         {
             List<Tournament> tournList = db.Tournaments.Where(x => x.EventID == id).ToList();
@@ -459,7 +486,7 @@ namespace OBM.Controllers
                 matchVM.Add(new MatchViewModel(model));
             }
 
-            List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => DateTime.Parse(y.Time)).ToList();
+            List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => y.Time).ToList();
 
             return Json(sortedList, JsonRequestBehavior.AllowGet);
         }
@@ -560,10 +587,24 @@ namespace OBM.Controllers
         {
             CompetitorUpdate(id);
 
+            var j = 0;
             string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
-                compStr += "<tr><td>" + i.CompetitorName + "</td></tr>";
+                var state = "";
+                var col = "";
+                if (i.BusyState == "b")
+                {
+                    col = "danger";
+                    state = "b";
+                }
+                else
+                {
+                    col = "success";
+                    state = "a";
+                }
+                compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\"" 
+                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td></tr>";
             }
             compStr += "</table>";
             var data = new
@@ -578,10 +619,10 @@ namespace OBM.Controllers
         {
             string matchStr = "<h4 align=\"left\">Brackets</h4>";
 
-            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList())
+            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList()) 
             {
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
-                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\">" + t.TournamentName + "</h5><div>";
+                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5><div>";
                 if (matchList.Any())
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;

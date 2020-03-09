@@ -1,4 +1,26 @@
-﻿var interval = 1000 * 30;
+﻿$("#busyState").click(function () {
+    var state = $('#busyState').val();
+    var id = $('#compID').val();
+
+    if (state == "b") {
+        $("#busyState").toggleClass("btn-outline-danger btn-outline-success");
+        $("#busyState").val("a");
+        $("#busyState").text("available");
+    }
+    else {
+        $("#busyState").toggleClass("btn-outline-success btn-outline-danger");
+        $("#busyState").val("b");
+        $("#busyState").text("busy");
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Events/Competitor/' + id,
+        error: errorOnAjax
+    });
+});
+
+var interval = 1000 * 30;
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
@@ -24,7 +46,7 @@ function dispMatches(matchArray) {
                 status = "Upcoming";
                 color = 'primary';
             }
-            else if (matchArray[i].Status == 1) {
+            else if ((matchArray[i].Status == 1)) {
                 status = "In Progress";
                 color = 'warning';
             }
@@ -48,7 +70,8 @@ function dispMatches(matchArray) {
             var score1 = (matchArray[i].Score1 || (matchArray[i].Score1 == 0)) ? matchArray[i].Score1 : '--';
             var score2 = (matchArray[i].Score2 || (matchArray[i].Score2 == 0)) ? matchArray[i].Score2 : '--';
             var round = matchArray[i].Round;
-            var time = new Date(matchArray[i].Time).toLocaleTimeString();;
+            var temp = new Date(matchArray[i].Time).toLocaleTimeString();
+            var time = (temp != "Invalid Date" ? temp : "--");
 
             $('#matches').append('<div class="card text-white border-' + color + ' mb-3"><div class="card-header bg-' + color
                 + '" align="center"><h3>' + status + '</h3></div><div class="card-body text-white bg-secondary"><div class="row">'
