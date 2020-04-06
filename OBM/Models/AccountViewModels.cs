@@ -85,6 +85,22 @@ namespace OBM.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class RegisterChalViewModel
+    {
+        [Required]
+        [Display(Name = "Username:")]
+        public string Username { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "Api Key:")]
+        public string ApiKey { get; set; }
+
+        [Required]
+        [Display(Name ="Email:")]
+        public string Email { get; set; }
+    }
+
     public class ResetPasswordViewModel
     {
         [Required]

@@ -11,12 +11,13 @@ using Microsoft.Owin.Security;
 using OBM.Models;
 using OBM.DAL;
 using reCAPTCHA.MVC;
+using OBM.Models.API;
 
 namespace OBM.Controllers
 {
-    [Authorize]
     public class AccountController : Controller
     {
+        private ApplicationDbContext db = new ApplicationDbContext();
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -147,6 +148,14 @@ namespace OBM.Controllers
         }
 
         //
+        // GET: /Account/RegisterOptions
+        [AllowAnonymous]
+        public ActionResult RegisterOptions()
+        {
+            return View();
+        }
+
+        //
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -182,6 +191,58 @@ namespace OBM.Controllers
             }
 
             // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [HttpGet]
+        public ActionResult RegisterChal()
+        {
+            return View();
+        }
+
+
+        //POST: /Account/RegisterChal
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [CaptchaValidator]
+        public async Task<ActionResult> RegisterChal(RegisterChalViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                ChallongeApi api = new ChallongeApi();
+                var emailcheck = db.Users.Where(u => u.Email == model.Email).ToList();
+                if (emailcheck.Count() == 0)
+                {
+                    if (api.checkCredentials(model))
+                    {
+                        var user = new ApplicationUser
+                        {
+                            UserName = model.Username,
+                            Email = model.Email
+                        };
+
+                        var result = await UserManager.CreateAsync(user, model.ApiKey);
+
+                        if (result.Succeeded)
+                        {
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            
+                            return RedirectToAction("Index", "Home");
+                        }
+                    }
+                    else
+                    {
+                        ModelState.AddModelError("", "Invalid Challonge username or password.");
+                        return View(model);
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("", "An account with that email address already exists.");
+                    return View(model);
+                }
+            }
             return View(model);
         }
 
