@@ -32,6 +32,11 @@ namespace OBM
                 "~/Scripts/anime.min.js",
                 "~/Scripts/HomePage.js"
                 ));
+
+            bundles.Add(new ScriptBundle("~/bundles/MatchDisplay").Include(
+                "~/Scripts/anime.min.js",
+                "~/Scripts/MatchDisplay.js"
+                ));
         }
     }
 }

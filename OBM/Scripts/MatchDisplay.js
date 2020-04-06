@@ -74,3 +74,35 @@ function errorOnAjax() {
 
 window.setTimeout(ajax_call, 0);
 
+var test = anime({
+        targets: '.MinimalGraph',
+        strokeDashoffset: [anime.setDashoffset, 0],
+        easing: 'easeInOutSine',
+        duration: 1500,
+        delay: function (el, i) { return i * 250 },
+        direction: 'alternate',
+        loop: true
+});
+
+let animation = anime({
+    targets: 'liner',
+    // Properties 
+    translateX: 100,
+    borderRadius: 50,
+    // Property Parameters
+    duration: 2000,
+    easing: 'linear',
+    // Animation Parameters
+    direction: 'alternate'
+}); 
+
+
+anime.timeline({ loop: false })
+    .add({
+        targets: '.liner',
+        scale: [12, 1.2],
+        opacity: [0, 1],
+        easing: "easeOutCirc",
+        duration: 1000,
+        delay: (el, i) => 1000 * i
+    })
