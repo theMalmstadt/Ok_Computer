@@ -15,9 +15,23 @@ namespace OBM.Models.ViewModels
             MatchID = match.MatchID;
             TournamentID = match.TournamentID;
             Competitor1ID = match.Competitor1ID;
-            Competitor1Name = db.Competitors.Find(match.Competitor1ID).CompetitorName;
+            if (Competitor1ID != null)
+            {
+                Competitor1Name = db.Competitors.Find(match.Competitor1ID).CompetitorName;
+            }
+            else
+            {
+                Competitor1Name = "";
+            }
             Competitor2ID = match.Competitor2ID;
-            Competitor2Name = db.Competitors.Find(match.Competitor2ID).CompetitorName;
+            if (Competitor2ID != null)
+            {
+                Competitor2Name = db.Competitors.Find(match.Competitor2ID).CompetitorName;
+            }
+            else
+            {
+                Competitor2Name = "";
+            }
             Score1 = match.Score1;
             Score2 = match.Score2;
             Identifier = match.Identifier;

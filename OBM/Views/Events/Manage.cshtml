@@ -6,31 +6,14 @@
 
     <h2>@Html.DisplayFor(model => model.EventName)</h2>
     <p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
+    <hidden id="EventID" value=@Model.EventID></hidden>
     <div class="col-md-10" align="center">
         @if (ViewBag.Access == true)
         {
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
             <div id="Matches"></div>
             <div id="Competitors"></div>
-            <div id="MinimalGraph">
-                <p class="liner">Here it is</p>    <div id="lineDrawing">
-                    <svg viewBox="-450 -450 900 900" style="background-color: slategray;">
-                        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="7" class="lines">
-
-                            <circle cx="-15" cy="0" r="15" stroke-width="3" />
-                            <circle cx="-15" cy="0" r="7" fill="currentColor" />
-
-                            <circle cx="-15" cy="100" r="15" stroke-width="3" />
-                            <circle cx="-15" cy="100" r="7" fill="currentColor" />
-
-                            <path d="M0,0 C50,0 50,50 100,50" />
-                            <path d="M0,100 C50,100 50,50 100,50" />
-                            <circle cx="115" cy="50" r="15" stroke-width="3" />
-
-                        </g>
-                    </svg>
-                </div>
-            </div>
+            <div id="MinimalGraph"></div>
 
             <p>
                 @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |

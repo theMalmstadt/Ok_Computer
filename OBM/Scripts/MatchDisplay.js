@@ -74,35 +74,40 @@ function errorOnAjax() {
 
 window.setTimeout(ajax_call, 0);
 
-var test = anime({
-        targets: '.MinimalGraph',
-        strokeDashoffset: [anime.setDashoffset, 0],
-        easing: 'easeInOutSine',
-        duration: 1500,
-        delay: function (el, i) { return i * 250 },
-        direction: 'alternate',
-        loop: true
-});
+window.onload = ajaxMatches;
 
-let animation = anime({
-    targets: 'liner',
-    // Properties 
-    translateX: 100,
-    borderRadius: 50,
-    // Property Parameters
-    duration: 2000,
-    easing: 'linear',
-    // Animation Parameters
-    direction: 'alternate'
-}); 
+var ajaxMatches = function () {
+    var id = $('#EventID').val();
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: '/Events/Matches/' + id,
+        success: drawTree,
+        error: errorOnAjax
+    });
+}
 
+function drawTree (data) {
+    //$('#MinimalGraph').append("<svg viewBox=\"-450 -450 900 900\" style=\"background-color: slategray;\"><g fill=\"none\" fill-rule=\"evenodd\" stroke=\"currentColor\" stroke-width=\"7\" class=\"lines\"><circle cx=\"-15\" cy=\"0\" r=\"15\" stroke-width=\"3\" /><circle cx=\"-15\" cy=\"0\" r=\"7\" fill=\"currentColor\" /><circle cx=\"-15\" cy=\"100\" r=\"15\" stroke-width=\"3\" /><circle cx=\"-15\" cy=\"100\" r=\"7\" fill=\"currentColor\" /><path d=\"M0,0 C50,0 50,50 100,50\" /><path d=\"M0,100 C50,100 50,50 100,50\" /><circle cx=\"115\" cy=\"50\" r=\"15\" stroke-width=\"3\" /></g></svg>");
+    /*
+     <svg viewBox="-450 -450 900 900" style="background-color: slategray;">
+        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="7" class="lines">
 
-anime.timeline({ loop: false })
-    .add({
-        targets: '.liner',
-        scale: [12, 1.2],
-        opacity: [0, 1],
-        easing: "easeOutCirc",
-        duration: 1000,
-        delay: (el, i) => 1000 * i
-    })
+            <circle cx="-15" cy="0" r="15" stroke-width="3" />
+            <circle cx="-15" cy="0" r="7" fill="currentColor" />
+
+            <circle cx="-15" cy="100" r="15" stroke-width="3" />
+            <circle cx="-15" cy="100" r="7" fill="currentColor" />
+
+            <path d="M0,0 C50,0 50,50 100,50" />
+            <path d="M0,100 C50,100 50,50 100,50" />
+            <circle cx="115" cy="50" r="15" stroke-width="3" />
+
+        </g>
+    </svg>
+    */
+    var temp = "<svg viewBox=\"-450 -450 900 900\" style=\"background-color: slategray;\"><g id=\"vBox\" fill=\"none\" fill-rule=\"evenodd\" stroke=\"currentColor\" stroke-width=\"7\" class=\"lines\">";
+    temp += "<circle cx=\"-15\" cy=\"0\" r=\"15\" stroke-width=\"3\" />";
+    temp += "</g></svg >";
+    $('#MinimalGraph').append(temp);
+}
