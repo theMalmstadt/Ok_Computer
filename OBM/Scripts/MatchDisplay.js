@@ -74,40 +74,107 @@ function errorOnAjax() {
 
 window.setTimeout(ajax_call, 0);
 
-window.onload = ajaxMatches;
-
 var ajaxMatches = function () {
     var id = $('#EventID').val();
+    console.log(id);
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: '/Events/Matches/' + id,
+        url: '/Events/Matches/' + id.toString(),
         success: drawTree,
         error: errorOnAjax
     });
 }
 
 function drawTree (data) {
-    //$('#MinimalGraph').append("<svg viewBox=\"-450 -450 900 900\" style=\"background-color: slategray;\"><g fill=\"none\" fill-rule=\"evenodd\" stroke=\"currentColor\" stroke-width=\"7\" class=\"lines\"><circle cx=\"-15\" cy=\"0\" r=\"15\" stroke-width=\"3\" /><circle cx=\"-15\" cy=\"0\" r=\"7\" fill=\"currentColor\" /><circle cx=\"-15\" cy=\"100\" r=\"15\" stroke-width=\"3\" /><circle cx=\"-15\" cy=\"100\" r=\"7\" fill=\"currentColor\" /><path d=\"M0,0 C50,0 50,50 100,50\" /><path d=\"M0,100 C50,100 50,50 100,50\" /><circle cx=\"115\" cy=\"50\" r=\"15\" stroke-width=\"3\" /></g></svg>");
-    /*
-     <svg viewBox="-450 -450 900 900" style="background-color: slategray;">
-        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-width="7" class="lines">
-
-            <circle cx="-15" cy="0" r="15" stroke-width="3" />
-            <circle cx="-15" cy="0" r="7" fill="currentColor" />
-
-            <circle cx="-15" cy="100" r="15" stroke-width="3" />
-            <circle cx="-15" cy="100" r="7" fill="currentColor" />
-
-            <path d="M0,0 C50,0 50,50 100,50" />
-            <path d="M0,100 C50,100 50,50 100,50" />
-            <circle cx="115" cy="50" r="15" stroke-width="3" />
-
-        </g>
-    </svg>
-    */
-    var temp = "<svg viewBox=\"-450 -450 900 900\" style=\"background-color: slategray;\"><g id=\"vBox\" fill=\"none\" fill-rule=\"evenodd\" stroke=\"currentColor\" stroke-width=\"7\" class=\"lines\">";
-    temp += "<circle cx=\"-15\" cy=\"0\" r=\"15\" stroke-width=\"3\" />";
-    temp += "</g></svg >";
-    $('#MinimalGraph').append(temp);
+    var test1 = new Date();
+    test1.setHours(16);
+    test1.setMinutes(15);
+    var test2 = new Date();
+    test2.setHours(16);
+    test2.setMinutes(30);
+    //console.log(test1.toLocaleString());
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            //labels: [test1.toLocaleString(), test2.toLocaleString()],
+            datasets: [{
+                data: [{
+                    x: test1,
+                    y: 80
+                    }, {
+                    x: test2,
+                    y: 75
+                }],
+                fill: false
+                }, {
+                data: [{
+                    x: test1,
+                    y: 70
+                    }, {
+                    x: test2,
+                    y: 75
+                }],
+			    fill: false
+            
+                /*data: [80, 75],
+			    fill: false
+                }, {
+                    data: [70, 75, 65],
+                    fill: false
+                }, {
+                    data: [60, 55],
+                    fill: false
+                }, {
+                    data: [50, 55, 65, 45],
+                    fill: false
+                }, {
+                    data: [40, 35],
+                    fill: false
+                }, {
+                    data: [30, 35, 25, 45],
+                    fill: false
+                }, {
+                    data: [20, 15],
+                    fill: false
+                }, {
+                    data: [10, 15, 25],
+                    fill: false*/
+            }]
+        },
+        options: {
+            responsive: true,
+            layout: {
+                padding: {
+                    top: 5,
+                    left: 5,
+                    right: 5,
+                    bottom: 5
+                }
+            },
+            title: {
+                display: false
+            },
+            legend: {
+                display: false
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    time: {
+                        displayFormats: {
+                            quarter: 'h:mm a'
+                        }
+                    }
+                }],
+                yAxes: [{
+                    display: false
+                }]
+            }
+        }
+    });
 }
+
+window.onload = ajaxMatches;
