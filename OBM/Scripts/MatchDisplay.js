@@ -86,22 +86,44 @@ var ajaxMatches = function () {
     });
 }
 
-function drawTree (data) {
-    var test1 = new Date();
-    test1.setHours(16);
-    test1.setMinutes(15);
+function drawTree(data) {
+    var here = moment.utc(data[0]["Time"]);
     var test2 = new Date();
     test2.setHours(16);
     test2.setMinutes(30);
-    //console.log(test1.toLocaleString());
-    var ctx = document.getElementById('myChart').getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            //labels: [test1.toLocaleString(), test2.toLocaleString()],
-            datasets: [{
+    
+    console.log(here.toLocaleString())
+    console.log(moment.utc(test2).toLocaleString())
+    var dataList = [];
+    for (var i = 0; i < data.length; i++) {
+        var temp = {
+            data: [{
+                x: here,
+                y: 80
+            }, {
+                x: test2,
+                y: 75
+            }],
+            fill: false
+        }
+        dataList.push(temp);
+        console.log(temp);
+    }
+    /*
+    var here2 = {
+        data: [{
+            x: here,
+            y: 80
+        }, {
+            x: test2,
+            y: 75
+        }],
+        fill: false
+    };*/
+    console.log(dataList);
+    /*console.log([{
                 data: [{
-                    x: test1,
+                    x: here,
                     y: 80
                     }, {
                     x: test2,
@@ -140,8 +162,21 @@ function drawTree (data) {
                     fill: false
                 }, {
                     data: [10, 15, 25],
-                    fill: false*/
-            }]
+                    fill: false
+                }]);
+
+    var test1 = new Date();
+    test1.setHours(16);
+    test1.setMinutes(15);
+    console.log(test1.toLocaleString());*/
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            //labels: [test1.toLocaleString(), test2.toLocaleString()],
+            datasets: dataList
+            
         },
         options: {
             responsive: true,

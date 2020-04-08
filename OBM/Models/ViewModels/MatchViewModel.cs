@@ -40,7 +40,7 @@ namespace OBM.Models.ViewModels
             PrereqMatch1ID = match.PrereqMatch1ID;
             PrereqMatch2ID = match.PrereqMatch2ID;
     
-            Time = match.Time.ToString() ?? null;
+            Time = match.Time;
             Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
 
             if ((match.Score1 != null) || (match.Score2 != null))
@@ -75,7 +75,7 @@ namespace OBM.Models.ViewModels
         public int ApiID { get; set; }
         public int? PrereqMatch1ID { get; set; }
         public int? PrereqMatch2ID { get; set; }
-        public string Time { get; set; }
+        public DateTime? Time { get; set; }
         public int? Winner { get; set; }
         public int Status { get; set; }
     }
