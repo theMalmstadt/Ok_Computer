@@ -20,6 +20,7 @@ using System.Net.Http;
 using System.IO;
 using static MoreLinq.Extensions.MaxByExtension;
 using static MoreLinq.Extensions.MinByExtension;
+using Microsoft.Ajax.Utilities;
 
 namespace OBM.Controllers
 {
@@ -653,11 +654,20 @@ namespace OBM.Controllers
 
                         matchStr += "</td><td width=\"25%\">";
 
+
+                       
+
                         if (m.Score1 == null)
-                            matchStr += "<button id=\"start" + m.Identifier + "\" style=\"width: 100 % \">Start</button>";
+                            matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch("+ JsonConvert.SerializeObject(m)+") >Start</button>";
                         else
-                            matchStr += m.Score1;
+                        {
+                            //location.href='<%: Url.Action("Action", "Controller") %>'
+                        }
+                        matchStr += m.Score1;
                         matchStr += "</td></tr>";
+
+
+
 
                         matchStr += "<tr><td>";
                         if ((m.Round > 0) && (m.Round < (GFinal - 3)))
@@ -699,7 +709,7 @@ namespace OBM.Controllers
                         matchStr += "</td><td>";
 
                         if (m.Score2 == null)
-                            matchStr += "<button id=\"submit" + m.Identifier + "\" style=\"width: 100 % \">Submit</button>";
+                            matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" >Submit</button>";
                         else
                             matchStr += m.Score2;
                         matchStr += "</td></tr></table>";
@@ -715,6 +725,66 @@ namespace OBM.Controllers
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+        [HttpPost]
+        public void StartMatch()
+        {
+
+            Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
+            var matchId = Request.Params["MatchID"];
+            var tournamentId = Request.Params["TournamentID"];
+            var userid = HttpContext.User.Identity.GetUserId();
+            var apiKey = db.AspNetUsers.Where(x => x.Id ==userid ).First().ApiKey;
+
+
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentId + "/matches/" + matchId + "/mark_as_underway.json;");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+
+
+
+            // https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}/mark_as_underway.{json|xml}
+
+            var myObject = new
+                {match_id = matchId,
+                tournament=tournamentId,
+                api_key= apiKey
+                };
+            var myJson = JObject.FromObject(myObject);
+            Debug.WriteLine(myJson);
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+
+
+                streamWriter.Write(myJson);
+            }
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
+                Debug.WriteLine(httpResponse);
+            }
+
+            catch (System.Net.WebException e)
+            {
+                
+
+            }
+
+
         }
 
         public void MatchUpdate(int? id)
@@ -783,6 +853,7 @@ namespace OBM.Controllers
 
         private string SendRequest(string uri)
         {
+
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
             request.Accept = "application/json";
 

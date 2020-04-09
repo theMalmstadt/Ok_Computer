@@ -205,12 +205,15 @@ namespace OBM.Controllers
                 resultTournament.UrlString = (string)myJSON["url"];
                 resultTournament.Description = (string)myJSON["description"];
                 resultTournament.Game = (string)myJSON["game_name"];
-                resultTournament.IsStarted = false;
-                //resultTournament.Subdomain = (string)myJSON["subdomain"];
-                //resultTournament.ApiId = (string)myJSON["api_key"];
+                if((string)myJSON["state"]=="underway") 
+                        resultTournament.IsStarted = true;
+                else 
+                        resultTournament.IsStarted = false;
+                    //resultTournament.Subdomain = (string)myJSON["subdomain"];
+                    resultTournament.ApiId = (int)myJSON["id"];
 
 
-                Create(resultTournament);
+                    Create(resultTournament);
                 return JObject.Parse(result);
                  }//EXCEPTION HAnDlINGSGINJFDIGSF
 

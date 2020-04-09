@@ -1,5 +1,5 @@
 ﻿function sharedFunction(id) {
-    //console.log("hello " + id);
+    console.log("hello " + id);
     var state = $('#busyState' + id).val();
 
     if (state == "b") {
@@ -60,6 +60,8 @@ var ajax_match = function () {
     });
 }
 
+
+
 function CompetitorList(data) {
     $('#Competitors').html(data["compTable"]);
 }
@@ -73,4 +75,23 @@ function errorOnAjax() {
 }
 
 window.setTimeout(ajax_call, 0);
+
+function StartMatch(mymatch)
+{
+    console.log(mymatch);
+    if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
+        //MAKE REQUEST TO START MATCH
+        console.log("match can be started");
+
+        $.ajax({
+            type: 'POST',
+            url: '/Events/StartMatch/',
+            data: (mymatch),
+            success: function () { console.log('success!'); },
+            error: errorOnAjax
+        });
+    }
+    else
+        console.log("this match isnt ready");
+}
 
