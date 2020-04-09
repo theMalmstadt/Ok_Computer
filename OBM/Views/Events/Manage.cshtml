@@ -10,7 +10,8 @@
     <div class="col-md-10" align="center">
         @if (ViewBag.Access == true)
         {
-            <div id="MinimalGraph">
+            <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
+            <div id="MinimalGraph" style="display:none">
                 <canvas id="myChart"></canvas>
             </div>
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />

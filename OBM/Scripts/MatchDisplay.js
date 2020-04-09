@@ -207,3 +207,14 @@ function drawTree(data) {
 }
 
 window.onload = ajaxMatches;
+
+function hideShow(div) {
+    console.log("trying");
+    var x = document.getElementById(div);
+    if (window.getComputedStyle(x).display === "none") {
+        x.style.display = "block";
+    }
+    else {
+        x.style.display = "none";
+    }
+}
