@@ -137,26 +137,36 @@ function tryThis(data, parent, h, e) {
     return dataList;
 }
 
-function fract(n, t) {
-    if (t == 1) {
-        return n;
-    }
-    //console.log(n);
-    return fract((n + n / 2), (t-1));
-}
-
 function drawTree(data) {
+    var trees = [{
+        round : 2,
+        final : data[0]
+    }]
+    var tournList = [data[0].TournamentID];
 
-    var round = 2;
-    var final = data[0]; 
-    for (var i = 0; i < data.length; i++) {
-        if (data[i].Round > round) {
-            round = data[i].Round;
-            final = data[i];
+    for (var j = 0; j < trees.length; j++) {
+        for (var i = 0; i < data.length; i++) {
+            if (tournList.includes(data[i].TournamentID)) {
+                if (data[i].Round > trees[0].round) {
+                    trees[0].round = data[i].Round;
+                    trees[0].final = data[i];
+                }
+            }
+            else {
+                var newTree = {
+                    round: 2,
+                    final: data[i]
+                }
+                tournList.push(data[i].TournamentID);
+                trees.push(newTree);
+            }
         }
     }
 
-    var dataList = tryThis(data, final, 1, 1);
+    var dataList = [];
+    for (var i = 0; i < trees.length; i++) {
+        dataList = dataList.concat(tryThis(data, trees[i].final, 1, 1));
+    }
     
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
