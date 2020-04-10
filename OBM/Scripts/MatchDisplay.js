@@ -165,21 +165,19 @@ function tryThis(data, parent, h, e, offset) {
 function tryThis2(data, current, currY, childY) {
     var dataList = [];
     var base = 1;
-    //var branch1 = h + (base / Math.pow(2, e)) + offset;
-    //var branch2 = h - (base / Math.pow(2, e)) + offset;
 
-    var latest = moment('2020-4-10 10:00');
+    var latest = moment();
 
     if (current.PrereqMatch1ID != null || current.PrereqMatch2ID != null) {
-        latest = latest.add((1 * 15), 'minutes');
+        latest = moment(latest).add((1 * 15), 'minutes');
     }
 
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, current.Round));
+        console.log(currY, Math.pow(2, current.Round));
         var parentResults = tryThis2(data, parent, parentY, currY);
         dataList = dataList.concat(parentResults.dl);
-        //latest = parentResults.last;
     }
 
     if (current.PrereqMatch2ID != null) {
@@ -187,10 +185,6 @@ function tryThis2(data, current, currY, childY) {
         var parentY = currY - (base / Math.pow(2, current.Round));
         var parentResults = tryThis2(data, parent, parentY, currY);
         dataList = dataList.concat(parentResults.dl);
-        //latest = parentResults.last;
-    }
-    if (current.TournamentID == 3002) {
-        //console.log(current.TournamentID, currY, parentY, latest.toLocaleString(), latest.add((1 * 15), 'minutes').toLocaleString());
     }
 
     var node = [{
@@ -217,45 +211,15 @@ function tryThis2(data, current, currY, childY) {
 
     dataList = dataList.concat(node);
 
-    
-
     var send = {
         dl: dataList,
         last: latest
     };
 
-    //console.log(send);
-
     return send;
 }
 
 function drawTree(data) {
-    /*var trees = [{
-        round : 2,
-        final : data[0]
-    }]
-    var tournList = [data[0].TournamentID];
-
-    for (var j = 0; j < trees.length; j++) {
-        for (var i = 0; i < data.length; i++) {
-            if (tournList.includes(data[i].TournamentID)) {
-                if (data[i].Round > trees[j].round) {
-                    console.log(data[i].TournamentID);
-                    trees[j].round = data[i].Round;
-                    trees[j].final = data[i];
-                }
-            }
-            else {
-                var newTree = {
-                    round: 2,
-                    final: data[i]
-                }
-                tournList.push(data[i].TournamentID);
-                trees.push(newTree);
-            }
-        }
-        console.log(tournList);
-    }*/
 
     var trees = [data[0]];
 
@@ -286,13 +250,43 @@ function drawTree(data) {
 
     var dataList = [];
     for (var i = 0; i < 1; i++) {//trees.length; i++) {
-        //console.log("here");
-        //dataList = dataList.concat(tryThis2(data, trees[i], 1, 1, i*trees.length));//maybe use final round size
-        dataList = dataList.concat(tryThis2(data, trees[i], 1.5, 1).dl);
-        //dataList = dataList.concat(tryThis2(data, trees[i], .5, 1).dl);//maybe use final round size
-        console.log("here");
-        //console.log(tryThis2(data, trees[i]).dl);
 
+        var current = trees[1];
+        var dataList = [];
+        var base = 1;
+
+        var latest = moment('2020-4-10 10:00');
+
+        if (current.PrereqMatch1ID != null || current.PrereqMatch2ID != null) {
+            latest = latest.add((1 * 15), 'minutes');
+        }
+
+        if (current.PrereqMatch1ID != null) {
+            var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
+            var parentY = base + (base / Math.pow(2, current.Round));
+            var parentResults = tryThis2(data, parent, parentY, base);
+            dataList = dataList.concat(parentResults.dl);
+            latest = parentResults.last;
+        }
+
+        if (current.PrereqMatch2ID != null) {
+            var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
+            var parentY = base - (base / Math.pow(2, current.Round));
+            var parentResults = tryThis2(data, parent, parentY, base);
+            dataList = dataList.concat(parentResults.dl);
+            latest = parentResults.last;
+        }
+
+        var node = [{
+            data: [{
+                x: moment(latest).add((1 * 15), 'minutes'),
+                y: base
+            }],
+            fill: false,
+            label: current.Identifier
+        }];
+
+        dataList = dataList.concat(node);
     }
     
     var ctx = document.getElementById('myChart').getContext('2d');
