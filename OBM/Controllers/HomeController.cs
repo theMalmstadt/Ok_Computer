@@ -46,7 +46,5 @@ namespace OBM.Controllers
         {
             return View();
         }
-
-        public static bool TestBool(int num) => num % 2 == 0;
     }
 }

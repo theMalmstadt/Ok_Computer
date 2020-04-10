@@ -10,11 +10,6 @@ namespace OBMTester
         [TestMethod]
         public void TestMethod1()
         {
-            var fuck = 69;
-
-            var fucker = HomeController.TestBool(fuck);
-
-            Assert.IsFalse(fucker);
         }
     }
 }
