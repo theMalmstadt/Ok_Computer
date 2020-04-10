@@ -735,28 +735,42 @@ namespace OBM.Controllers
         {
 
             Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
-            var matchId = Request.Params["MatchID"];
-            var tournamentId = Request.Params["TournamentID"];
+            var matchId = Int32.Parse(Request.Params["MatchID"]);
+            var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
+
+            Debug.WriteLine("TournamentID is: " + Request.Params["TournamentID"]);
+
+            var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
+
+            var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
+
             var userid = HttpContext.User.Identity.GetUserId();
             var apiKey = db.AspNetUsers.Where(x => x.Id ==userid ).First().ApiKey;
 
 
-
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentId + "/matches/" + matchId + "/mark_as_underway.json;");
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/mark_as_underway.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
 
 
 
-            // https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}/mark_as_underway.{json|xml}
+           
 
-            var myObject = new
-                {match_id = matchId,
-                tournament=tournamentId,
-                api_key= apiKey
-                };
-            var myJson = JObject.FromObject(myObject);
+
+            //var myJson = JObject.FromObject(myObject);
+            Debug.WriteLine(tournamentId);
+            JObject myJson= new JObject();
+            myJson.Add("match_id", matchApiId);
+            myJson.Add("tournament", tournamentApiId);
+            myJson.Add("api_key", apiKey);
+
+
+            //myJSON.Add("private", myJSON["Private"]);
+
+
+
+
             Debug.WriteLine(myJson);
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
@@ -784,6 +798,8 @@ namespace OBM.Controllers
 
             }
 
+            var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
+            MatchUpdate(eventId);
 
         }
 
@@ -809,7 +825,7 @@ namespace OBM.Controllers
                         int matchID = (int)m["match"]["id"];
                         var temp = db.Matches.Where(x => x.ApiID == matchID).First();
                         var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
-                        if (temp.UpdatedAt != chalUpdatedTime)
+                       // if (temp.UpdatedAt != chalUpdatedTime)
                         {
                             temp.UpdatedAt = chalUpdatedTime;
 

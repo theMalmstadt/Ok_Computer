@@ -79,7 +79,7 @@ window.setTimeout(ajax_call, 0);
 function StartMatch(mymatch)
 {
     console.log(mymatch);
-    if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
+    //if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
         //MAKE REQUEST TO START MATCH
         console.log("match can be started");
 
@@ -87,7 +87,7 @@ function StartMatch(mymatch)
             type: 'POST',
             url: '/Events/StartMatch/',
             data: (mymatch),
-            success: function () { console.log('success!'); },
+            success: function () { ajax_call },
             error: errorOnAjax
         });
     }
