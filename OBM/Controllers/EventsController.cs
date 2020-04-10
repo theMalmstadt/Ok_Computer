@@ -747,10 +747,6 @@ namespace OBM.Controllers
                         {
                             temp.UpdatedAt = chalUpdatedTime;
 
-                            if (m["match"]["started_at"].ToString() != "")
-                            {
-                                temp.Time = DateTime.Parse((string)m["match"]["started_at"]);
-                            }
                             if (m["match"]["player1_id"].ToString() != "")
                             {
                                 string tempPart1 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];

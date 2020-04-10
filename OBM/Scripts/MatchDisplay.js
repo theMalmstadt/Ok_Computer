@@ -86,18 +86,46 @@ var ajaxMatches = function () {
     });
 }
 
-function tryThis(data, parent, h, e) {
+function drawNodes() {
+    var node = {
+        data: [
+            {
+                x: moment().add((r * 15), 'minutes'),
+                    y: h + offset
+            }
+        ],
+        fill: false,
+        //label: parent.MatchID,
+        pointBackgroundColor: 'red',
+        //radius: -1,
+        //pointRadius: [-1]
+    };
+    return node;
+}
+
+function tryThis(data, parent, h, e, offset) {
+    console.log("count");
     var base = 1;
     var r = parent.Round;
     var dataList = [];
-    var branch1 = h + (base / Math.pow(2, e));
-    var branch2 = h - (base / Math.pow(2, e));
+    var branch1 = h + (base / Math.pow(2, e)) + offset;
+    var branch2 = h - (base / Math.pow(2, e)) + offset;
+
+    if (parent.PrereqMatch1ID != null) {
+        var child = data.find(item => item.MatchID === parent.PrereqMatch1ID);
+        dataList = dataList.concat(tryThis(data, child, branch1, e + 1, offset));
+    }
+    if (parent.PrereqMatch2ID != null) {
+        var child = data.find(item => item.MatchID === parent.PrereqMatch2ID);
+        dataList = dataList.concat(tryThis(data, child, branch2, e + 1, offset));
+    }
+
 
     var temp = {
         data: [
             {
                 x: moment().add((r * 15), 'minutes'),
-                y: h
+                y: h + offset
             },
             {
                 x: moment().add(((r - 1) * 15), 'minutes'),
@@ -105,7 +133,10 @@ function tryThis(data, parent, h, e) {
             }
         ],
         fill: false,
-        label: "temp"
+        label: parent.TournamentID,
+        //pointBackgroundColor: 'red',
+        //radius: -1,
+        //pointRadius: [-1]
     };
     dataList.push(temp);
 
@@ -113,7 +144,7 @@ function tryThis(data, parent, h, e) {
         data: [
             {
                 x: moment().add((r * 15), 'minutes'),
-                y: h
+                y: h + offset
             },
             {
                 x: moment().add(((r - 1) * 15), 'minutes'),
@@ -121,24 +152,85 @@ function tryThis(data, parent, h, e) {
             }
         ],
         fill: false,
-        label: "temp"
+        label: parent.TournamentID,
+        //radius: -1,
+       // pointRadius: [-1]
+        //pointBackgroundColor: 'green',
     };
     dataList.push(temp);
-
-    if (parent.PrereqMatch1ID != null) {
-        var child = data.find(item => item.MatchID === parent.PrereqMatch1ID);
-        dataList = dataList.concat(tryThis(data, child, branch1, e + 1));
-    }
-    if (parent.PrereqMatch2ID != null) {
-        var child = data.find(item => item.MatchID === parent.PrereqMatch2ID);
-        dataList = dataList.concat(tryThis(data, child, branch2, e + 1));
-    }
 
     return dataList;
 }
 
+function tryThis2(data, current, currY, childY) {
+    var dataList = [];
+    var base = 1;
+    //var branch1 = h + (base / Math.pow(2, e)) + offset;
+    //var branch2 = h - (base / Math.pow(2, e)) + offset;
+
+    var latest = moment('2020-4-10 10:00');
+
+    if (current.PrereqMatch1ID != null || current.PrereqMatch2ID != null) {
+        latest = latest.add((1 * 15), 'minutes');
+    }
+
+    if (current.PrereqMatch1ID != null) {
+        var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
+        var parentY = currY + (base / Math.pow(2, current.Round));
+        var parentResults = tryThis2(data, parent, parentY, currY);
+        dataList = dataList.concat(parentResults.dl);
+        //latest = parentResults.last;
+    }
+
+    if (current.PrereqMatch2ID != null) {
+        var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
+        var parentY = currY - (base / Math.pow(2, current.Round));
+        var parentResults = tryThis2(data, parent, parentY, currY);
+        dataList = dataList.concat(parentResults.dl);
+        //latest = parentResults.last;
+    }
+    if (current.TournamentID == 3002) {
+        //console.log(current.TournamentID, currY, parentY, latest.toLocaleString(), latest.add((1 * 15), 'minutes').toLocaleString());
+    }
+
+    var node = [{
+        data: [{
+            x: latest,//.add((1 * 15), 'minutes'),
+            y: currY
+        }],
+        fill: false,
+        label: current.Identifier
+    },
+    {
+        data: [{
+            x: latest,//.add((1 * 15), 'minutes'),
+            y: currY
+        },{
+            x: moment(latest).add((15), 'minutes'),
+            y: childY
+        }],
+        fill: false,
+        //label: "right" + current.TournamentID
+        radius: -1,
+        pointRadius: [-1]
+        }];
+
+    dataList = dataList.concat(node);
+
+    
+
+    var send = {
+        dl: dataList,
+        last: latest
+    };
+
+    //console.log(send);
+
+    return send;
+}
+
 function drawTree(data) {
-    var trees = [{
+    /*var trees = [{
         round : 2,
         final : data[0]
     }]
@@ -147,9 +239,10 @@ function drawTree(data) {
     for (var j = 0; j < trees.length; j++) {
         for (var i = 0; i < data.length; i++) {
             if (tournList.includes(data[i].TournamentID)) {
-                if (data[i].Round > trees[0].round) {
-                    trees[0].round = data[i].Round;
-                    trees[0].final = data[i];
+                if (data[i].Round > trees[j].round) {
+                    console.log(data[i].TournamentID);
+                    trees[j].round = data[i].Round;
+                    trees[j].final = data[i];
                 }
             }
             else {
@@ -161,19 +254,55 @@ function drawTree(data) {
                 trees.push(newTree);
             }
         }
+        console.log(tournList);
+    }*/
+
+    var trees = [data[0]];
+
+    for (var j = 0; j < trees.length; j++) {
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].TournamentID == trees[j].TournamentID) {
+                if (data[i].Round > trees[j].Round) {
+                    //console.log(data[i].TournamentID);
+                    trees[j] = data[i];
+                }
+            }
+            else {
+                var flag = 1;
+                for (var h = 0; h < trees.length; h++) {
+                    //console.log(data[i].TournamentID + "-" + trees[h].TournamentID)
+                    if (data[i].TournamentID == trees[h].TournamentID) {
+                        flag = 0;
+                        h = trees.length;
+                    }
+                }
+                if (flag == 1) {
+                    trees.push(data[i]);
+                }
+            }
+        }
     }
+    console.log(trees);
 
     var dataList = [];
-    for (var i = 0; i < trees.length; i++) {
-        dataList = dataList.concat(tryThis(data, trees[i].final, 1, 1));
+    for (var i = 0; i < 1; i++) {//trees.length; i++) {
+        //console.log("here");
+        //dataList = dataList.concat(tryThis2(data, trees[i], 1, 1, i*trees.length));//maybe use final round size
+        dataList = dataList.concat(tryThis2(data, trees[i], 1.5, 1).dl);
+        //dataList = dataList.concat(tryThis2(data, trees[i], .5, 1).dl);//maybe use final round size
+        console.log("here");
+        //console.log(tryThis2(data, trees[i]).dl);
+
     }
     
     var ctx = document.getElementById('myChart').getContext('2d');
+    //ctx.height = 5000;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList },
         options: {
             responsive: true,
+            maintainAspectRatio: true,
             layout: {
                 padding: {
                     top: 5,
@@ -196,11 +325,47 @@ function drawTree(data) {
                         displayFormats: {
                             quarter: 'h:mm a'
                         }
-                    }
+                    },
+                    /*ticks: {
+                        max: moment().add(1, 'hours'),
+                        min: moment('2020-4-09 19:00')
+                    }*/
                 }],
                 yAxes: [{
-                    display: false
+                    display: false/*,
+                    ticks: {
+                        max: 40,
+                        min: 0,
+                        stepSize: 0.1
+                    }*/
                 }]
+            },
+            elements: {
+                point: {
+                    radius: 15
+                }
+            },
+            tooltips: {
+                callbacks: {
+                    title: function (tooltipItem, data) {
+                        return "test";
+                    }
+                    /*,
+                    label: function (tooltipItem, data) {
+                        return;
+                    },
+                    afterLabel: function (tooltipItem, data) {
+                        var dataset = data['datasets'][0];
+                        var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
+                        return '(' + percent + '%)';
+                    }*/
+                },
+                backgroundColor: '#FFF',
+                titleFontSize: 16,
+                titleFontColor: '#0066ff',
+                bodyFontColor: '#000',
+                bodyFontSize: 14,
+                displayColors: false
             }
         }
     });
