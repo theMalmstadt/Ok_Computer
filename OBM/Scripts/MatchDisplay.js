@@ -162,28 +162,29 @@ function tryThis(data, parent, h, e, offset) {
     return dataList;
 }
 
-function tryThis2(data, current, currY, childY) {
+
+function tryThis2(data, current, currY, childY, e) {
     var dataList = [];
     var base = 1;
 
     var latest = moment();
 
-    if (current.PrereqMatch1ID != null || current.PrereqMatch2ID != null) {
-        latest = moment(latest).add((1 * 15), 'minutes');
-    }
+        latest = moment(latest).add((current.Round * 15), 'minutes');
+        console.log(current.Round, latest.toLocaleString());
+
 
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
-        var parentY = currY + (base / Math.pow(2, current.Round));
-        console.log(currY, Math.pow(2, current.Round));
-        var parentResults = tryThis2(data, parent, parentY, currY);
+        var parentY = currY + (base / Math.pow(2, e));
+        //console.log(currY, Math.pow(2, current.Round));
+        var parentResults = tryThis2(data, parent, parentY, currY, e + 1);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
-        var parentY = currY - (base / Math.pow(2, current.Round));
-        var parentResults = tryThis2(data, parent, parentY, currY);
+        var parentY = currY - (base / Math.pow(2, e));
+        var parentResults = tryThis2(data, parent, parentY, currY, e + 1);
         dataList = dataList.concat(parentResults.dl);
     }
 
@@ -251,11 +252,11 @@ function drawTree(data) {
     var dataList = [];
     for (var i = 0; i < 1; i++) {//trees.length; i++) {
 
-        var current = trees[1];
+        var current = trees[i];
         var dataList = [];
         var base = 1;
 
-        var latest = moment('2020-4-10 10:00');
+        var latest = moment();
 
         if (current.PrereqMatch1ID != null || current.PrereqMatch2ID != null) {
             latest = latest.add((1 * 15), 'minutes');
@@ -263,16 +264,16 @@ function drawTree(data) {
 
         if (current.PrereqMatch1ID != null) {
             var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
-            var parentY = base + (base / Math.pow(2, current.Round));
-            var parentResults = tryThis2(data, parent, parentY, base);
+            var parentY = base + (base / Math.pow(2, base));
+            var parentResults = tryThis2(data, parent, parentY, base, base + 1);
             dataList = dataList.concat(parentResults.dl);
             latest = parentResults.last;
         }
 
         if (current.PrereqMatch2ID != null) {
             var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
-            var parentY = base - (base / Math.pow(2, current.Round));
-            var parentResults = tryThis2(data, parent, parentY, base);
+            var parentY = base - (base / Math.pow(2, base));
+            var parentResults = tryThis2(data, parent, parentY, base, base + 1);
             dataList = dataList.concat(parentResults.dl);
             latest = parentResults.last;
         }
