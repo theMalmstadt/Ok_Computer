@@ -6,46 +6,67 @@
 
 <h1><b>@ViewBag.Title</b></h1>
 
-@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-    <h4><i>Create a new account.</i></h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Enter Username" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Create Password" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password" })
-        </div>
-    </div>
+<div class="container-fluid justify-content-center">
+    <div class="row">
+        <div class="col-md-5">
+            @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <h4><i>Create a new account.</i></h4>
+                <hr />
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", placeholder = "Enter Username" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Enter Email" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Create Password" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-5">
+                        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password" })
+                    </div>
+                </div>
 
-    @Html.Recaptcha()
-    @Html.ValidationMessage("ReCaptcha")
-    <hr />
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn registerbtn" value="Register" />
+                @Html.Recaptcha()
+                @Html.ValidationMessage("ReCaptcha")
+                <hr />
+                <div class="row">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" class="btn registerbtn" value="Register" />
+                    </div>
+                </div>
+            }
         </div>
-    </div>
-}
+</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
