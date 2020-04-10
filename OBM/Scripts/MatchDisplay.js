@@ -163,35 +163,35 @@ function tryThis(data, parent, h, e, offset) {
 }
 
 
-function tryThis2(data, current, currY, childY, e) {
+function tryThis2(data, current, currY, childY, e, offset) {
     var dataList = [];
     var base = 1;
 
     var latest = moment();
 
-        latest = moment(latest).add((current.Round * 15), 'minutes');
-        console.log(current.Round, latest.toLocaleString());
+    latest = moment(latest).add((current.Round * 15), 'minutes');
+    console.log(current.Round, latest.toLocaleString());
 
 
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
         //console.log(currY, Math.pow(2, current.Round));
-        var parentResults = tryThis2(data, parent, parentY, currY, e + 1);
+        var parentResults = tryThis2(data, parent, parentY, currY, e + 1, offset);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
         var parentY = currY - (base / Math.pow(2, e));
-        var parentResults = tryThis2(data, parent, parentY, currY, e + 1);
+        var parentResults = tryThis2(data, parent, parentY, currY, e + 1, offset);
         dataList = dataList.concat(parentResults.dl);
     }
 
     var node = [{
         data: [{
             x: latest,//.add((1 * 15), 'minutes'),
-            y: currY
+            y: currY + offset
         }],
         fill: false,
         label: current.Identifier
@@ -199,10 +199,10 @@ function tryThis2(data, current, currY, childY, e) {
     {
         data: [{
             x: latest,//.add((1 * 15), 'minutes'),
-            y: currY
+            y: currY + offset
         },{
             x: moment(latest).add((15), 'minutes'),
-            y: childY
+            y: childY + offset
         }],
         fill: false,
         //label: "right" + current.TournamentID
@@ -250,11 +250,11 @@ function drawTree(data) {
     console.log(trees);
 
     var dataList = [];
-    for (var i = 0; i < 1; i++) {//trees.length; i++) {
+    for (var i = 0; i < trees.length; i++) {
 
         var current = trees[i];
-        var dataList = [];
         var base = 1;
+        var offset = i * trees[i].Round;
 
         var latest = moment();
 
@@ -265,7 +265,7 @@ function drawTree(data) {
         if (current.PrereqMatch1ID != null) {
             var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
             var parentY = base + (base / Math.pow(2, base));
-            var parentResults = tryThis2(data, parent, parentY, base, base + 1);
+            var parentResults = tryThis2(data, parent, parentY, base, (base + 1), offset);
             dataList = dataList.concat(parentResults.dl);
             latest = parentResults.last;
         }
@@ -273,7 +273,7 @@ function drawTree(data) {
         if (current.PrereqMatch2ID != null) {
             var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
             var parentY = base - (base / Math.pow(2, base));
-            var parentResults = tryThis2(data, parent, parentY, base, base + 1);
+            var parentResults = tryThis2(data, parent, parentY, base, (base + 1), offset);
             dataList = dataList.concat(parentResults.dl);
             latest = parentResults.last;
         }
@@ -281,7 +281,7 @@ function drawTree(data) {
         var node = [{
             data: [{
                 x: moment(latest).add((1 * 15), 'minutes'),
-                y: base
+                y: base + offset
             }],
             fill: false,
             label: current.Identifier
@@ -290,8 +290,8 @@ function drawTree(data) {
         dataList = dataList.concat(node);
     }
     
-    var ctx = document.getElementById('myChart').getContext('2d');
-    //ctx.height = 5000;
+    var ctx = document.getElementById('myChart');
+    ctx.height = 100 * trees.length;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList },
@@ -300,10 +300,10 @@ function drawTree(data) {
             maintainAspectRatio: true,
             layout: {
                 padding: {
-                    top: 5,
-                    left: 5,
-                    right: 5,
-                    bottom: 5
+                    top: 50,
+                    left: 50,
+                    right: 50,
+                    bottom: 50
                 }
             },
             title: {
@@ -319,11 +319,13 @@ function drawTree(data) {
                     time: {
                         displayFormats: {
                             quarter: 'h:mm a'
-                        }
+                        },
+                        unit: 'minute',
+                        unitStepSize: 5
                     },
                     /*ticks: {
-                        max: moment().add(1, 'hours'),
-                        min: moment('2020-4-09 19:00')
+                        //max: moment().add(1, 'hours'),
+                        //min: moment('2020-4-09 19:00')
                     }*/
                 }],
                 yAxes: [{
