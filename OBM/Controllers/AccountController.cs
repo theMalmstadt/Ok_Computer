@@ -214,7 +214,7 @@ namespace OBM.Controllers
                 var emailcheck = db.Users.Where(u => u.Email == model.Email).ToList();
                 if (emailcheck.Count() == 0)
                 {
-                    if (api.checkCredentials(model))
+                    if (api.checkCredentials(model.Username, model.ApiKey))
                     {
                         var user = new ApplicationUser
                         {
@@ -222,13 +222,15 @@ namespace OBM.Controllers
                             Email = model.Email
                         };
 
+                        user.ApiKey = model.ApiKey;
+
                         var result = await UserManager.CreateAsync(user, model.ApiKey);
 
                         if (result.Succeeded)
                         {
                             await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                            
-                            return RedirectToAction("Index", "Home");
+
+                            return RedirectToAction("Index", "Home");    
                         }
                     }
                     else

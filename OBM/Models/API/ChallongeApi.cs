@@ -6,17 +6,25 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
+/// <summary>
+/// This is the source for this API handling class: https://github.com/WolfenCLI/Challonge-CSharp-API
+/// </summary>
+
 namespace OBM.Models.API
 {
     public class ChallongeApi
     {
         private const string ChallongeApiUrl = "api.challonge.com/v1";
         private static readonly HttpClient client = new HttpClient();
+        private ApiCredentials creds = new ApiCredentials();
         public enum Methods { GET, POST, DELETE}
 
-        public bool checkCredentials(RegisterChalViewModel model)
+        public bool checkCredentials(string username, string apiKey)
         {
-            string encoded = Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(model.Username + ":" + model.ApiKey));
+            creds.Username = username;
+            creds.ApiKey = apiKey;
+
+            string encoded = Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes(creds.Username + ":" + creds.ApiKey));
             //HTTP Basic Authentication
             if (!client.DefaultRequestHeaders.Contains("Authorization"))
             {
@@ -26,7 +34,7 @@ namespace OBM.Models.API
             return false;
         }
 
-        public async Task<string> Fetch(ChallongeApi.Methods method, string path, RegisterChalViewModel model, Dictionary<string, string> parameters = null)
+        public async Task<string> Fetch(ChallongeApi.Methods method, string path, Dictionary<string, string> parameters = null)
         {
             if (parameters == null)
             {
@@ -35,7 +43,7 @@ namespace OBM.Models.API
 
             if (!parameters.ContainsKey("api_key"))
             {
-                parameters.Add("api_key", model.ApiKey);
+                parameters.Add("api_key", creds.ApiKey);
             }
 
             FormUrlEncodedContent content = new FormUrlEncodedContent(parameters);
@@ -77,7 +85,7 @@ namespace OBM.Models.API
          */
         public async Task<JObject> FetchAndParse(ChallongeApi.Methods method, string path, Dictionary<string, string> body)
         {
-            string responseAsString = await Fetch(method, path, null, body);
+            string responseAsString = await Fetch(method, path, body);
             if (responseAsString.StartsWith("{"))
             {
                 return new JObject(new JProperty("result", JObject.Parse(responseAsString)));
