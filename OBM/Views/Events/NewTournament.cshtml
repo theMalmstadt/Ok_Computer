@@ -1,4 +1,6 @@
-﻿@{
+﻿@model OBM.Models.ViewModels.EventViewModel
+
+@{
     ViewBag.Title = "GetTournament";
 }
 
@@ -15,6 +17,7 @@
 }
 else if (Request.IsAuthenticated)
 {
+    <p>@Html.ActionLink("Return to Manage", "Manage/" + Model.EventID)</p>
     <form method="get">
         <h3>Find Challonge Tournament by URL</h3>
         <input class="form-control" id="search" name="search" type="text" placeholder="Enter URL...">
