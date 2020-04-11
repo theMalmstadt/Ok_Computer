@@ -256,7 +256,7 @@ function drawTree(data) {
     ctx.height = 100 * trees.length * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
-        data: { datasets: dataList },
+        data: { datasets: dataList.reverse() },
         options: {
             responsive: true,
             maintainAspectRatio: true,
@@ -307,7 +307,6 @@ function drawTree(data) {
                         return data.datasets[tooltipItem.datasetIndex].label;
                     }
                 },
-                backgroundColor: '#808080',
                 titleFontSize: 17,
                 titleFontColor: '#DCDCDC',
                 bodyFontSize: 14,
