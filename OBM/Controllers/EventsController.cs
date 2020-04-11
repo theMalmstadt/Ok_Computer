@@ -358,8 +358,8 @@ namespace OBM.Controllers
             }
             else
                 ViewBag.Access = false;
-            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
-            return View(eventView);
+
+            return View();
         }
 
         [HttpGet]
@@ -961,11 +961,19 @@ namespace OBM.Controllers
                                 string tempPart1 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
                                 temp.Competitor1ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart1).First().CompetitorID;
                             }
+                            else
+                            {
+                                temp.Competitor1ID = null;
+                            }
                             if (m["match"]["player2_id"].ToString() != "")
                             {
                                 string tempPart2 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
                                 temp.Competitor2ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart2).First().CompetitorID;
-                            } 
+                            }
+                            else
+                            {
+                                temp.Competitor2ID = null;
+                            }
                             if (m["match"]["scores-csv"] == null)
                             {
                                 temp.Score1 = null;
