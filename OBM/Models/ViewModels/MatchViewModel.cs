@@ -14,6 +14,7 @@ namespace OBM.Models.ViewModels
         {
             MatchID = match.MatchID;
             TournamentID = match.TournamentID;
+            TournamentName = db.Tournaments.Find(match.TournamentID).TournamentName;
             Competitor1ID = match.Competitor1ID;
             if (Competitor1ID != null)
             {
@@ -64,6 +65,7 @@ namespace OBM.Models.ViewModels
 
         public int MatchID { get; set; }
         public int TournamentID { get;  set; }
+        public string TournamentName { get; set; }
         public int? Competitor1ID { get; set; }
         public string Competitor1Name { get; set; }
         public int? Competitor2ID { get; set; }

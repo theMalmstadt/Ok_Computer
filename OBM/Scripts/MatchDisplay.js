@@ -86,7 +86,7 @@ var ajaxMatches = function () {
     });
 }
 
-function tryThis2(data, current, currY, childY, e, offset) {
+function lineage(data, current, currY, childY, e, offset) {
     var dataList = [];
     var base = 1;
     var latest = moment().add(5, 'minutes');
@@ -96,14 +96,14 @@ function tryThis2(data, current, currY, childY, e, offset) {
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
-        var parentResults = tryThis2(data, parent, parentY, currY, e + 1, offset);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
         var parentY = currY - (base / Math.pow(2, e));
-        var parentResults = tryThis2(data, parent, parentY, currY, e + 1, offset);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset);
         dataList = dataList.concat(parentResults.dl);
     }
 
@@ -111,7 +111,19 @@ function tryThis2(data, current, currY, childY, e, offset) {
         nodeLineColor = 'gray';
     }
 
-    //if ()
+    var matchName = "";
+    if (current.Competitor1Name != "" && current.Competitor2Name != "") {
+        matchName = current.Competitor1Name + " vs " + current.Competitor2Name;
+    }
+    else if (current.Competitor1Name != "") {
+        matchName = current.Competitor1Name + " vs --";
+    }
+    else if (current.Competitor2Name != "") {
+        matchName = current.Competitor2Name + " vs --";
+    }
+    else {
+        matchName = "Round " + current.Round + " Match";
+    }
 
     var node = [{
         data: [{
@@ -119,13 +131,32 @@ function tryThis2(data, current, currY, childY, e, offset) {
             y: currY + offset
         }],
         fill: false,
-        label: latest.toLocaleString(),
-        yLabel: "test",
+        title: matchName,
+        label: latest.format('LT') + " - " + current.TournamentName,
         backgroundColor: nodeLineColor,
         pointHoverBackgroundColor: nodeLineColor,
         pointHoverRadius: 30
-    },
-    {
+    }];
+
+    return {
+        node: node,
+        nodeLineColor: nodeLineColor,
+        dataList: dataList
+    };
+}
+
+function recursiveCall(data, current, currY, childY, e, offset) {
+    var dataList = [];
+    var latest = moment().add(5, 'minutes');
+    var latest = moment(latest).add(((current.Round - 1) * 15), 'minutes');
+    var nodeLineColor = 'red';
+
+    var get = lineage(data, current, currY, childY, e, offset);
+    dataList = dataList.concat(get.dataList);
+    nodeLineColor = get.nodeLineColor;
+    var node = get.node;
+
+    var line = {
         data: [{
             x: latest,
             y: currY + offset
@@ -139,8 +170,9 @@ function tryThis2(data, current, currY, childY, e, offset) {
         backgroundColor: nodeLineColor,
         borderWidth: 5,
         borderColor: nodeLineColor
-        }];
+    };
 
+    node.push(line);
     dataList = dataList.concat(node);
 
     var send = {
@@ -183,37 +215,14 @@ function drawTree(data) {
 
     var dataList = [];
     for (var i = 0; i < trees.length; i++) {
-
         var current = trees[i];
         var base = 1;
         var offset = i * (trees[i].Round - 1);
 
-        var latest = moment();
-
-        if (current.PrereqMatch1ID != null) {
-            var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
-            var parentY = base + (base / Math.pow(2, base));
-            var parentResults = tryThis2(data, parent, parentY, base, (base + 1), offset);
-            dataList = dataList.concat(parentResults.dl);
-            latest = parentResults.last;
-        }
-
-        if (current.PrereqMatch2ID != null) {
-            var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
-            var parentY = base - (base / Math.pow(2, base));
-            var parentResults = tryThis2(data, parent, parentY, base, (base + 1), offset);
-            dataList = dataList.concat(parentResults.dl);
-            latest = parentResults.last;
-        }
-
-        var node = [{
-            data: [{
-                x: moment(latest).add((1 * 15), 'minutes'),
-                y: base + offset
-            }],
-            fill: false,
-            label: current.Identifier
-        }];
+        var get = lineage(data, current, base, base, base, offset);
+        dataList = dataList.concat(get.dataList);
+        nodeLineColor = get.nodeLineColor;
+        var node = get.node;
 
         dataList = dataList.concat(node);
     }
@@ -293,23 +302,17 @@ function drawTree(data) {
             tooltips: {
                 callbacks: {
                     title: function (tooltipItem, data) {
-                        return "test";
-                    }
-                    /*,
-                    label: function (tooltipItem, data) {
-                        return;
+                        return data.datasets[tooltipItem[0].datasetIndex].title;
                     },
-                    afterLabel: function (tooltipItem, data) {
-                        var dataset = data['datasets'][0];
-                        var percent = Math.round((dataset['data'][tooltipItem['index']] / dataset["_meta"][0]['total']) * 100)
-                        return '(' + percent + '%)';
-                    }*/
+                    label: function (tooltipItem, data) {
+                        return data.datasets[tooltipItem.datasetIndex].label;
+                    }
                 },
-                backgroundColor: '#FFF',
-                titleFontSize: 16,
-                titleFontColor: '#0066ff',
-                bodyFontColor: '#000',
+                backgroundColor: '#808080',
+                titleFontSize: 17,
+                titleFontColor: '#DCDCDC',
                 bodyFontSize: 14,
+                bodyFontColor: '#DCDCDC',
                 displayColors: false
             }
         }
