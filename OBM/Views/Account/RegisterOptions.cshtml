@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "RegisterOptions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid w-50">
+    <h1 class="text-center">How Would You Like to Register?</h1>
+    <div class="row justify-content-center d-flex">
+        <div class="col-lg-4 text-center">
+            @using (Html.BeginForm("Register", "Account", FormMethod.Get))
+            {
+                <input type="submit" value="Ok Brackets" class="btn createbtn" />
+            }
+        </div>
+        <div class="col-lg-4 text-center my-auto">
+            <span class="h4 mx-auto my-auto">OR</span>
+        </div>
+        <div class="col-lg-4 text-center">
+            @using (Html.BeginForm("RegisterChal", "Account", FormMethod.Get))
+            {
+                <input type="submit" value="Challonge" class="btn registerbtn" />
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

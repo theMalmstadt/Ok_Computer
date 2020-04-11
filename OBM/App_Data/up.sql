@@ -147,7 +147,8 @@ CREATE TABLE [dbo].[Match](
     [ApiID] INT NOT NULL,
     [PrereqMatch1ID] INT NULL,
     [PrereqMatch2ID] INT NULL,
-    [Time] DATETIME NULL
+    [Time] DATETIME NULL,
+    UpdatedAt DATETIME NOT NULL
     CONSTRAINT [FK_dbo.Match_dbo.Tournament_TournamentID] Foreign KEY ([TournamentID]) REFERENCES [dbo].[Tournament] ([TournamentID]),
     CONSTRAINT [FK_dbo.Match_dbo.Competitor_Competitor1ID] Foreign KEY ([Competitor1ID]) REFERENCES [dbo].[Competitor] ([CompetitorID]),
     CONSTRAINT [FK_dbo.Match_dbo.Competitor_Competitor2ID] Foreign KEY ([Competitor2ID]) REFERENCES [dbo].[Competitor] ([CompetitorID]),
