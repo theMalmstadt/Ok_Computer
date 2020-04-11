@@ -86,6 +86,7 @@ var ajaxMatches = function () {
 }
 
 function lineage(data, current, currY, childY, e, offset) {
+    var compList = [];
     var dataList = [];
     var base = 1;
     var nodeLineColor = 'red';
@@ -138,6 +139,12 @@ function lineage(data, current, currY, childY, e, offset) {
     }
     else {
         matchName = "Round " + current.Round + " Match";
+    }
+
+    if (compList.includes(current.Competitor1Name) || compList.includes(current.Competitor1Name)) {
+        if (current.Time == latest) {
+            nodeLineColor = 'yellow';
+        }
     }
 
     var node = [{
