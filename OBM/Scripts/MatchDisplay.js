@@ -86,97 +86,16 @@ var ajaxMatches = function () {
     });
 }
 
-function drawNodes() {
-    var node = {
-        data: [
-            {
-                x: moment().add((r * 15), 'minutes'),
-                    y: h + offset
-            }
-        ],
-        fill: false,
-        //label: parent.MatchID,
-        pointBackgroundColor: 'red',
-        //radius: -1,
-        //pointRadius: [-1]
-    };
-    return node;
-}
-
-function tryThis(data, parent, h, e, offset) {
-    console.log("count");
-    var base = 1;
-    var r = parent.Round;
-    var dataList = [];
-    var branch1 = h + (base / Math.pow(2, e)) + offset;
-    var branch2 = h - (base / Math.pow(2, e)) + offset;
-
-    if (parent.PrereqMatch1ID != null) {
-        var child = data.find(item => item.MatchID === parent.PrereqMatch1ID);
-        dataList = dataList.concat(tryThis(data, child, branch1, e + 1, offset));
-    }
-    if (parent.PrereqMatch2ID != null) {
-        var child = data.find(item => item.MatchID === parent.PrereqMatch2ID);
-        dataList = dataList.concat(tryThis(data, child, branch2, e + 1, offset));
-    }
-
-
-    var temp = {
-        data: [
-            {
-                x: moment().add((r * 15), 'minutes'),
-                y: h + offset
-            },
-            {
-                x: moment().add(((r - 1) * 15), 'minutes'),
-                y: branch1
-            }
-        ],
-        fill: false,
-        label: parent.TournamentID,
-        //pointBackgroundColor: 'red',
-        //radius: -1,
-        //pointRadius: [-1]
-    };
-    dataList.push(temp);
-
-    temp = {
-        data: [
-            {
-                x: moment().add((r * 15), 'minutes'),
-                y: h + offset
-            },
-            {
-                x: moment().add(((r - 1) * 15), 'minutes'),
-                y: branch2
-            }
-        ],
-        fill: false,
-        label: parent.TournamentID,
-        //radius: -1,
-       // pointRadius: [-1]
-        //pointBackgroundColor: 'green',
-    };
-    dataList.push(temp);
-
-    return dataList;
-}
-
-
 function tryThis2(data, current, currY, childY, e, offset) {
     var dataList = [];
     var base = 1;
-
-    var latest = moment();
-
-    latest = moment(latest).add((current.Round * 15), 'minutes');
-    console.log(current.Round, latest.toLocaleString());
-
+    var latest = moment().add(5, 'minutes');
+    var latest = moment(latest).add(((current.Round - 1) * 15), 'minutes');
+    var nodeLineColor = 'red';
 
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
-        //console.log(currY, Math.pow(2, current.Round));
         var parentResults = tryThis2(data, parent, parentY, currY, e + 1, offset);
         dataList = dataList.concat(parentResults.dl);
     }
@@ -188,26 +107,38 @@ function tryThis2(data, current, currY, childY, e, offset) {
         dataList = dataList.concat(parentResults.dl);
     }
 
+    if (current.winner == null) {
+        nodeLineColor = 'gray';
+    }
+
+    //if ()
+
     var node = [{
         data: [{
-            x: latest,//.add((1 * 15), 'minutes'),
+            x: latest,
             y: currY + offset
         }],
         fill: false,
-        label: current.Identifier
+        label: latest.toLocaleString(),
+        yLabel: "test",
+        backgroundColor: nodeLineColor,
+        pointHoverBackgroundColor: nodeLineColor,
+        pointHoverRadius: 30
     },
     {
         data: [{
-            x: latest,//.add((1 * 15), 'minutes'),
+            x: latest,
             y: currY + offset
         },{
             x: moment(latest).add((15), 'minutes'),
             y: childY + offset
         }],
         fill: false,
-        //label: "right" + current.TournamentID
         radius: -1,
-        pointRadius: [-1]
+        pointRadius: [-1],
+        backgroundColor: nodeLineColor,
+        borderWidth: 5,
+        borderColor: nodeLineColor
         }];
 
     dataList = dataList.concat(node);
@@ -223,19 +154,21 @@ function tryThis2(data, current, currY, childY, e, offset) {
 function drawTree(data) {
 
     var trees = [data[0]];
+    var largestRound = 2;
 
     for (var j = 0; j < trees.length; j++) {
         for (var i = 0; i < data.length; i++) {
             if (data[i].TournamentID == trees[j].TournamentID) {
                 if (data[i].Round > trees[j].Round) {
-                    //console.log(data[i].TournamentID);
                     trees[j] = data[i];
+                    if (data[i].Round > largestRound) {
+                        largestRound = data[i].Round;
+                    }
                 }
             }
             else {
                 var flag = 1;
                 for (var h = 0; h < trees.length; h++) {
-                    //console.log(data[i].TournamentID + "-" + trees[h].TournamentID)
                     if (data[i].TournamentID == trees[h].TournamentID) {
                         flag = 0;
                         h = trees.length;
@@ -247,20 +180,15 @@ function drawTree(data) {
             }
         }
     }
-    console.log(trees);
 
     var dataList = [];
     for (var i = 0; i < trees.length; i++) {
 
         var current = trees[i];
         var base = 1;
-        var offset = i * trees[i].Round;
+        var offset = i * (trees[i].Round - 1);
 
         var latest = moment();
-
-        if (current.PrereqMatch1ID != null || current.PrereqMatch2ID != null) {
-            latest = latest.add((1 * 15), 'minutes');
-        }
 
         if (current.PrereqMatch1ID != null) {
             var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
@@ -289,9 +217,26 @@ function drawTree(data) {
 
         dataList = dataList.concat(node);
     }
+
+    var hidden = [{
+        data: [{
+            x: moment(),
+            y: 0
+        }],
+        fill: false,
+        radius: -1,
+        pointRadius: [-1]
+    }];
+
+    dataList = dataList.concat(hidden);
+
+    largestRound = largestRound - 2;
+    if (largestRound < 0) {
+        largestRound = 0;
+    }
     
     var ctx = document.getElementById('myChart');
-    ctx.height = 100 * trees.length;
+    ctx.height = 100 * trees.length * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList },
@@ -341,6 +286,9 @@ function drawTree(data) {
                 point: {
                     radius: 15
                 }
+            },
+            hover: {
+                mode: 'nearest'
             },
             tooltips: {
                 callbacks: {
