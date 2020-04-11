@@ -567,6 +567,7 @@ namespace OBM.Controllers
                 if (m["match"]["started_at"].ToString() != "")
                 {
                     newMatch.Time = DateTime.Parse((string)m["match"]["started_at"]);
+                    Console.WriteLine(newMatch.Time);
                 }
                 if (m["match"]["player1_id"].ToString() != "")
                 {

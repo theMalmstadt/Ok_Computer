@@ -42,7 +42,14 @@ namespace OBM.Models.ViewModels
             PrereqMatch2ID = match.PrereqMatch2ID;
     
             Time = match.Time;
-            Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
+            if (match.Score1 != null || match.Score2 != null)
+            { 
+                Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
+            }
+            else
+            {
+                Winner = null;
+            }
 
             if ((match.Score1 != null) || (match.Score2 != null))
             {

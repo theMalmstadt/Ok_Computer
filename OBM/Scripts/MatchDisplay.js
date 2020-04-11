@@ -107,8 +107,16 @@ function lineage(data, current, currY, childY, e, offset) {
         dataList = dataList.concat(parentResults.dl);
     }
 
-    if (current.winner == null) {
-        nodeLineColor = 'gray';
+    if (current.Winner == null) {
+        if (current.Time == null) {
+            nodeLineColor = 'gray';
+        }
+        else {
+            nodeLineColor = '#3895d3';
+        }
+    }
+    else {
+        nodeLineColor = '#03c04a';
     }
 
     var matchName = "";
@@ -276,19 +284,10 @@ function drawTree(data) {
                         },
                         unit: 'minute',
                         unitStepSize: 5
-                    },
-                    /*ticks: {
-                        //max: moment().add(1, 'hours'),
-                        //min: moment('2020-4-09 19:00')
-                    }*/
+                    }
                 }],
                 yAxes: [{
-                    display: false/*,
-                    ticks: {
-                        max: 40,
-                        min: 0,
-                        stepSize: 0.1
-                    }*/
+                    display: false
                 }]
             },
             elements: {
