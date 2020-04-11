@@ -76,7 +76,6 @@ window.setTimeout(ajax_call, 0);
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
-    //console.log(id);
     $.ajax({
         type: 'GET',
         dataType: 'json',
@@ -89,23 +88,31 @@ var ajaxMatches = function () {
 function lineage(data, current, currY, childY, e, offset) {
     var dataList = [];
     var base = 1;
-    var latest = moment().add(5, 'minutes');
-    var latest = moment(latest).add(((current.Round - 1) * 15), 'minutes');
     var nodeLineColor = 'red';
+
+    var latest = moment().add(5, 'minutes').startOf('minute');
+    var latest = moment(latest).add(((current.Round - 2) * 15), 'minutes').startOf('minute');
+    if (current.Time != null) {
+        latest = moment(current.Time).startOf('minute');
+    }
 
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset, latest);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
         var parentY = currY - (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset, latest);
         dataList = dataList.concat(parentResults.dl);
     }
+
+    /*if (current.Time != null) {
+        latest = moment(current.Time);
+    }*/
 
     if (current.Winner == null) {
         if (current.Time == null) {
@@ -149,27 +156,27 @@ function lineage(data, current, currY, childY, e, offset) {
     return {
         node: node,
         nodeLineColor: nodeLineColor,
-        dataList: dataList
+        dataList: dataList,
+        latest: latest
     };
 }
 
-function recursiveCall(data, current, currY, childY, e, offset) {
+function recursiveCall(data, current, currY, childY, e, offset, next) {
     var dataList = [];
-    var latest = moment().add(5, 'minutes');
-    var latest = moment(latest).add(((current.Round - 1) * 15), 'minutes');
     var nodeLineColor = 'red';
 
     var get = lineage(data, current, currY, childY, e, offset);
     dataList = dataList.concat(get.dataList);
     nodeLineColor = get.nodeLineColor;
     var node = get.node;
+    latest = get.latest;
 
     var line = {
         data: [{
             x: latest,
             y: currY + offset
         },{
-            x: moment(latest).add((15), 'minutes'),
+            x: next,
             y: childY + offset
         }],
         fill: false,
@@ -284,7 +291,8 @@ function drawTree(data) {
                         },
                         unit: 'minute',
                         unitStepSize: 5
-                    }
+                    },
+                    distribution: 'series'
                 }],
                 yAxes: [{
                     display: false
@@ -320,7 +328,6 @@ function drawTree(data) {
 window.onload = ajaxMatches;
 
 function hideShow(div) {
-    console.log("trying");
     var x = document.getElementById(div);
     if (window.getComputedStyle(x).display === "none") {
         x.style.display = "block";
@@ -328,4 +335,5 @@ function hideShow(div) {
     else {
         x.style.display = "none";
     }
+    ajaxMatches;
 }
