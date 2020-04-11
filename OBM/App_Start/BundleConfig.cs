@@ -36,8 +36,13 @@ namespace OBM
             bundles.Add(new ScriptBundle("~/bundles/MatchDisplay").Include(
                 "~/Scripts/moment.js",
                 "~/Scripts/Chart.min.js",
-                "~/Scripts/anime.min.js",
                 "~/Scripts/MatchDisplay.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/TournamentDisplay").Include(
+                "~/Scripts/moment.js",
+                "~/Scripts/Chart.min.js",
+                "~/Scripts/TournamentDisplay.js"
                 ));
         }
     }

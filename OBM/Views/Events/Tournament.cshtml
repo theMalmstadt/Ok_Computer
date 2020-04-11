@@ -43,7 +43,11 @@
             </table>
         </div>
 
-
+        <input id="EventID" type="hidden" value="@Model.EventID" />
+        <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
+        <div id="MinimalGraph" style="display:block">
+            <canvas id="myChart"></canvas>
+        </div>
 
         using (Html.BeginForm(FormMethod.Post))
         {
@@ -59,3 +63,6 @@
         </div>
     }
 }
+
+
+@Scripts.Render("~/bundles/TournamentDisplay")
