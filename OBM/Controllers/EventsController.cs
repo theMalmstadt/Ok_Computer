@@ -752,6 +752,7 @@ namespace OBM.Controllers
 
             catch (System.Net.WebException e)
             {
+                Debug.WriteLine(e);
             }
 
 
