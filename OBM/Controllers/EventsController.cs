@@ -709,7 +709,7 @@ namespace OBM.Controllers
                         matchStr += "</td><td>";
 
                         if (m.Score2 == null)
-                            matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" >Submit</button>";
+                            matchStr += "<button id=sub" + m.ApiID + "\" style=\"width: 100 % \" onclick=SubmitScore(" + JsonConvert.SerializeObject(m) + ")>Submit</button>";
                         else
                             matchStr += m.Score2;
                         matchStr += "</td></tr></table>";
@@ -727,6 +727,133 @@ namespace OBM.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
 
+        public String MatchDetails(int matchApiId, int? tournamentApiId, String apiKey)    //takes a match from our db and finds its competitors apikeys
+        {
+            //get comp apikeys via match details  GET https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}.{json|xml}
+
+            Debug.WriteLine("Keys for match lookup are:" + tournamentApiId + "   " + matchApiId);
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key="+apiKey);
+            httpWebRequest.Method = "GET";
+            Debug.WriteLine("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key="+apiKey);
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Debug.WriteLine("OPPS POOPS"+httpResponse);
+
+                    return result;
+
+                }
+
+            }
+
+            catch (System.Net.WebException e)
+            {
+            }
+
+
+
+
+            return "";
+        }
+
+
+        [HttpPost]
+        public void SubmitScore()
+        {
+            Debug.WriteLine("Score POSTING"+ Request.Params["Competitor1ID"]);
+
+            var matchId = Int32.Parse(Request.Params["MatchID"]);
+            var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
+
+
+            var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
+            var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
+            var userid = HttpContext.User.Identity.GetUserId();
+            var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+
+
+
+            //PUT Help https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}.{json|xml}
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "PUT";
+
+            var matchDetails = JObject.Parse(MatchDetails(matchApiId, tournamentApiId, apiKey));
+            Debug.WriteLine("CHALLONGE MATCH DETAILS: "+matchDetails);
+
+            JObject match = new JObject();
+            match.Add("scores_csv",Request.Params["scoreCsv"]);
+
+            int score1 = Int32.Parse(Request.Params["score1"].Substring(1, Request.Params["score1"].Length-1));
+            int score2 = Int32.Parse(Request.Params["score2"].Substring(1, Request.Params["score1"].Length-1));
+
+            //Debug.WriteLine(Request.Params["score1"] + " " + Request.Params["score2"]);
+
+
+
+           
+
+            if (score1 > score2)
+            {
+                Debug.WriteLine("player 1 is winner: " + matchDetails["match"]["player1_id"]);
+                match.Add("winner_id", matchDetails["match"]["player1_id"]);
+
+            }
+
+            if (score1 < score2)
+            {
+                Debug.WriteLine("player 2 is winner: " + matchDetails["match"]["player2_id"]);
+
+                match.Add("winner_id", matchDetails["match"]["player2_id"]);
+
+            }
+
+            Debug.WriteLine("");
+            Debug.WriteLine("");
+            Debug.WriteLine(matchDetails["match"]["player1_id"]);
+            Debug.WriteLine("");
+            Debug.WriteLine("");
+            JObject myJson = new JObject();
+            myJson.Add("match_id", matchApiId);
+            myJson.Add("tournament", tournamentApiId);
+            myJson.Add("api_key", apiKey);
+            myJson.Add("match", match);
+            myJson.Add("state", "complete");
+
+            Debug.WriteLine("NOW SENDING!!!!:   "+myJson);
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+
+
+                streamWriter.Write(myJson);
+            }
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    //Debug.WriteLine(result);
+
+                }
+            }
+
+            catch (System.Net.WebException e)
+            {
+
+
+            }
+
+        }
 
 
 
@@ -751,7 +878,6 @@ namespace OBM.Controllers
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/mark_as_underway.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-
 
 
 
@@ -799,6 +925,7 @@ namespace OBM.Controllers
             }
 
             var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
+
             MatchUpdate(eventId);
 
         }
@@ -875,13 +1002,23 @@ namespace OBM.Controllers
 
             string jsonString = null;
             // TODO: You should handle exceptions here
-            using (WebResponse response = request.GetResponse())
+            try
             {
-                Stream stream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(stream);
-                jsonString = reader.ReadToEnd();
-                reader.Close();
-                stream.Close();
+                using (WebResponse response = request.GetResponse())
+                {
+
+                    Stream stream = response.GetResponseStream();
+                    StreamReader reader = new StreamReader(stream);
+                    jsonString = reader.ReadToEnd();
+                    reader.Close();
+                    stream.Close();
+                }
+                
+            }
+            catch (System.Net.WebException e)
+            {
+
+
             }
             return jsonString;
         }
