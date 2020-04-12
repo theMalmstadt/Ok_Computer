@@ -9,8 +9,7 @@
     });
 }
 
-function lineage(data, current, currY, childY, e, offset) {
-    var compList = [];
+function lineage(data, current, currY, childY, e, compList) {
     var dataList = [];
     var base = 1;
     var nodeLineColor = 'red';
@@ -24,61 +23,45 @@ function lineage(data, current, currY, childY, e, offset) {
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset, latest);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest, compList);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
         var parentY = currY - (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset, latest);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest, compList);
         dataList = dataList.concat(parentResults.dl);
     }
 
-    /*if (current.Time != null) {
-        latest = moment(current.Time);
-    }*/
-
     if (current.Winner == null) {
-        if (current.Time == null) {
-            nodeLineColor = 'gray';
-        }
-        else {
-            nodeLineColor = '#3895d3';
-        }
+        nodeLineColor = 'gray';
     }
     else {
-        nodeLineColor = '#03c04a';
+        var winner = compList.find(x => x.compID === current.Winner);
+        nodeLineColor = winner.color;
     }
 
-    var matchName = "";
-    if (current.Competitor1Name != "" && current.Competitor2Name != "") {
-        matchName = current.Competitor1Name + " vs " + current.Competitor2Name;
-    }
-    else if (current.Competitor1Name != "") {
-        matchName = current.Competitor1Name + " vs --";
-    }
-    else if (current.Competitor2Name != "") {
-        matchName = current.Competitor2Name + " vs --";
-    }
-    else {
-        matchName = "Round " + current.Round + " Match";
-    }
+    title = "Round " + current.Round + " Match";
+    label = "";
 
-    if (compList.includes(current.Competitor1Name) || compList.includes(current.Competitor1Name)) {
-        if (current.Time == latest) {
-            nodeLineColor = 'yellow';
-        }
+    var comp1 = (current.Competitor1Name) ? current.Competitor1Name : "--";
+    var comp2 = (current.Competitor2Name) ? current.Competitor2Name : "--";
+    if (comp1 != "--" && comp2 != "--") {
+        var score1 = (current.Score1) ? current.Score1 : 0;
+        var score2 = (current.Score2) ? current.Score2 : 0;
+        title = comp1 + " - " + comp2;
+        label = score1 + " - " + score2;
     }
 
     var node = [{
         data: [{
             x: latest,
-            y: currY + offset
+            y: currY
         }],
         fill: false,
-        title: matchName,
-        label: latest.format('LT') + " - " + current.TournamentName,
+        title: title,
+        label: label,
         backgroundColor: nodeLineColor,
         pointHoverBackgroundColor: nodeLineColor,
         pointHoverRadius: 30
@@ -92,11 +75,11 @@ function lineage(data, current, currY, childY, e, offset) {
     };
 }
 
-function recursiveCall(data, current, currY, childY, e, offset, next) {
+function recursiveCall(data, current, currY, childY, e, next, compList) {
     var dataList = [];
     var nodeLineColor = 'red';
 
-    var get = lineage(data, current, currY, childY, e, offset);
+    var get = lineage(data, current, currY, childY, e, compList);
     dataList = dataList.concat(get.dataList);
     nodeLineColor = get.nodeLineColor;
     var node = get.node;
@@ -105,10 +88,10 @@ function recursiveCall(data, current, currY, childY, e, offset, next) {
     var line = {
         data: [{
             x: latest,
-            y: currY + offset
+            y: currY
         }, {
             x: next,
-            y: childY + offset
+            y: childY
         }],
         fill: false,
         radius: -1,
@@ -130,48 +113,54 @@ function recursiveCall(data, current, currY, childY, e, offset, next) {
 }
 
 function drawTree(data) {
-
-    var trees = [data[0]];
+    var id = $('#TournamentID').val();
     var largestRound = 2;
+    var endNode = data[0];
+    var preciseData = [];
+    var compList = [];
+    var compIDs = [];
 
-    for (var j = 0; j < trees.length; j++) {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].TournamentID == trees[j].TournamentID) {
-                if (data[i].Round > trees[j].Round) {
-                    trees[j] = data[i];
-                    if (data[i].Round > largestRound) {
-                        largestRound = data[i].Round;
-                    }
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].TournamentID == id) {
+            if (data[i].Round > endNode.Round) {
+                endNode = data[i];
+                if (data[i].Round > largestRound) {
+                    largestRound = data[i].Round;
                 }
             }
-            else {
-                var flag = 1;
-                for (var h = 0; h < trees.length; h++) {
-                    if (data[i].TournamentID == trees[h].TournamentID) {
-                        flag = 0;
-                        h = trees.length;
-                    }
+
+            if (!compIDs.includes(data[i].Competitor1ID) && data[i].Competitor1ID != null) {
+                var temp = {
+                    compID: data[i].Competitor1ID,
+                    compName: data[i].Competitor1Name,
+                    color: randomColor()
                 }
-                if (flag == 1) {
-                    trees.push(data[i]);
-                }
+                compList.push(temp);
+                compIDs.push(temp.compID);
             }
+            if (!compIDs.includes(data[i].Competitor2ID) && data[i].Competitor2ID != null) {
+                var temp = {
+                    compID: data[i].Competitor2ID,
+                    compName: data[i].Competitor2Name,
+                    color: randomColor()
+                }
+                compList.push(temp);
+                compIDs.push(temp.compID);
+            }
+
+            preciseData.push(data[i]);
         }
     }
 
     var dataList = [];
-    for (var i = 0; i < trees.length; i++) {
-        var current = trees[i];
-        var base = 1;
-        var offset = i * (trees[i].Round - 1);
+    var base = 1;
 
-        var get = lineage(data, current, base, base, base, offset);
-        dataList = dataList.concat(get.dataList);
-        nodeLineColor = get.nodeLineColor;
-        var node = get.node;
+    var get = lineage(preciseData, endNode, base, base, base, compList);
+    dataList = dataList.concat(get.dataList);
+    nodeLineColor = get.nodeLineColor;
+    var node = get.node;
 
-        dataList = dataList.concat(node);
-    }
+    dataList = dataList.concat(node);
 
     var hidden = [{
         data: [{
@@ -186,12 +175,12 @@ function drawTree(data) {
     dataList = dataList.concat(hidden);
 
     largestRound = largestRound - 2;
-    if (largestRound < 0) {
-        largestRound = 0;
+    if (largestRound < 1) {
+        largestRound = 1;
     }
 
     var ctx = document.getElementById('myChart');
-    ctx.height = 100 * trees.length * largestRound;
+    ctx.height = 100 * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList.reverse() },
@@ -210,7 +199,20 @@ function drawTree(data) {
                 display: false
             },
             legend: {
-                display: false
+                display: true,
+                labels: {
+                    generateLabels(chart) {
+                        var labelList = []
+                        for (var i = 0; i < compList.length; i++) {
+                            var temp = {
+                                text: compList[i].compName,
+                                fillStyle: compList[i].color,
+                            }
+                            labelList.push(temp);
+                        }
+                        return labelList;
+                    }
+                }
             },
             scales: {
                 xAxes: [{
@@ -248,15 +250,15 @@ function drawTree(data) {
                 },
                 titleFontSize: 17,
                 titleFontColor: '#DCDCDC',
-                bodyFontSize: 14,
+                bodyFontSize: 21,
                 bodyFontColor: '#DCDCDC',
-                displayColors: false
+                displayColors: false,
+                titleAlign: 'center',
+                bodyAlign: 'center'
             }
         }
     });
 }
-
-window.onload = ajaxMatches;
 
 function hideShow(div) {
     var x = document.getElementById(div);
@@ -272,3 +274,5 @@ function hideShow(div) {
 function errorOnAjax(data) {
     console.log("ERROR in ajax request.");
 }
+
+window.onload = ajaxMatches;
