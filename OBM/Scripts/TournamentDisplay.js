@@ -10,7 +10,6 @@
 }
 
 function lineage(data, current, currY, childY, e, offset) {
-    var compList = [];
     var dataList = [];
     var base = 1;
     var nodeLineColor = 'red';
@@ -35,10 +34,6 @@ function lineage(data, current, currY, childY, e, offset) {
         dataList = dataList.concat(parentResults.dl);
     }
 
-    /*if (current.Time != null) {
-        latest = moment(current.Time);
-    }*/
-
     if (current.Winner == null) {
         if (current.Time == null) {
             nodeLineColor = 'gray';
@@ -51,24 +46,16 @@ function lineage(data, current, currY, childY, e, offset) {
         nodeLineColor = '#03c04a';
     }
 
-    var matchName = "";
-    if (current.Competitor1Name != "" && current.Competitor2Name != "") {
-        matchName = current.Competitor1Name + " vs " + current.Competitor2Name;
-    }
-    else if (current.Competitor1Name != "") {
-        matchName = current.Competitor1Name + " vs --";
-    }
-    else if (current.Competitor2Name != "") {
-        matchName = current.Competitor2Name + " vs --";
-    }
-    else {
-        matchName = "Round " + current.Round + " Match";
-    }
+    var comp1 = (current.Competitor1Name) ? current.Competitor1Name : "--";
+    var comp2 = (current.Competitor2Name) ? current.Competitor2Name : "--";
+    var score1 = (current.Score1) ? current.Score1 : 0;
+    var score2 = (current.Score2) ? current.Score2 : 0;
+    var title = comp1 + " - " + comp2;
+    var label = score1 + " - " + score2;
 
-    if (compList.includes(current.Competitor1Name) || compList.includes(current.Competitor1Name)) {
-        if (current.Time == latest) {
-            nodeLineColor = 'yellow';
-        }
+    if (title == "-- - --") {
+        title = "Round " + current.Round + " Match";
+        label = "";
     }
 
     var node = [{
@@ -77,8 +64,8 @@ function lineage(data, current, currY, childY, e, offset) {
             y: currY + offset
         }],
         fill: false,
-        title: matchName,
-        label: latest.format('LT') + " - " + current.TournamentName,
+        title: title,
+        label: label,
         backgroundColor: nodeLineColor,
         pointHoverBackgroundColor: nodeLineColor,
         pointHoverRadius: 30
@@ -130,7 +117,7 @@ function recursiveCall(data, current, currY, childY, e, offset, next) {
 }
 
 function drawTree(data) {
-
+    var id = $('#TournamentID').val();
     var trees = [data[0]];
     var largestRound = 2;
 
@@ -165,12 +152,14 @@ function drawTree(data) {
         var base = 1;
         var offset = i * (trees[i].Round - 1);
 
-        var get = lineage(data, current, base, base, base, offset);
-        dataList = dataList.concat(get.dataList);
-        nodeLineColor = get.nodeLineColor;
-        var node = get.node;
+        if (trees[i].TournamentID == id) {
+            var get = lineage(data, current, base, base, base, offset);
+            dataList = dataList.concat(get.dataList);
+            nodeLineColor = get.nodeLineColor;
+            var node = get.node;
 
-        dataList = dataList.concat(node);
+            dataList = dataList.concat(node);
+        }
     }
 
     var hidden = [{
@@ -248,15 +237,15 @@ function drawTree(data) {
                 },
                 titleFontSize: 17,
                 titleFontColor: '#DCDCDC',
-                bodyFontSize: 14,
+                bodyFontSize: 21,
                 bodyFontColor: '#DCDCDC',
-                displayColors: false
+                displayColors: false,
+                titleAlign: 'center',
+                bodyAlign: 'center'
             }
         }
     });
 }
-
-window.onload = ajaxMatches;
 
 function hideShow(div) {
     var x = document.getElementById(div);
@@ -272,3 +261,5 @@ function hideShow(div) {
 function errorOnAjax(data) {
     console.log("ERROR in ajax request.");
 }
+
+window.onload = ajaxMatches;
