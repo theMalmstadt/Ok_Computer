@@ -1,5 +1,5 @@
 ﻿function sharedFunction(id) {
-    //console.log("hello " + id);
+    console.log("hello " + id);
     var state = $('#busyState' + id).val();
 
     if (state == "b") {
@@ -60,6 +60,8 @@ var ajax_match = function () {
     });
 }
 
+
+
 function CompetitorList(data) {
     $('#Competitors').html(data["compTable"]);
 }
@@ -73,6 +75,73 @@ function errorOnAjax() {
 }
 
 window.setTimeout(ajax_call, 0);
+
+function StartMatch(mymatch)
+{
+    console.log(mymatch);
+    //if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
+        //MAKE REQUEST TO START MATCH
+
+        $.ajax({
+            type: 'POST',
+            url: '/Events/StartMatch/',
+            data: (mymatch),
+            success: ajax_call ,
+            error: errorOnAjax
+        });
+    
+    alert("Match Started");
+//ajax_call;
+    
+}
+
+function SubmitScore(mymatch)
+{
+    var score1;
+    score1 = parseInt(prompt("competitor 1 score:", "0"));
+
+    var score2;
+    score2 = parseInt(prompt("competitor 2 score:", "0"));
+
+    console.log(mymatch);
+
+    if (Number.isInteger(score1) && Number.isInteger(score2))
+    {
+        console.log("Submitted Scores: " + score1 + " " + score2);
+        mymatch.scoreCsv = score1 + "-" + score2;
+        mymatch.score1 = score1;
+        mymatch.score2 = score2;
+
+        console.log(mymatch.scoreCsv);
+
+        
+        PostScore(mymatch);
+    }
+    else
+        alert("Please Enter a number for each score.");
+}
+
+
+
+
+function ValidateScore(score)
+{
+    if (score.isInteger)
+        return true;
+    else return false;
+
+}
+
+function PostScore(mymatch)
+{
+    $.ajax({
+        type: 'POST',
+        url: '/Events/SubmitScore/',
+        data: (mymatch),
+        success: ajax_call,
+        error: errorOnAjax
+    });
+}
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
