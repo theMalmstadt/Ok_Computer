@@ -215,10 +215,6 @@ function drawTree(data) {
                             }
                             labelList.push(temp);
                         }
-                        console.log(labelList);
-
-                        console.log(compList);
-
                         return labelList;
                     }
                 }
