@@ -4,7 +4,7 @@
         type: 'GET',
         dataType: 'json',
         url: '/Events/Matches/' + id.toString(),
-        success: drawTree,
+        success: loopActivator,
         error: errorOnAjax
     });
 }
@@ -117,8 +117,10 @@ function recursiveCall(data, current, currY, childY, e, next, compList) {
     return send;
 }
 
-function drawTree(data) {
-    var id = $('#TournamentID').val();
+function drawTree(data, id) {
+    //var id = $('#TournamentID').val();
+    //$("#MinimalGraph").append($("<canvas id=\"" + id + "\"></canvas>"));
+
     var largestRound = 2;
     var endNode = data[0];
     var preciseData = [];
@@ -184,7 +186,7 @@ function drawTree(data) {
         largestRound = 0;
     }
 
-    var ctx = document.getElementById('myChart');
+    var ctx = document.getElementById(id.toString());
     ctx.height = 100 * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -215,10 +217,6 @@ function drawTree(data) {
                             }
                             labelList.push(temp);
                         }
-                        console.log(labelList);
-
-                        console.log(compList);
-
                         return labelList;
                     }
                 }
@@ -267,6 +265,19 @@ function drawTree(data) {
             }
         }
     });
+}
+
+function loopActivator(data) {
+    var trees = [data[0].TournamentID];
+    for (var j = 0; j < data.length; j++) {
+        if (!trees.includes(data[j].TournamentID)) {
+            trees.push(data[j].TournamentID);
+        }
+    }
+    console.log(trees);
+    for (var i = 0; i < trees.length; i++) {
+        drawTree(data, trees[i]);
+    }
 }
 
 function errorOnAjax(data) {

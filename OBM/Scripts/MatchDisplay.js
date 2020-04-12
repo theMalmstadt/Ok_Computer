@@ -282,7 +282,24 @@ function drawTree(data) {
                 display: false
             },
             legend: {
-                display: false
+                display: false,
+                /* This legend works but i prefer no legend. Code is ready to implement
+                 * true,
+                labels: {
+                    generateLabels(chart) {
+                        return [{
+                            text: "completed",
+                            fillStyle: '#03c04a',
+                            }, {
+                                text: "ready",
+                                fillStyle: '#3895d3',
+                            }, {
+                                text: "unreachable",
+                                fillStyle: 'gray',
+                            }];
+                    }
+                }
+                */
             },
             scales: {
                 xAxes: [{
