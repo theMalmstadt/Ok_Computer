@@ -932,7 +932,7 @@ namespace OBM.Controllers
 
             var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
 
-            MatchUpdate(eventId);
+            //MatchUpdate(eventId);
 
         }
 
