@@ -113,9 +113,6 @@ function recursiveCall(data, current, currY, childY, e, next, compList) {
 }
 
 function drawTree(data, id) {
-    //var id = $('#TournamentID').val();
-    //$("#MinimalGraph").append($("<canvas id=\"" + id + "\"></canvas>"));
-
     var largestRound = 2;
     var endNode = data[0];
     var preciseData = [];
@@ -177,8 +174,8 @@ function drawTree(data, id) {
     dataList = dataList.concat(hidden);
 
     largestRound = largestRound - 2;
-    if (largestRound < 0) {
-        largestRound = 0;
+    if (largestRound < 1) {
+        largestRound = 1;
     }
 
     var ctx = document.getElementById(id.toString());

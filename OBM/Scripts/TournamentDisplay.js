@@ -178,8 +178,8 @@ function drawTree(data) {
     dataList = dataList.concat(hidden);
 
     largestRound = largestRound - 2;
-    if (largestRound < 0) {
-        largestRound = 0;
+    if (largestRound < 1) {
+        largestRound = 1;
     }
 
     var ctx = document.getElementById('myChart');
