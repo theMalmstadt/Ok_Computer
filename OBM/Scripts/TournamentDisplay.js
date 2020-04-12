@@ -35,12 +35,7 @@ function lineage(data, current, currY, childY, e, compList) {
     }
 
     if (current.Winner == null) {
-        if (current.Time == null) {
-            nodeLineColor = 'gray';
-        }
-        else {
-            nodeLineColor = '#3895d3';
-        }
+        nodeLineColor = 'gray';
     }
     else {
         var winner = compList.find(x => x.compID === current.Winner);
@@ -180,8 +175,8 @@ function drawTree(data) {
     dataList = dataList.concat(hidden);
 
     largestRound = largestRound - 2;
-    if (largestRound < 0) {
-        largestRound = 0;
+    if (largestRound < 1) {
+        largestRound = 1;
     }
 
     var ctx = document.getElementById('myChart');
