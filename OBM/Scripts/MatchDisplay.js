@@ -111,10 +111,6 @@ function lineage(data, current, currY, childY, e, offset) {
         dataList = dataList.concat(parentResults.dl);
     }
 
-    /*if (current.Time != null) {
-        latest = moment(current.Time);
-    }*/
-
     if (current.Winner == null) {
         if (current.Time == null) {
             nodeLineColor = 'gray';

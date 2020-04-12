@@ -1,0 +1,25 @@
+﻿@model IEnumerable<OBM.Models.Tournament>
+
+@{
+    ViewBag.Title = "Standings";
+
+
+    <h2>@Model.First().TournamentName</h2>
+    <input id="EventID" type="hidden" value="@Model.First().EventID" />
+    <input id="TournamentID" type="hidden" value="@Model.First().TournamentID" />
+    <div class="col-md-10" align="center">
+        @if (ViewBag.Access == true)
+        {
+            <div id="MinimalGraph" style="display:block">
+                <canvas id="myChart"></canvas>
+            </div>
+        }
+        else
+        {
+            <div class="form-horizontal">
+                <h4>Access Denied</h4>
+            </div>
+        }
+    </div>
+}
+@Scripts.Render("~/bundles/StandingsDisplay")
