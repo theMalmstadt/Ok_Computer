@@ -4,7 +4,7 @@
         type: 'GET',
         dataType: 'json',
         url: '/Events/Matches/' + id.toString(),
-        success: drawTree,
+        success: loopActivator,
         error: errorOnAjax
     });
 }
@@ -81,7 +81,7 @@ function lineage(data, current, currY, childY, e, compList) {
 function recursiveCall(data, current, currY, childY, e, next, compList) {
     var dataList = [];
     var nodeLineColor = 'red';
-    var lineDash = [1, 0];
+    var lineDash = [1,0];
 
     var get = lineage(data, current, currY, childY, e, compList);
     dataList = dataList.concat(get.dataList);
@@ -118,8 +118,7 @@ function recursiveCall(data, current, currY, childY, e, next, compList) {
     return send;
 }
 
-function drawTree(data) {
-    var id = $('#TournamentID').val();
+function drawTree(data, id) {
     var largestRound = 2;
     var endNode = data[0];
     var preciseData = [];
@@ -185,7 +184,7 @@ function drawTree(data) {
         largestRound = 1;
     }
 
-    var ctx = document.getElementById('myChart');
+    var ctx = document.getElementById(id.toString());
     ctx.height = 100 * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -266,15 +265,17 @@ function drawTree(data) {
     });
 }
 
-function hideShow(div) {
-    var x = document.getElementById(div);
-    if (window.getComputedStyle(x).display === "none") {
-        x.style.display = "block";
+function loopActivator(data) {
+    var trees = [data[0].TournamentID];
+    for (var j = 0; j < data.length; j++) {
+        if (!trees.includes(data[j].TournamentID)) {
+            trees.push(data[j].TournamentID);
+        }
     }
-    else {
-        x.style.display = "none";
+    console.log(trees);
+    for (var i = 0; i < trees.length; i++) {
+        drawTree(data, trees[i]);
     }
-    ajaxMatches;
 }
 
 function errorOnAjax(data) {

@@ -356,6 +356,7 @@
     <Content Include="Scripts\src\utils\setAttributes.js" />
     <Content Include="Scripts\src\utils\setStyles.js" />
     <Content Include="Scripts\src\utils\setupEventListeners.js" />
+    <Content Include="Scripts\StandingsDisplay.js" />
     <Content Include="Scripts\TournamentSearch.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
@@ -423,6 +424,7 @@
     <Content Include="Views\Events\Competitor.cshtml" />
     <Content Include="Views\Account\RegisterChal.cshtml" />
     <Content Include="Views\Account\RegisterOptions.cshtml" />
+    <Content Include="Views\Events\Standings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
