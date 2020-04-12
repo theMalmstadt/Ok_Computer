@@ -66,10 +66,27 @@ namespace OBM.Controllers
         [HttpGet]
         public String PublicEvents()
         {
-            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location });
-            var jsonResponse = JObject.FromObject(eventsDb);
+            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location, url=("/Events/Details/"+x.EventID) }).ToList();
+            var jsonResponse = new JArray();
+            var mylist = new List<Object>();
+
+            foreach(var tempevent in eventsDb)
+            {
+                jsonResponse.Add(JObject.FromObject(tempevent));
+                mylist.Add(tempevent);
+            }
+
+
             Debug.WriteLine(jsonResponse);
-            return jsonResponse.ToString();
+
+
+            
+            var result=JsonConvert.SerializeObject(mylist);
+
+
+            result.Replace('[', '{');
+            result.Replace(']', '}');
+            return result;
         }
 
 

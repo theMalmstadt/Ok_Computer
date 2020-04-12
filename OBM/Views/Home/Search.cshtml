@@ -11,19 +11,22 @@
 
 <div class="form-group">
     <div class="form-row">
-        <label for="inputState">Result Type:</label>
-        <select id="inputState" class="form-control-sm">
+        <label for="table">Result Type:</label>
+        <select id="table" class="form-control-sm">
             <option selected>Tournament</option>
             <option>Event</option>
         </select>
-        <label for="inputAddress">Search:</label>
-        <input type="text" class="form-control-sm" id="inputAddress" placeholder="Keyword search" value=@ViewBag.search>
+        <input type="text" class="form-control-md" id="searchterm" hidden placeholder="Keyword search" value=@ViewBag.search>
     </div>
 </div>
 
-<div class="container" id="searchRestults">
-
+<div class="container">
+    <table class="table" id="searchResults">
+    </table>
 </div>
 
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 <script src="~/Scripts/Search.js"></script>
 
