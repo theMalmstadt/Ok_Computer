@@ -563,8 +563,13 @@ namespace OBM.Controllers
                     Competitor1ID = null,
                     Competitor2ID = null,
                     PrereqMatch1ID = null,
-                    PrereqMatch2ID = null
+                    PrereqMatch2ID = null,
                 };
+                if (m["match"]["started_at"].ToString() != "")
+                {
+                    newMatch.Time = DateTime.Parse((string)m["match"]["started_at"]);
+                    Console.WriteLine(newMatch.Time);
+                }
                 if (m["match"]["player1_id"].ToString() != "")
                 {
                     string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
