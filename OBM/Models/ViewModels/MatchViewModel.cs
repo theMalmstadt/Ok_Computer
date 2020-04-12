@@ -40,18 +40,20 @@ namespace OBM.Models.ViewModels
             ApiID = match.ApiID;
             PrereqMatch1ID = match.PrereqMatch1ID;
             PrereqMatch2ID = match.PrereqMatch2ID;
-    
             Time = match.Time;
-            if (match.Score1 != null || match.Score2 != null)
+
+            int score1 = match.Score1 ?? 0;
+            int score2 = match.Score2 ?? 0;
+            if (score1 != 0 || score2 != 0)
             { 
-                Winner = (Score1 > Score2) ? Competitor1ID : Competitor2ID;
+                Winner = (score1 > score2) ? Competitor1ID : Competitor2ID;
             }
             else
             {
                 Winner = null;
             }
 
-            if ((match.Score1 != null) || (match.Score2 != null))
+            if ((score1 != 0) || (score2 != 0))
             {
                 Status = 3;
             }

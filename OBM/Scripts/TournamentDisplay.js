@@ -1,55 +1,4 @@
-﻿/*var Colors = {
-    aqua: "#00ffff",
-    azure: "#f0ffff",
-    beige: "#f5f5dc",
-    black: "#000000",
-    blue: "#0000ff",
-    brown: "#a52a2a",
-    cyan: "#00ffff",
-    darkblue: "#00008b",
-    darkcyan: "#008b8b",
-    darkgrey: "#a9a9a9",
-    darkgreen: "#006400",
-    darkkhaki: "#bdb76b",
-    darkmagenta: "#8b008b",
-    darkolivegreen: "#556b2f",
-    darkorange: "#ff8c00",
-    darkorchid: "#9932cc",
-    darkred: "#8b0000",
-    darksalmon: "#e9967a",
-    darkviolet: "#9400d3",
-    fuchsia: "#ff00ff",
-    gold: "#ffd700",
-    green: "#008000",
-    indigo: "#4b0082",
-    khaki: "#f0e68c",
-    lightblue: "#add8e6",
-    lightcyan: "#e0ffff",
-    lightgreen: "#90ee90",
-    lightgrey: "#d3d3d3",
-    lightpink: "#ffb6c1",
-    lightyellow: "#ffffe0",
-    lime: "#00ff00",
-    magenta: "#ff00ff",
-    maroon: "#800000",
-    navy: "#000080",
-    olive: "#808000",
-    orange: "#ffa500",
-    pink: "#ffc0cb",
-    purple: "#800080",
-    violet: "#800080",
-    red: "#ff0000",
-    silver: "#c0c0c0",
-    white: "#ffffff",
-    yellow: "#ffff00"
-};*/
-
-// random number generator
-function rand(frm, to) {
-    return ~~(Math.random() * (to - frm)) + frm;
-}
-
-var ajaxMatches = function () {
+﻿var ajaxMatches = function () {
     var id = $('#EventID').val();
     $.ajax({
         type: 'GET',
@@ -174,6 +123,7 @@ function drawTree(data) {
     var endNode = data[0];
     var preciseData = [];
     var compList = [];
+    var compIDs = [];
 
     for (var i = 0; i < data.length; i++) {
         if (data[i].TournamentID == id) {
@@ -183,19 +133,24 @@ function drawTree(data) {
                     largestRound = data[i].Round;
                 }
             }
-            if (!compList.includes(data[i].Competitor1ID) && data[i].Competitor1ID != null) {
+
+            if (!compIDs.includes(data[i].Competitor1ID) && data[i].Competitor1ID != null) {
                 var temp = {
                     compID: data[i].Competitor1ID,
+                    compName: data[i].Competitor1Name,
                     color: randomColor()
                 }
                 compList.push(temp);
+                compIDs.push(temp.compID);
             }
-            if (!compList.includes(data[i].Competitor2ID) && data[i].Competitor2ID != null) {
+            if (!compIDs.includes(data[i].Competitor2ID) && data[i].Competitor2ID != null) {
                 var temp = {
                     compID: data[i].Competitor2ID,
+                    compName: data[i].Competitor2Name,
                     color: randomColor()
                 }
                 compList.push(temp);
+                compIDs.push(temp.compID);
             }
 
             preciseData.push(data[i]);
@@ -249,7 +204,24 @@ function drawTree(data) {
                 display: false
             },
             legend: {
-                display: false
+                display: true,
+                labels: {
+                    generateLabels(chart) {
+                        var labelList = []
+                        for (var i = 0; i < compList.length; i++) {
+                            var temp = {
+                                text: compList[i].compName,
+                                fillStyle: compList[i].color,
+                            }
+                            labelList.push(temp);
+                        }
+                        console.log(labelList);
+
+                        console.log(compList);
+
+                        return labelList;
+                    }
+                }
             },
             scales: {
                 xAxes: [{
