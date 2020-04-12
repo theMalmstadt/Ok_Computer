@@ -35,12 +35,7 @@ function lineage(data, current, currY, childY, e, compList) {
     }
 
     if (current.Winner == null) {
-        if (current.Time == null) {
-            nodeLineColor = 'gray';
-        }
-        else {
-            nodeLineColor = '#3895d3';
-        }
+        nodeLineColor = 'gray';
     }
     else {
         var winner = compList.find(x => x.compID === current.Winner);
