@@ -42,6 +42,7 @@ namespace OBM
             bundles.Add(new ScriptBundle("~/bundles/TournamentDisplay").Include(
                 "~/Scripts/moment.js",
                 "~/Scripts/Chart.min.js",
+                "~/Scripts/randomColor.js",
                 "~/Scripts/TournamentDisplay.js"
                 ));
         }

@@ -1,4 +1,55 @@
-﻿var ajaxMatches = function () {
+﻿/*var Colors = {
+    aqua: "#00ffff",
+    azure: "#f0ffff",
+    beige: "#f5f5dc",
+    black: "#000000",
+    blue: "#0000ff",
+    brown: "#a52a2a",
+    cyan: "#00ffff",
+    darkblue: "#00008b",
+    darkcyan: "#008b8b",
+    darkgrey: "#a9a9a9",
+    darkgreen: "#006400",
+    darkkhaki: "#bdb76b",
+    darkmagenta: "#8b008b",
+    darkolivegreen: "#556b2f",
+    darkorange: "#ff8c00",
+    darkorchid: "#9932cc",
+    darkred: "#8b0000",
+    darksalmon: "#e9967a",
+    darkviolet: "#9400d3",
+    fuchsia: "#ff00ff",
+    gold: "#ffd700",
+    green: "#008000",
+    indigo: "#4b0082",
+    khaki: "#f0e68c",
+    lightblue: "#add8e6",
+    lightcyan: "#e0ffff",
+    lightgreen: "#90ee90",
+    lightgrey: "#d3d3d3",
+    lightpink: "#ffb6c1",
+    lightyellow: "#ffffe0",
+    lime: "#00ff00",
+    magenta: "#ff00ff",
+    maroon: "#800000",
+    navy: "#000080",
+    olive: "#808000",
+    orange: "#ffa500",
+    pink: "#ffc0cb",
+    purple: "#800080",
+    violet: "#800080",
+    red: "#ff0000",
+    silver: "#c0c0c0",
+    white: "#ffffff",
+    yellow: "#ffff00"
+};*/
+
+// random number generator
+function rand(frm, to) {
+    return ~~(Math.random() * (to - frm)) + frm;
+}
+
+var ajaxMatches = function () {
     var id = $('#EventID').val();
     $.ajax({
         type: 'GET',
@@ -9,7 +60,7 @@
     });
 }
 
-function lineage(data, current, currY, childY, e) {
+function lineage(data, current, currY, childY, e, compList) {
     var dataList = [];
     var base = 1;
     var nodeLineColor = 'red';
@@ -23,14 +74,14 @@ function lineage(data, current, currY, childY, e) {
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest, compList);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
         var parentY = currY - (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest, compList);
         dataList = dataList.concat(parentResults.dl);
     }
 
@@ -43,19 +94,20 @@ function lineage(data, current, currY, childY, e) {
         }
     }
     else {
-        nodeLineColor = '#03c04a';
+        var winner = compList.find(x => x.compID === current.Winner);
+        nodeLineColor = winner.color;
     }
+
+    title = "Round " + current.Round + " Match";
+    label = "";
 
     var comp1 = (current.Competitor1Name) ? current.Competitor1Name : "--";
     var comp2 = (current.Competitor2Name) ? current.Competitor2Name : "--";
-    var score1 = (current.Score1) ? current.Score1 : 0;
-    var score2 = (current.Score2) ? current.Score2 : 0;
-    var title = comp1 + " - " + comp2;
-    var label = score1 + " - " + score2;
-
-    if (title == "-- - --") {
-        title = "Round " + current.Round + " Match";
-        label = "";
+    if (comp1 != "--" && comp2 != "--") {
+        var score1 = (current.Score1) ? current.Score1 : 0;
+        var score2 = (current.Score2) ? current.Score2 : 0;
+        title = comp1 + " - " + comp2;
+        label = score1 + " - " + score2;
     }
 
     var node = [{
@@ -79,11 +131,11 @@ function lineage(data, current, currY, childY, e) {
     };
 }
 
-function recursiveCall(data, current, currY, childY, e, next) {
+function recursiveCall(data, current, currY, childY, e, next, compList) {
     var dataList = [];
     var nodeLineColor = 'red';
 
-    var get = lineage(data, current, currY, childY, e);
+    var get = lineage(data, current, currY, childY, e, compList);
     dataList = dataList.concat(get.dataList);
     nodeLineColor = get.nodeLineColor;
     var node = get.node;
@@ -120,6 +172,8 @@ function drawTree(data) {
     var id = $('#TournamentID').val();
     var largestRound = 2;
     var endNode = data[0];
+    var preciseData = [];
+    var compList = [];
 
     for (var i = 0; i < data.length; i++) {
         if (data[i].TournamentID == id) {
@@ -129,13 +183,29 @@ function drawTree(data) {
                     largestRound = data[i].Round;
                 }
             }
+            if (!compList.includes(data[i].Competitor1ID) && data[i].Competitor1ID != null) {
+                var temp = {
+                    compID: data[i].Competitor1ID,
+                    color: randomColor()
+                }
+                compList.push(temp);
+            }
+            if (!compList.includes(data[i].Competitor2ID) && data[i].Competitor2ID != null) {
+                var temp = {
+                    compID: data[i].Competitor2ID,
+                    color: randomColor()
+                }
+                compList.push(temp);
+            }
+
+            preciseData.push(data[i]);
         }
     }
 
     var dataList = [];
     var base = 1;
 
-    var get = lineage(data, endNode, base, base, base);
+    var get = lineage(preciseData, endNode, base, base, base, compList);
     dataList = dataList.concat(get.dataList);
     nodeLineColor = get.nodeLineColor;
     var node = get.node;
