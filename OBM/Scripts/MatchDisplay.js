@@ -90,6 +90,7 @@ function lineage(data, current, currY, childY, e, offset) {
     var dataList = [];
     var base = 1;
     var nodeLineColor = 'red';
+    var lineDash = [1, 0];
 
     var latest = moment().add(5, 'minutes').startOf('minute');
     var latest = moment(latest).add(((current.Round - 2) * 15), 'minutes').startOf('minute');
@@ -114,6 +115,7 @@ function lineage(data, current, currY, childY, e, offset) {
     if (current.Winner == null) {
         if (current.Time == null) {
             nodeLineColor = 'gray';
+            lineDash = [3, 3];
         }
         else {
             nodeLineColor = '#3895d3';
@@ -159,6 +161,7 @@ function lineage(data, current, currY, childY, e, offset) {
     return {
         node: node,
         nodeLineColor: nodeLineColor,
+        lineDash: lineDash,
         dataList: dataList,
         latest: latest
     };
@@ -167,10 +170,12 @@ function lineage(data, current, currY, childY, e, offset) {
 function recursiveCall(data, current, currY, childY, e, offset, next) {
     var dataList = [];
     var nodeLineColor = 'red';
+    var lineDash = [1, 0];
 
     var get = lineage(data, current, currY, childY, e, offset);
     dataList = dataList.concat(get.dataList);
     nodeLineColor = get.nodeLineColor;
+    lineDash = get.lineDash;
     var node = get.node;
     latest = get.latest;
 
@@ -187,7 +192,8 @@ function recursiveCall(data, current, currY, childY, e, offset, next) {
         pointRadius: [-1],
         backgroundColor: nodeLineColor,
         borderWidth: 5,
-        borderColor: nodeLineColor
+        borderColor: nodeLineColor,
+        borderDash: lineDash
     };
 
     node.push(line);
