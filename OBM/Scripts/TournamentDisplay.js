@@ -9,7 +9,7 @@
     });
 }
 
-function lineage(data, current, currY, childY, e, offset) {
+function lineage(data, current, currY, childY, e) {
     var dataList = [];
     var base = 1;
     var nodeLineColor = 'red';
@@ -23,14 +23,14 @@ function lineage(data, current, currY, childY, e, offset) {
     if (current.PrereqMatch1ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch1ID);
         var parentY = currY + (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset, latest);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest);
         dataList = dataList.concat(parentResults.dl);
     }
 
     if (current.PrereqMatch2ID != null) {
         var parent = data.find(item => item.MatchID === current.PrereqMatch2ID);
         var parentY = currY - (base / Math.pow(2, e));
-        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, offset, latest);
+        var parentResults = recursiveCall(data, parent, parentY, currY, e + 1, latest);
         dataList = dataList.concat(parentResults.dl);
     }
 
@@ -61,7 +61,7 @@ function lineage(data, current, currY, childY, e, offset) {
     var node = [{
         data: [{
             x: latest,
-            y: currY + offset
+            y: currY
         }],
         fill: false,
         title: title,
@@ -79,11 +79,11 @@ function lineage(data, current, currY, childY, e, offset) {
     };
 }
 
-function recursiveCall(data, current, currY, childY, e, offset, next) {
+function recursiveCall(data, current, currY, childY, e, next) {
     var dataList = [];
     var nodeLineColor = 'red';
 
-    var get = lineage(data, current, currY, childY, e, offset);
+    var get = lineage(data, current, currY, childY, e);
     dataList = dataList.concat(get.dataList);
     nodeLineColor = get.nodeLineColor;
     var node = get.node;
@@ -92,10 +92,10 @@ function recursiveCall(data, current, currY, childY, e, offset, next) {
     var line = {
         data: [{
             x: latest,
-            y: currY + offset
+            y: currY
         }, {
             x: next,
-            y: childY + offset
+            y: childY
         }],
         fill: false,
         radius: -1,
@@ -118,49 +118,29 @@ function recursiveCall(data, current, currY, childY, e, offset, next) {
 
 function drawTree(data) {
     var id = $('#TournamentID').val();
-    var trees = [data[0]];
     var largestRound = 2;
+    var endNode = data[0];
 
-    for (var j = 0; j < trees.length; j++) {
-        for (var i = 0; i < data.length; i++) {
-            if (data[i].TournamentID == trees[j].TournamentID) {
-                if (data[i].Round > trees[j].Round) {
-                    trees[j] = data[i];
-                    if (data[i].Round > largestRound) {
-                        largestRound = data[i].Round;
-                    }
-                }
-            }
-            else {
-                var flag = 1;
-                for (var h = 0; h < trees.length; h++) {
-                    if (data[i].TournamentID == trees[h].TournamentID) {
-                        flag = 0;
-                        h = trees.length;
-                    }
-                }
-                if (flag == 1) {
-                    trees.push(data[i]);
+    for (var i = 0; i < data.length; i++) {
+        if (data[i].TournamentID == id) {
+            if (data[i].Round > endNode.Round) {
+                endNode = data[i];
+                if (data[i].Round > largestRound) {
+                    largestRound = data[i].Round;
                 }
             }
         }
     }
 
     var dataList = [];
-    for (var i = 0; i < trees.length; i++) {
-        var current = trees[i];
-        var base = 1;
-        var offset = i * (trees[i].Round - 1);
+    var base = 1;
 
-        if (trees[i].TournamentID == id) {
-            var get = lineage(data, current, base, base, base, offset);
-            dataList = dataList.concat(get.dataList);
-            nodeLineColor = get.nodeLineColor;
-            var node = get.node;
+    var get = lineage(data, endNode, base, base, base);
+    dataList = dataList.concat(get.dataList);
+    nodeLineColor = get.nodeLineColor;
+    var node = get.node;
 
-            dataList = dataList.concat(node);
-        }
-    }
+    dataList = dataList.concat(node);
 
     var hidden = [{
         data: [{
@@ -180,7 +160,7 @@ function drawTree(data) {
     }
 
     var ctx = document.getElementById('myChart');
-    ctx.height = 100 * trees.length * largestRound;
+    ctx.height = 100 * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList.reverse() },
