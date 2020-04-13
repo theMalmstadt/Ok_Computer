@@ -51,6 +51,10 @@
             <dd>
                 @Html.DisplayFor(model => model.Public)
             </dd>
+
+            <dd>
+                @Html.ActionLink("View Standings", "Standings", new { id = Model.EventID })
+            </dd>
         </dl>
         <div class="col-md-10" align="center">
             <div id="Matches"></div>

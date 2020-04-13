@@ -501,6 +501,31 @@ namespace OBM.Controllers
             return Json(sortedList, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult Standings(int? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+            //var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            Event even = db.Events.Find(id);
+            //var eventTournaments = db.Tournaments.Find(id);
+            List<Tournament> eventTournaments = db.Tournaments.Where(x => x.EventID == id).ToList();
+            if (eventTournaments == null)
+            {
+                throw new HttpException(404, "Page not Found");
+            }
+            if ((even.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == even.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+
+            return View(eventTournaments);
+        }
+
         public void CompetitorUpdate(int? id)
         {
             string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;

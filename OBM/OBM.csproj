@@ -293,6 +293,7 @@
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
     <Content Include="Scripts\Search.js" />
+    <Content Include="Scripts\randomColor.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
     <Content Include="Scripts\src\methods\destroy.js" />
@@ -356,6 +357,7 @@
     <Content Include="Scripts\src\utils\setAttributes.js" />
     <Content Include="Scripts\src\utils\setStyles.js" />
     <Content Include="Scripts\src\utils\setupEventListeners.js" />
+    <Content Include="Scripts\StandingsDisplay.js" />
     <Content Include="Scripts\TournamentSearch.js" />
     <Content Include="Scripts\umd\popper-utils.js" />
     <Content Include="Scripts\umd\popper-utils.min.js" />
@@ -424,6 +426,7 @@
     <Content Include="Views\Account\RegisterChal.cshtml" />
     <Content Include="Views\Account\RegisterOptions.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
+    <Content Include="Views\Events\Standings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
