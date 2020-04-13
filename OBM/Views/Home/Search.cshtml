@@ -12,10 +12,42 @@
 <div class="form-group">
     <div class="form-row">
         <label for="table">Result Type:</label>
+
+
         <select id="table" class="form-control-sm">
-            <option selected>Tournament</option>
-            <option>Event</option>
+            @if (ViewBag.table != null)
+            {
+                if (ViewBag.table == "Tournaments")
+                {
+                    <option selected>Tournaments</option>
+                }
+                else
+                {
+                    <option>Tournaments</option>
+
+                }
+
+                if (ViewBag.table == "Events")
+                {
+                    <option selected>Events</option>
+                }
+                else
+                {
+                    <option>Events</option>
+
+                }
+            }
+            else
+            {
+                <option>Tournaments</option>
+                <option selected>Events</option>
+
+            }
+
         </select>
+
+
+
         <input type="text" class="form-control-md" id="searchterm" hidden placeholder="Keyword search" value=@ViewBag.search>
     </div>
 </div>
