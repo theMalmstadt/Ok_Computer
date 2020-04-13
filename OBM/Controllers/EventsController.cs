@@ -358,8 +358,8 @@ namespace OBM.Controllers
             }
             else
                 ViewBag.Access = false;
-
-            return View();
+            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            return View(eventView);
         }
 
         [HttpGet]
