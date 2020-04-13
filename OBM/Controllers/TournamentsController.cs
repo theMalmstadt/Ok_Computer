@@ -196,7 +196,6 @@ namespace OBM.Controllers
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                 var result = streamReader.ReadToEnd();
-                Debug.WriteLine(result);
                 Tournament resultTournament = new Tournament();
 
 
@@ -210,7 +209,9 @@ namespace OBM.Controllers
                 else 
                         resultTournament.IsStarted = false;
                     //resultTournament.Subdomain = (string)myJSON["subdomain"];
-                    resultTournament.ApiId = (int)myJSON["id"];
+                    Debug.WriteLine("API ID IS: "+JObject.Parse(result)["tournament"]["id"]);
+
+                    resultTournament.ApiId = (int)JObject.Parse(result)["tournament"]["id"];
 
 
                     Create(resultTournament);
