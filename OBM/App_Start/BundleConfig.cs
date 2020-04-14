@@ -32,6 +32,26 @@ namespace OBM
                 "~/Scripts/anime.min.js",
                 "~/Scripts/HomePage.js"
                 ));
+
+            bundles.Add(new ScriptBundle("~/bundles/MatchDisplay").Include(
+                "~/Scripts/moment.js",
+                "~/Scripts/Chart.min.js",
+                "~/Scripts/MatchDisplay.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/StandingsDisplay").Include(
+                "~/Scripts/moment.js",
+                "~/Scripts/Chart.min.js",
+                "~/Scripts/randomColor.js",
+                "~/Scripts/StandingsDisplay.js"
+                ));
+
+            bundles.Add(new ScriptBundle("~/bundles/TournamentDisplay").Include(
+                "~/Scripts/moment.js",
+                "~/Scripts/Chart.min.js",
+                "~/Scripts/randomColor.js",
+                "~/Scripts/TournamentDisplay.js"
+                ));
         }
     }
 }

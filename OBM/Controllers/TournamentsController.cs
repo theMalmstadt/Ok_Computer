@@ -156,13 +156,28 @@ namespace OBM.Controllers
         public string ChallongeCreate()
         {
             //PARSE VALUES
-            var myobject = new { api_key = Request.Params["api_key"], name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"] };
+            var userId = User.Identity.GetUserId();
+            var myobject = new {name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"], ranked_by = Request.Params["ranked_by"], open_signup = Request.Params["open_signup"], pts_for_bye = Request.Params["pts_for_bye"], signup_cap = Request.Params["signup_cap"], start_at = Request.Params["start_at"], checkin_duration = Request.Params["checkin_duration"], tournament_type = Request.Params["tournament_type"] };
+            var myJSON = new JObject();
+            var mytournament = new JObject();
 
+<<<<<<< HEAD
             var myJSON = JObject.FromObject(myobject);
 
 
 
             return ChallongePost(myJSON).ToString();
+=======
+            mytournament=JObject.FromObject(myobject);
+            
+
+           var apikey = db.AspNetUsers.Where(x => x.Id == userId).First().ApiKey;
+            myJSON.Add("api_key",apikey);
+            myJSON.Add("tournament", JObject.FromObject(myobject));
+            mytournament.Add("api_key", apikey);
+            Debug.WriteLine("mytournament is: "+ mytournament);
+            return ChallongePost(mytournament).ToString();
+>>>>>>> dev
 
         }
 
@@ -176,7 +191,6 @@ namespace OBM.Controllers
             httpWebRequest.Method = "POST";
 
 
-            Debug.WriteLine(myJSON.ToString());
             Debug.WriteLine("api_key is : " + myJSON["api_key"]);
             Debug.WriteLine("url is : " + myJSON["url"]);
             Debug.WriteLine("name is : " + myJSON["name"]);
@@ -196,6 +210,7 @@ namespace OBM.Controllers
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
+<<<<<<< HEAD
                     var result = streamReader.ReadToEnd();
                     Debug.WriteLine(result);
                     Tournament resultTournament = new Tournament();
@@ -214,6 +229,29 @@ namespace OBM.Controllers
                     Create(resultTournament);
                     return JObject.Parse(result);
                 }//EXCEPTION HAnDlINGSGINJFDIGSF
+=======
+                var result = streamReader.ReadToEnd();
+                Tournament resultTournament = new Tournament();
+
+
+                resultTournament.EventID = (int)myJSON["event_id"];
+                resultTournament.TournamentName = (string)myJSON["name"];
+                resultTournament.UrlString = (string)myJSON["url"];
+                resultTournament.Description = (string)myJSON["description"];
+                resultTournament.Game = (string)myJSON["game_name"];
+                if((string)myJSON["state"]=="underway") 
+                        resultTournament.IsStarted = true;
+                else 
+                        resultTournament.IsStarted = false;
+                    //resultTournament.Subdomain = (string)myJSON["subdomain"];
+
+                    resultTournament.ApiId = (int)JObject.Parse(result)["tournament"]["id"];
+
+
+                    Create(resultTournament);
+                return JObject.Parse(result);
+                 }//EXCEPTION HAnDlINGSGINJFDIGSF
+>>>>>>> dev
 
             }
             catch (System.Net.WebException e)
@@ -231,5 +269,34 @@ namespace OBM.Controllers
             Debug.WriteLine(tournaments);
             return tournaments;
         }
+<<<<<<< HEAD
+=======
+
+        [HttpGet]
+        public String PublicTournaments()
+        {
+            var tournamentsDb = db.Tournaments.Select(x => new { x.TournamentID, x.TournamentName, x.Game, x.Description, url = ("/Tournament/Details/" + x.TournamentID) }).ToList();
+            var jsonResponse = new JArray();
+            var mylist = new List<Object>();
+
+            foreach (var temptourney in tournamentsDb)
+            {
+                jsonResponse.Add(JObject.FromObject(temptourney));
+                mylist.Add(temptourney);
+            }
+
+
+            Debug.WriteLine(jsonResponse);
+
+
+
+            var result = JsonConvert.SerializeObject(mylist);
+
+
+            result.Replace('[', '{');
+            result.Replace(']', '}');
+            return result;
+        }
+>>>>>>> dev
     }
 }

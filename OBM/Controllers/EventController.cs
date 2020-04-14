@@ -66,10 +66,34 @@ namespace OBM.Controllers
         [HttpGet]
         public String PublicEvents()
         {
-            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location });
-            var jsonResponse = JObject.FromObject(eventsDb);
+            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location, url=("/Events/Details/"+x.EventID)}).ToList();
+            var jsonResponse = new JArray();
+            var mylist = new List<Object>();
+
+            foreach(var tempevent in eventsDb)
+            {
+                var organizerId = db.Events.Find(tempevent.EventID).OrganizerID;
+                var organizerName = db.AspNetUsers.Find(organizerId).UserName;
+
+                var tempJson = JObject.FromObject(tempevent);
+                tempJson.Add("UserName", organizerName);
+
+                jsonResponse.Add(tempJson);
+                
+                mylist.Add(new { tempevent.EventID, tempevent.EventName, tempevent.Description, tempevent.Location, UserName = organizerName, url = ("/Events/Details/" + tempevent.EventID) });
+            }
+
+
             Debug.WriteLine(jsonResponse);
-            return jsonResponse.ToString();
+
+
+            
+            var result=JsonConvert.SerializeObject(mylist);
+
+
+            result.Replace('[', '{');
+            result.Replace(']', '}');
+            return result;
         }
 
 
@@ -362,8 +386,8 @@ namespace OBM.Controllers
             }
             else
                 ViewBag.Access = false;
-            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
-            return View(eventView);
+
+            return View();
         }
 
         [HttpGet]
@@ -499,31 +523,6 @@ namespace OBM.Controllers
             List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => y.Time).ToList();
 
             return Json(sortedList, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public ActionResult Standings(int? id)
-        {
-            if (id == null)
-            {
-                throw new HttpException(400, "Bad Request");
-            }
-            //var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
-            Event even = db.Events.Find(id);
-            //var eventTournaments = db.Tournaments.Find(id);
-            List<Tournament> eventTournaments = db.Tournaments.Where(x => x.EventID == id).ToList();
-            if (eventTournaments == null)
-            {
-                throw new HttpException(404, "Page not Found");
-            }
-            if ((even.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == even.OrganizerID)))
-            {
-                ViewBag.Access = true;
-            }
-            else
-                ViewBag.Access = false;
-
-            return View(eventTournaments);
         }
 
         public void CompetitorUpdate(int? id)
@@ -895,57 +894,36 @@ namespace OBM.Controllers
         [HttpPost]
         public void StartMatch()
         {
-
-            Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
+            //FETCH NEEDED VALUES
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
-
-            Debug.WriteLine("TournamentID is: " + Request.Params["TournamentID"]);
-
             var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
-
             var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
-
             var userid = HttpContext.User.Identity.GetUserId();
             var apiKey = db.AspNetUsers.Where(x => x.Id ==userid ).First().ApiKey;
 
-
+            //PREPARE REQUEST
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/mark_as_underway.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
 
-
-           
-
-
-            //var myJson = JObject.FromObject(myObject);
-            Debug.WriteLine(tournamentId);
+            //BUILD REQUEST DATA
             JObject myJson= new JObject();
             myJson.Add("match_id", matchApiId);
             myJson.Add("tournament", tournamentApiId);
             myJson.Add("api_key", apiKey);
 
-
-            //myJSON.Add("private", myJSON["Private"]);
-
-
-
-
+            //WRITE DATA TO REQUEST
             Debug.WriteLine(myJson);
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-
-
                 streamWriter.Write(myJson);
             }
-
+            //TRY SENDING THE REQUEST
             try
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-
-
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
@@ -955,14 +933,8 @@ namespace OBM.Controllers
 
             catch (System.Net.WebException e)
             {
-                
-
             }
-
             var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
-
-            //MatchUpdate(eventId);
-
         }
 
         public void MatchUpdate(int? id)

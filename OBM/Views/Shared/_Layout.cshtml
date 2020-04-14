@@ -19,20 +19,17 @@
         <a href="@Url.Action("Index", "Home")">
             <img class="nav-logo" alt="OK" src="@Url.Content("~/Media/OKsign.png")">
         </a>
-        <i>
-            @Html.ActionLink("OK Brackets", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "nav-item" })
-        </i>
-
+            
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
-
-                <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", id = "nav-item" })</i></li>
-                <li><i>@Html.ActionLink("Tournaments", "Index", "Tournaments", null, new { @class = "nav-link", id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("OK Brackets", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Tournaments", "Index", "Events", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
             </ul>
 
 
             <!-- Search form -->
-            @using (Html.BeginForm("ResponsiveEvents", "Events", FormMethod.Get))
+            @using (Html.BeginForm("Search", "Home", FormMethod.Get))
             {
                 @Html.TextBox("search", null, new { @class = "form-control", placeholder = "Search events:" })
             }

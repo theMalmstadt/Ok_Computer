@@ -1,0 +1,64 @@
+﻿
+@{
+    ViewBag.Title = "Search";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+<h2>Search</h2>
+
+<div class="form-group">
+    <div class="form-row">
+        <label for="table">Result Type:</label>
+
+
+        <select id="table" class="form-control-sm">
+            @if (ViewBag.table != null)
+            {
+                if (ViewBag.table == "Tournaments")
+                {
+                    <option selected>Tournaments</option>
+                }
+                else
+                {
+                    <option>Tournaments</option>
+
+                }
+
+                if (ViewBag.table == "Events")
+                {
+                    <option selected>Events</option>
+                }
+                else
+                {
+                    <option>Events</option>
+
+                }
+            }
+            else
+            {
+                <option>Tournaments</option>
+                <option selected>Events</option>
+
+            }
+
+        </select>
+
+
+
+        <input type="text" class="form-control-md" id="searchterm" hidden placeholder="Keyword search" value=@ViewBag.search>
+    </div>
+</div>
+
+<div class="container">
+    <table class="table" id="searchResults">
+    </table>
+</div>
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+<script src="~/Scripts/Search.js"></script>
+
