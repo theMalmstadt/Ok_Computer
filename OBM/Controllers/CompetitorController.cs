@@ -132,7 +132,7 @@ namespace OBM.Controllers
             return RedirectToAction("Tournament", "Events", new { id = TourneyID });
         }
 
-        bool DuplicateParticipants(string[] participants)
+        public static bool DuplicateParticipants(string[] participants)
         {
             //puts all elements into a hashset (doesn't make an entry if it matches another entry)
             HashSet<string> s = new HashSet<string>(participants);
