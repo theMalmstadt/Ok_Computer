@@ -40,7 +40,7 @@ namespace OBMTester
             //te
             EventsController myController = new EventsController();
 
-            var result = myController.Search("asdf");
+            var result = myController.ResponsiveEvents("asdf");
             Debug.WriteLine(result);
 
             Assert.IsNotNull(result);
