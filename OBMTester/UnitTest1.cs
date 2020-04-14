@@ -49,5 +49,16 @@ namespace OBMTester
 
             Assert.IsNotNull(result);
         }
+
+        [TestMethod]
+        public void HomeSearchTest()
+        {
+            HomeController controller = new HomeController();
+
+            ViewResult result = controller.Search("SearchString", "TableString") as ViewResult;
+
+
+            Assert.IsTrue(("SearchString" == result.ViewBag.search) && ("TableString" == result.ViewBag.table));
+        }
     }
 }
