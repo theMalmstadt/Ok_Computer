@@ -93,9 +93,13 @@ nav {
     font-size: 200%;
 }
 
-.nav-link:hover, nav:hover {
+.nav-link:hover, nav:hover, a {
     color: #4ac959;
 }
+
+    a:hover {
+        color: #58585A;
+    }
 
 #registerLink, #loginLink, #logoutLink, #accountLink {
     color: #E7E8E9;
