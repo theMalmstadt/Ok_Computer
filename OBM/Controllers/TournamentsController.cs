@@ -157,18 +157,18 @@ namespace OBM.Controllers
         {
             //PARSE VALUES
             var userId = User.Identity.GetUserId();
-            var myobject = new {name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"], ranked_by = Request.Params["ranked_by"], open_signup = Request.Params["open_signup"], pts_for_bye = Request.Params["pts_for_bye"], signup_cap = Request.Params["signup_cap"], start_at = Request.Params["start_at"], checkin_duration = Request.Params["checkin_duration"], tournament_type = Request.Params["tournament_type"] };
+            var myobject = new { name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"], ranked_by = Request.Params["ranked_by"], open_signup = Request.Params["open_signup"], pts_for_bye = Request.Params["pts_for_bye"], signup_cap = Request.Params["signup_cap"], start_at = Request.Params["start_at"], checkin_duration = Request.Params["checkin_duration"], tournament_type = Request.Params["tournament_type"] };
             var myJSON = new JObject();
             var mytournament = new JObject();
 
-            mytournament=JObject.FromObject(myobject);
-            
+            mytournament = JObject.FromObject(myobject);
 
-           var apikey = db.AspNetUsers.Where(x => x.Id == userId).First().ApiKey;
-            myJSON.Add("api_key",apikey);
+
+            var apikey = db.AspNetUsers.Where(x => x.Id == userId).First().ApiKey;
+            myJSON.Add("api_key", apikey);
             myJSON.Add("tournament", JObject.FromObject(myobject));
             mytournament.Add("api_key", apikey);
-            Debug.WriteLine("mytournament is: "+ mytournament);
+            Debug.WriteLine("mytournament is: " + mytournament);
             return ChallongePost(mytournament).ToString();
 
         }
@@ -202,18 +202,18 @@ namespace OBM.Controllers
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-                var result = streamReader.ReadToEnd();
-                Tournament resultTournament = new Tournament();
+                    var result = streamReader.ReadToEnd();
+                    Tournament resultTournament = new Tournament();
 
 
-                resultTournament.EventID = (int)myJSON["event_id"];
-                resultTournament.TournamentName = (string)myJSON["name"];
-                resultTournament.UrlString = (string)myJSON["url"];
-                resultTournament.Description = (string)myJSON["description"];
-                resultTournament.Game = (string)myJSON["game_name"];
-                if((string)myJSON["state"]=="underway") 
+                    resultTournament.EventID = (int)myJSON["event_id"];
+                    resultTournament.TournamentName = (string)myJSON["name"];
+                    resultTournament.UrlString = (string)myJSON["url"];
+                    resultTournament.Description = (string)myJSON["description"];
+                    resultTournament.Game = (string)myJSON["game_name"];
+                    if ((string)myJSON["state"] == "underway")
                         resultTournament.IsStarted = true;
-                else 
+                    else
                         resultTournament.IsStarted = false;
                     //resultTournament.Subdomain = (string)myJSON["subdomain"];
 
@@ -221,13 +221,13 @@ namespace OBM.Controllers
 
 
                     Create(resultTournament);
-                return JObject.Parse(result);
-                 }//EXCEPTION HAnDlINGSGINJFDIGSF
+                    return JObject.Parse(result);
+                }//EXCEPTION HAnDlINGSGINJFDIGSF
 
             }
             catch (System.Net.WebException e)
             {
-                return JObject.FromObject(new { error = "webException", message = "please ensure that you have not already create a tournament with this url, and that the URL, name, and event_id fields are accurate." });
+                return JObject.FromObject(new { error = "webException", message = "please ensure that you have not already create a tournaent with this url, and that the URL, name, and event_id fields are accurate." });
             }
 
         }
