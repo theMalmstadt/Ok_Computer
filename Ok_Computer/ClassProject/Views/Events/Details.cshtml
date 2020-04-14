@@ -1,0 +1,73 @@
+﻿@model ClassProject.Models.EventViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EventName)
+        </dt>
+
+
+
+        <dd>
+            @Html.DisplayFor(model => model.EventName)
+        </dd>
+
+
+        <dd>
+        </dd>
+
+    </dl>
+
+    <div class="row">
+
+        <dt class="col-md-4">
+            Athlete Name
+        </dt>
+
+
+        <dt class="col-md-4">
+            Race Time
+        </dt>
+
+
+        <dt class="col-md-4">
+            Date
+        </dt>
+        <br />
+        @foreach (var x in Model.ResultList)
+        {
+            <div class="col-md-4">
+                @x.Athlete.AthleteName
+            </div>
+
+
+            <div class="col-md-4">
+                @x.RecordedTime
+            </div>
+
+
+            <div class="col-md-4">
+                @x.EventDate
+            </div>
+            <br />
+            <br />
+            <br />
+
+        }
+
+
+    </div>
+    
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.EventId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
