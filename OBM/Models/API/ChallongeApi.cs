@@ -19,7 +19,12 @@ namespace OBM.Models.API
         private ApiCredentials creds = new ApiCredentials();
         public enum Methods { GET, POST, DELETE}
 
-        public bool checkCredentials(string username, string apiKey)
+        public Tuple<string, string> getCredentials()
+        {
+            return new Tuple<string, string>(creds.Username, creds.ApiKey);
+        }
+
+        public bool setCredentials(string username, string apiKey)
         {
             creds.Username = username;
             creds.ApiKey = apiKey;
@@ -34,19 +39,21 @@ namespace OBM.Models.API
             return false;
         }
 
-        public async Task<string> Fetch(ChallongeApi.Methods method, string path, Dictionary<string, string> parameters = null)
+        public async Task<string> Fetch(ChallongeApi.Methods method, string path, List<KeyValuePair<string,string>> parameters = null)
         {
             if (parameters == null)
             {
-                parameters = new Dictionary<string, string>();
+                parameters = new List<KeyValuePair<string, string>>();
             }
 
-            if (!parameters.ContainsKey("api_key"))
-            {
-                parameters.Add("api_key", creds.ApiKey);
-            }
+            //if (!parameters.)
+            //{
+            //    parameters.Add(new KeyValuePair<string, string>("api_key", creds.ApiKey));
+            //}
 
             FormUrlEncodedContent content = new FormUrlEncodedContent(parameters);
+
+            client.BaseAddress = new Uri("Https://" + ChallongeApiUrl);
 
             // Full Path
             string fullpath = "https://" + ChallongeApiUrl + "/" + path;
@@ -63,7 +70,9 @@ namespace OBM.Models.API
                     response = await client.GetAsync(fullpath + "?" + query);
                     break;
                 case Methods.POST:
-                    response = await client.PostAsync(fullpath, content);
+                    var request = new HttpRequestMessage(HttpMethod.Post, path);
+                    request.Content = new FormUrlEncodedContent(parameters);
+                    response = await client.SendAsync(request);
                     break;
                 case Methods.DELETE:
                     foreach (KeyValuePair<string, string> entry in parameters)
@@ -83,7 +92,7 @@ namespace OBM.Models.API
         /*
          * Returns the JObject (used like a Dictionary) of the response
          */
-        public async Task<JObject> FetchAndParse(ChallongeApi.Methods method, string path, Dictionary<string, string> body)
+        public async Task<JObject> FetchAndParse(ChallongeApi.Methods method, string path, List<KeyValuePair<string, string>> body)
         {
             string responseAsString = await Fetch(method, path, body);
             if (responseAsString.StartsWith("{"))

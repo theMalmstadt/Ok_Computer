@@ -1,6 +1,8 @@
 ﻿@model OBM.Models.ViewModels.TournamentViewModel
 @{
     ViewBag.Title = Model.TournamentName;
+    ViewBag.ApiID = Model.ApiId;
+    ViewBag.TourneyID = Model.TournamentID;
 
     <h1>@Html.DisplayFor(model => model.TournamentName)</h1>
 
@@ -24,10 +26,57 @@
                 <dt>Tournament Organizer</dt>
                 <dd>@Html.DisplayFor(model => model.OrganizerName)</dd>
 
-                <dt>Ending URL string</dt>
-                <dd>@Html.DisplayFor(model => model.UrlString)</dd>
-            </dl>
+                <dt>Challonge URL:</dt>
+                <dd><a href="https://challonge.com/@Html.DisplayFor(model => model.UrlString)">https://challonge.com/@Html.DisplayFor(model => model.UrlString)</a></dd>
+                @if (Model.IsStarted == "No")
+                {
+                    <p>@TempData["Result"]</p>
+                    using (Html.BeginForm("AddSingleParticipant", "Competitor", FormMethod.Post))
+                    {
+                        <dt>Add Participants:</dt>
+                        <dd>
+                            <select name="options" id="options">
+                                <option>
+                                    -Select Method-
+                                </option>
+                                <option value="Single">
+                                    Single Participant
+                                </option>
+                                <option value="Bulk">
+                                    Bulk Participants
+                                </option>
+                            </select>
+                            <br />
 
+                            <div class="Single add" id="participantOptions">
+                                <label for="create">Participant's Name or Gamer Tag: </label>
+                                <br />
+                                <input type="text" name="singleAdd" />
+                                <input type="submit" value="Add" class="btn createbtn" />
+                                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
+                                <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                            </div>
+                        </dd>
+                    }
+                    using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
+                    {
+                        <dt></dt>
+                        <dd>
+                            <div class="Bulk add" id="participantOptions">
+                                <div>
+                                    <i>Format input like; participant,participant,...</i>
+                                </div>
+                                <label for="bulkadd">Bulk add Participants:</label>
+                                <br />
+                                <input type="text" name="bulkadd" />
+                                <input type="submit" value="Bulk Add" class="btn createbtn" />
+                                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
+                                <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                            </div>
+                        </dd>
+                    }
+                }
+            </dl>
 
 
             <table class="table table-bordered table-striped">
@@ -53,9 +102,12 @@
         using (Html.BeginForm(FormMethod.Post))
         {
             <div class="form-group">
-                <input id="delete-tournament" type="submit" value="Delete Tournament" class="btn btn-default" />
+                <input id="delete-tournament" type="submit" value="Delete Tournament" class="btn btn-danger" />
             </div>
         }
+        <div>
+            @Html.ActionLink("Back to Event", "Manage", "Events", routeValues: new { id = Model.EventID }, htmlAttributes: new { @class = "btn registerbtn" })
+        </div>
     }
     else
     {
@@ -63,7 +115,17 @@
             <h4>Access Denied</h4>
         </div>
     }
+<<<<<<< HEAD
+
+
+    @section scripts
+    {
+        <script type="text/javascript" src="~/Scripts/participants.js"></script>
+    }
+}
+=======
 }
 
 
 @Scripts.Render("~/bundles/TournamentDisplay")
+>>>>>>> dev

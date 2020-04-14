@@ -15,6 +15,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using OBM.Models.ViewModels;
+using OBM.Models.API;
+using OBM.Controllers;
 
 namespace OBM.Controllers
 {
@@ -22,9 +25,7 @@ namespace OBM.Controllers
     public class TournamentsController : Controller
     {
         private static readonly HttpClient client = new HttpClient();
-
         private EventContext db = new EventContext();
-        private ApplicationDbContext userdb = new ApplicationDbContext();
 
         // GET: Tournaments
         public ActionResult Index()
@@ -152,7 +153,7 @@ namespace OBM.Controllers
 
 
         [HttpPost]
-        public  string ChallongeCreate()
+        public string ChallongeCreate()
         {
             //PARSE VALUES
             var userId = User.Identity.GetUserId();
@@ -160,6 +161,13 @@ namespace OBM.Controllers
             var myJSON = new JObject();
             var mytournament = new JObject();
 
+<<<<<<< HEAD
+            var myJSON = JObject.FromObject(myobject);
+
+
+
+            return ChallongePost(myJSON).ToString();
+=======
             mytournament=JObject.FromObject(myobject);
             
 
@@ -169,6 +177,7 @@ namespace OBM.Controllers
             mytournament.Add("api_key", apikey);
             Debug.WriteLine("mytournament is: "+ mytournament);
             return ChallongePost(mytournament).ToString();
+>>>>>>> dev
 
         }
 
@@ -196,11 +205,31 @@ namespace OBM.Controllers
             try
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            
+
 
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
+<<<<<<< HEAD
+                    var result = streamReader.ReadToEnd();
+                    Debug.WriteLine(result);
+                    Tournament resultTournament = new Tournament();
+
+
+                    resultTournament.EventID = (int)myJSON["event_id"];
+                    resultTournament.TournamentName = (string)myJSON["name"];
+                    resultTournament.UrlString = (string)myJSON["url"];
+                    resultTournament.Description = (string)myJSON["description"];
+                    resultTournament.Game = (string)myJSON["game_name"];
+                    resultTournament.IsStarted = false;
+                    //resultTournament.Subdomain = (string)myJSON["subdomain"];
+                    //resultTournament.ApiId = (string)myJSON["api_key"];
+
+
+                    Create(resultTournament);
+                    return JObject.Parse(result);
+                }//EXCEPTION HAnDlINGSGINJFDIGSF
+=======
                 var result = streamReader.ReadToEnd();
                 Tournament resultTournament = new Tournament();
 
@@ -222,11 +251,12 @@ namespace OBM.Controllers
                     Create(resultTournament);
                 return JObject.Parse(result);
                  }//EXCEPTION HAnDlINGSGINJFDIGSF
+>>>>>>> dev
 
             }
             catch (System.Net.WebException e)
             {
-                return JObject.FromObject(new { error = "webException", message="please ensure that you have not already create a tournaent with this url, and that the URL, name, and event_id fields are accurate." });    
+                return JObject.FromObject(new { error = "webException", message = "please ensure that you have not already create a tournament with this url, and that the URL, name, and event_id fields are accurate." });
             }
 
         }
@@ -236,9 +266,11 @@ namespace OBM.Controllers
         {
 
             var tournaments = JArray.FromObject(db.Tournaments);
-            Debug.WriteLine(tournaments);  
+            Debug.WriteLine(tournaments);
             return tournaments;
         }
+<<<<<<< HEAD
+=======
 
         [HttpGet]
         public String PublicTournaments()
@@ -265,5 +297,6 @@ namespace OBM.Controllers
             result.Replace(']', '}');
             return result;
         }
+>>>>>>> dev
     }
 }

@@ -191,12 +191,14 @@
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\CompetitorController.cs" />
     <Compile Include="Controllers\TournamentsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\API\ApiCredentials.cs" />
+    <Compile Include="Models\API\Participants.cs" />
     <Compile Include="Models\AspNetUser.cs" />
     <Compile Include="Models\API\ChallongeApi.cs" />
     <Compile Include="Models\Tournament.cs" />
@@ -237,6 +239,7 @@
     <Content Include="Media\OKsign.png" />
     <Content Include="Media\space.gif" />
     <Content Include="Media\swan.gif" />
+    <Compile Include="Models\ViewModels\ParticipantTournamentViewModel.cs" />
     <Content Include="Scripts\anime.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -286,10 +289,14 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\MatchDisplay.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+<<<<<<< HEAD
+    <Content Include="Scripts\participants.js" />
+=======
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+>>>>>>> dev
     <Content Include="Scripts\popper-utils.js" />
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
@@ -441,7 +448,9 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Participant\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

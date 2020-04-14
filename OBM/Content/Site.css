@@ -1,4 +1,8 @@
-﻿.titleok {
+﻿#participantOptions {
+    display: none;
+}
+
+.titleok {
     text-transform: uppercase;
 }
 .titleok, .wordsok {
