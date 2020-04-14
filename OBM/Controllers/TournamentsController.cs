@@ -161,13 +161,6 @@ namespace OBM.Controllers
             var myJSON = new JObject();
             var mytournament = new JObject();
 
-<<<<<<< HEAD
-            var myJSON = JObject.FromObject(myobject);
-
-
-
-            return ChallongePost(myJSON).ToString();
-=======
             mytournament=JObject.FromObject(myobject);
             
 
@@ -177,7 +170,6 @@ namespace OBM.Controllers
             mytournament.Add("api_key", apikey);
             Debug.WriteLine("mytournament is: "+ mytournament);
             return ChallongePost(mytournament).ToString();
->>>>>>> dev
 
         }
 
@@ -210,26 +202,6 @@ namespace OBM.Controllers
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
-<<<<<<< HEAD
-                    var result = streamReader.ReadToEnd();
-                    Debug.WriteLine(result);
-                    Tournament resultTournament = new Tournament();
-
-
-                    resultTournament.EventID = (int)myJSON["event_id"];
-                    resultTournament.TournamentName = (string)myJSON["name"];
-                    resultTournament.UrlString = (string)myJSON["url"];
-                    resultTournament.Description = (string)myJSON["description"];
-                    resultTournament.Game = (string)myJSON["game_name"];
-                    resultTournament.IsStarted = false;
-                    //resultTournament.Subdomain = (string)myJSON["subdomain"];
-                    //resultTournament.ApiId = (string)myJSON["api_key"];
-
-
-                    Create(resultTournament);
-                    return JObject.Parse(result);
-                }//EXCEPTION HAnDlINGSGINJFDIGSF
-=======
                 var result = streamReader.ReadToEnd();
                 Tournament resultTournament = new Tournament();
 
@@ -251,7 +223,6 @@ namespace OBM.Controllers
                     Create(resultTournament);
                 return JObject.Parse(result);
                  }//EXCEPTION HAnDlINGSGINJFDIGSF
->>>>>>> dev
 
             }
             catch (System.Net.WebException e)
@@ -269,8 +240,6 @@ namespace OBM.Controllers
             Debug.WriteLine(tournaments);
             return tournaments;
         }
-<<<<<<< HEAD
-=======
 
         [HttpGet]
         public String PublicTournaments()
@@ -297,6 +266,5 @@ namespace OBM.Controllers
             result.Replace(']', '}');
             return result;
         }
->>>>>>> dev
     }
 }
