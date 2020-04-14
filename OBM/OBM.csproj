@@ -227,6 +227,7 @@
     <Content Include="Content\Chart.css" />
     <Content Include="Content\Chart.min.css" />
     <Content Include="Content\datatables.min.css" />
+    <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Media\cat-gif-1.gif" />
@@ -278,6 +279,7 @@
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
