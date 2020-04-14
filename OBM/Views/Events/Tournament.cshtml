@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = Model.TournamentName;
     ViewBag.ApiID = Model.ApiId;
-    ViewBag.EventID = Model.EventID;
+    ViewBag.TourneyID = Model.TournamentID;
 
     <h1>@Html.DisplayFor(model => model.TournamentName)</h1>
 
@@ -30,6 +30,7 @@
                 <dd><a href="https://challonge.com/@Html.DisplayFor(model => model.UrlString)">https://challonge.com/@Html.DisplayFor(model => model.UrlString)</a></dd>
                 @if (Model.IsStarted == "No")
                 {
+                    <p>@TempData["Result"]</p>
                     using (Html.BeginForm("AddSingleParticipant", "Competitor", FormMethod.Post))
                     {
                         <dt>Add Participants:</dt>
@@ -44,7 +45,7 @@
                                 <option value="Bulk">
                                     Bulk Participants
                                 </option>
-                            </select> 
+                            </select>
                             <br />
 
                             <div class="Single add" id="participantOptions">
@@ -53,11 +54,11 @@
                                 <input type="text" name="singleAdd" />
                                 <input type="submit" value="Add" class="btn createbtn" />
                                 <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
-                                <input type="hidden" name="EventID" value="@ViewBag.EventID" />
+                                <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                             </div>
                         </dd>
                     }
-                    using (Html.BeginForm("BulkAddParticipants", "Tournaments", FormMethod.Post))
+                    using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
                     {
                         <dt></dt>
                         <dd>
@@ -65,10 +66,12 @@
                                 <div>
                                     <i>Format input like; participant,participant,...</i>
                                 </div>
-                                <label for="bulkadd">Bulk add Participants:</label> 
+                                <label for="bulkadd">Bulk add Participants:</label>
                                 <br />
-                                <input type="text" name="bulkAdd" />
+                                <input type="text" name="bulkadd" />
                                 <input type="submit" value="Bulk Add" class="btn createbtn" />
+                                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
+                                <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                             </div>
                         </dd>
                     }

@@ -23,93 +23,129 @@ namespace OBM.Controllers
     {
         private EventContext db = new EventContext();
 
-        // GET: Participant
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpPost]
-        public string AddChallongeCompetitor()
+        public ActionResult AddSingleParticipant(string singleAdd, int ApiID, int? TourneyID)
         {
-            var myobject = new { api_key = Request.Params["api_key"], name = Request.Params["name"], url = Request.Params["myUrl"] };
-
-            var myJson = JObject.FromObject(myobject);
-
-            return ChallongePost(myJson).ToString();
-        }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult CreateComp([Bind(Include ="CompetitorID,CompetitorName,EventID,BusyState,Event")] Competitor comp)
-        //{
-
-        //}
-
-        public JObject ChallongePost(JObject myJSON)
-        {
-            myJSON.Add("private", myJSON["Private"]);
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/"+ myJSON["api_key"] + "/participants.json");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
-
-            try
+            if(!string.IsNullOrEmpty(singleAdd))
             {
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                var userApiKey = db.AspNetUsers.FindAsync(User.Identity.GetUserId()).Result.ApiKey;
 
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + ApiID + "/participants.json");
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+                JObject parameters = new JObject();
+                parameters.Add("api_key", userApiKey);
+                parameters.Add("name", singleAdd);
+
+                using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                 {
-                    var result = streamReader.ReadToEnd();
-                    Competitor resultCompetitor = new Competitor();
+                    streamWriter.Write(parameters);
+                }
+                try
+                {
+                    var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                    using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                    {
+                        var result = streamReader.ReadToEnd();
+                    }
+                }
+                catch (System.Net.WebException e)
+                {
+                    TempData["Result"] = "Duplicate Participants not allowed.";
+                    return RedirectToAction("Tournament", "Events", new { id = TourneyID });
+                }
 
+                TempData["Result"] = "Participant added!";
 
-                    resultCompetitor.EventID = (int)myJSON["event_id"];
-                    resultCompetitor.CompetitorName = (string)myJSON["name"];
-
-
-
-                    //CreateComp(resultCompetitor);
-                    return JObject.Parse(result);
-                }//EXCEPTION HAnDlINGSGINJFDIGSF
-
+                return RedirectToAction("Tournament", "Events", new { id = TourneyID });
             }
-            catch (System.Net.WebException e)
+            else
             {
-                return JObject.FromObject(new { error = "webException", message = "please ensure that you have not already create a tournament with this url, and that the URL, name, and event_id fields are accurate." });
+                TempData["Result"] = "Must have at least one participant to add to tournament.";
+                return RedirectToAction("Tournament", "Events", new { id = TourneyID });
             }
-
-        }
-
-        [HttpPost]
-        public ActionResult AddSingleParticipant(string singleAdd, int ApiID, int? EventID)
-        {
-            var userApiKey = db.AspNetUsers.FindAsync(User.Identity.GetUserId()).Result.ApiKey;
             
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + ApiID + "/participants.json");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
+        }
 
-            JObject parameters = new JObject();
-            parameters.Add("api_key", userApiKey);
-            parameters.Add("name", singleAdd);
+        [HttpPost]
+        public ActionResult BulkAddParticipants(string bulkadd, int ApiID, int TourneyID)
+        {
+            //CheckDBParticipants();
+            if(!string.IsNullOrEmpty(bulkadd))
+            {
+                var userApiKey = db.AspNetUsers.FindAsync(User.Identity.GetUserId()).Result.ApiKey;
 
-            using(var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                streamWriter.Write(parameters);
-            }
-            try
-            {
-                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + ApiID + "/participants/bulk_add.json");
+                httpWebRequest.ContentType = "application/json";
+                httpWebRequest.Method = "POST";
+
+                char[] parser = { ' ', ',' };
+
+                string[] bulkaddnames = bulkadd.Split(parser, StringSplitOptions.RemoveEmptyEntries);
+                if (DuplicateParticipants(bulkaddnames))
                 {
-                    var result = streamReader.ReadToEnd();
+                    JObject senddata = new JObject();
+                    senddata.Add("api_key", userApiKey);
+
+                    JArray participants = new JArray();
+
+                    foreach (var name in bulkaddnames)
+                    {
+                        JObject temp = new JObject();
+                        temp.Add("name", name);
+
+                        participants.Add(temp);
+                    }
+
+                    senddata.Add("participants", participants);
+
+                    using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+                    {
+                        streamWriter.Write(senddata);
+                    }
+                    try
+                    {
+                        var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                        using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                        {
+                            var result = streamReader.ReadToEnd();
+                        }
+                    }
+                    catch (System.Net.WebException e)
+                    {
+                        TempData["Result"] = "Duplicate Participants not allowed.";
+                        return RedirectToAction("Tournament", "Events", new { id = TourneyID });
+                    }
+
+                    TempData["Result"] = "Participants added!";
+
+                    return RedirectToAction("Tournament", "Events", new { id = TourneyID });
+                }
+                else
+                {
+                    TempData["Result"] = "Must have at least one participant to add to tournament.";
+                    return RedirectToAction("Tournament", "Events", new { id = TourneyID });
                 }
             }
-            catch (System.Net.WebException e)
-            {
-
-            }
-            return RedirectToAction("Tournament", "Events", new { id= EventID });
+            ViewBag.bulkcannotbenull = true;
+            return RedirectToAction("Tournament", "Events", new { id = TourneyID });
         }
+
+        bool DuplicateParticipants(string[] participants)
+        {
+            //puts all elements into a hashset (doesn't make an entry if it matches another entry)
+            HashSet<string> s = new HashSet<string>(participants);
+
+            if(s.Count == participants.Length)
+            {
+                return (true);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
