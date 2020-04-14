@@ -234,6 +234,30 @@ namespace OBM.Controllers
             return tournaments;
         }
 
+        [HttpGet]
+        public String PublicTournaments()
+        {
+            var tournamentsDb = db.Tournaments.Select(x => new { x.TournamentID, x.TournamentName, x.Game, x.Description, url = ("/Tournament/Details/" + x.TournamentID) }).ToList();
+            var jsonResponse = new JArray();
+            var mylist = new List<Object>();
 
+            foreach (var temptourney in tournamentsDb)
+            {
+                jsonResponse.Add(JObject.FromObject(temptourney));
+                mylist.Add(temptourney);
+            }
+
+
+            Debug.WriteLine(jsonResponse);
+
+
+
+            var result = JsonConvert.SerializeObject(mylist);
+
+
+            result.Replace('[', '{');
+            result.Replace(']', '}');
+            return result;
+        }
     }
 }

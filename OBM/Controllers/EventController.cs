@@ -66,10 +66,34 @@ namespace OBM.Controllers
         [HttpGet]
         public String PublicEvents()
         {
-            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location });
-            var jsonResponse = JObject.FromObject(eventsDb);
+            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location, url=("/Events/Details/"+x.EventID)}).ToList();
+            var jsonResponse = new JArray();
+            var mylist = new List<Object>();
+
+            foreach(var tempevent in eventsDb)
+            {
+                var organizerId = db.Events.Find(tempevent.EventID).OrganizerID;
+                var organizerName = db.AspNetUsers.Find(organizerId).UserName;
+
+                var tempJson = JObject.FromObject(tempevent);
+                tempJson.Add("UserName", organizerName);
+
+                jsonResponse.Add(tempJson);
+                
+                mylist.Add(new { tempevent.EventID, tempevent.EventName, tempevent.Description, tempevent.Location, UserName = organizerName, url = ("/Events/Details/" + tempevent.EventID) });
+            }
+
+
             Debug.WriteLine(jsonResponse);
-            return jsonResponse.ToString();
+
+
+            
+            var result=JsonConvert.SerializeObject(mylist);
+
+
+            result.Replace('[', '{');
+            result.Replace(']', '}');
+            return result;
         }
 
 
@@ -499,31 +523,6 @@ namespace OBM.Controllers
             List<MatchViewModel> sortedList = matchVM.OrderBy(x => x.Status).ThenBy(y => y.Time).ToList();
 
             return Json(sortedList, JsonRequestBehavior.AllowGet);
-        }
-
-        [HttpGet]
-        public ActionResult Standings(int? id)
-        {
-            if (id == null)
-            {
-                throw new HttpException(400, "Bad Request");
-            }
-            //var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
-            Event even = db.Events.Find(id);
-            //var eventTournaments = db.Tournaments.Find(id);
-            List<Tournament> eventTournaments = db.Tournaments.Where(x => x.EventID == id).ToList();
-            if (eventTournaments == null)
-            {
-                throw new HttpException(404, "Page not Found");
-            }
-            if ((even.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == even.OrganizerID)))
-            {
-                ViewBag.Access = true;
-            }
-            else
-                ViewBag.Access = false;
-
-            return View(eventTournaments);
         }
 
         public void CompetitorUpdate(int? id)

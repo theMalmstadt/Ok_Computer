@@ -187,8 +187,8 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\EventController.cs" />
     <Compile Include="Controllers\ErrorPageController.cs" />
-    <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\TournamentsController.cs" />
@@ -292,6 +292,7 @@
     <Content Include="Scripts\popper-utils.min.js" />
     <Content Include="Scripts\popper.js" />
     <Content Include="Scripts\popper.min.js" />
+    <Content Include="Scripts\Search.js" />
     <Content Include="Scripts\randomColor.js" />
     <Content Include="Scripts\src\index.js" />
     <Content Include="Scripts\src\methods\defaults.js" />
@@ -424,6 +425,7 @@
     <Content Include="Views\Events\Competitor.cshtml" />
     <Content Include="Views\Account\RegisterChal.cshtml" />
     <Content Include="Views\Account\RegisterOptions.cshtml" />
+    <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Events\Standings.cshtml" />
   </ItemGroup>
   <ItemGroup>
