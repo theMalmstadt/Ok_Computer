@@ -211,11 +211,10 @@ namespace OBM.Controllers
             if (ModelState.IsValid)
             {
                 ChallongeApi api = new ChallongeApi();
-                api.setCredentials(model.Username, model.ApiKey);
                 var emailcheck = db.Users.Where(u => u.Email == model.Email).ToList();
                 if (emailcheck.Count() == 0)
                 {
-                    if (api.setCredentials(api.getCredentials().Item1, api.getCredentials().Item2))
+                    if (api.setCredentials(model.Username, model.ApiKey))
                     {
                         var user = new ApplicationUser
                         {
