@@ -66,34 +66,10 @@ namespace OBM.Controllers
         [HttpGet]
         public String PublicEvents()
         {
-            var eventsDb = db.Events.Where(x => x.Public).Select(x=>new { x.EventID, x.EventName, x.Description, x.Location, url=("/Events/Details/"+x.EventID)}).ToList();
-            var jsonResponse = new JArray();
-            var mylist = new List<Object>();
-
-            foreach(var tempevent in eventsDb)
-            {
-                var organizerId = db.Events.Find(tempevent.EventID).OrganizerID;
-                var organizerName = db.AspNetUsers.Find(organizerId).UserName;
-
-                var tempJson = JObject.FromObject(tempevent);
-                tempJson.Add("UserName", organizerName);
-
-                jsonResponse.Add(tempJson);
-                
-                mylist.Add(new { tempevent.EventID, tempevent.EventName, tempevent.Description, tempevent.Location, UserName = organizerName, url = ("/Events/Details/" + tempevent.EventID) });
-            }
-
-
+            var eventsDb = db.Events.Where(x => x.Public).Select(x => new { x.EventID, x.EventName, x.Description, x.Location });
+            var jsonResponse = JObject.FromObject(eventsDb);
             Debug.WriteLine(jsonResponse);
-
-
-            
-            var result=JsonConvert.SerializeObject(mylist);
-
-
-            result.Replace('[', '{');
-            result.Replace(']', '}');
-            return result;
+            return jsonResponse.ToString();
         }
 
 
@@ -245,7 +221,7 @@ namespace OBM.Controllers
 
             Debug.WriteLine("LOCATION IS: " + location);
             Debug.WriteLine("NAME IS: " + name);
-            if (location != null&&location!="")// if we know the location of event, get the events at the location
+            if (location != null && location != "")// if we know the location of event, get the events at the location
             {
                 foreach (var i in db.Events.Where(p => p.Public && p.Location.Contains(location)).ToList())
                 {
@@ -264,10 +240,10 @@ namespace OBM.Controllers
             //NOW THE SEARCH BY NAME
             if (name != null && name != "")
             {
-                var eventListTemp =new List<Event>(eventList);
+                var eventListTemp = new List<Event>(eventList);
                 foreach (var i in eventListTemp)
                 {
-                    if(!i.EventName.Contains(name))
+                    if (!i.EventName.Contains(name))
                     {
                         eventList.Remove(i);
                     }
@@ -275,8 +251,8 @@ namespace OBM.Controllers
             }
 
 
-    
-            return Json (JsonConvert.SerializeObject(eventList, Formatting.Indented, new JsonSerializerSettings()
+
+            return Json(JsonConvert.SerializeObject(eventList, Formatting.Indented, new JsonSerializerSettings()
             {
             }), JsonRequestBehavior.AllowGet);
 
@@ -286,7 +262,7 @@ namespace OBM.Controllers
         {
             List<Tournament> TournamentList = new List<Tournament>();
 
-            foreach (var i in db.Tournaments.Where(x=>x.EventID==id).ToList())
+            foreach (var i in db.Tournaments.Where(x => x.EventID == id).ToList())
             {
                 TournamentList.Add(i);
             }
@@ -386,8 +362,8 @@ namespace OBM.Controllers
             }
             else
                 ViewBag.Access = false;
-
-            return View();
+            var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            return View(eventView);
         }
 
         [HttpGet]
@@ -402,7 +378,7 @@ namespace OBM.Controllers
             {
                 Tournament found = db.Tournaments.Find(id);
                 TournamentViewModel tour = new TournamentViewModel(found, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(found.EventID).OrganizerID).UserName);
-            
+
                 if (tour == null)
                 {
                     throw new HttpException(404, "Page not Found");
@@ -418,7 +394,7 @@ namespace OBM.Controllers
                 return View(tour);
 
             }
-            catch 
+            catch
             {
                 throw new HttpException(404, "Page not Found");
             }
@@ -525,12 +501,37 @@ namespace OBM.Controllers
             return Json(sortedList, JsonRequestBehavior.AllowGet);
         }
 
+        [HttpGet]
+        public ActionResult Standings(int? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+            //var eventView = new EventViewModel(db.Events.Find(id), HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).UserName);
+            Event even = db.Events.Find(id);
+            //var eventTournaments = db.Tournaments.Find(id);
+            List<Tournament> eventTournaments = db.Tournaments.Where(x => x.EventID == id).ToList();
+            if (eventTournaments == null)
+            {
+                throw new HttpException(404, "Page not Found");
+            }
+            if ((even.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == even.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
+
+            return View(eventTournaments);
+        }
+
         public void CompetitorUpdate(int? id)
         {
             string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
             foreach (var i in db.Tournaments.Where(p => p.EventID == id).ToList())
             {
-                if(i.IsStarted == false)
+                if (i.IsStarted == false)
                 {
                     string uri = "https://api.challonge.com/v1/tournaments/" + i.ApiId + "/participants.json?api_key=" + api_key;
                     string participantsData = SendRequest(uri);
@@ -569,7 +570,7 @@ namespace OBM.Controllers
                         i.IsStarted = true;
                         db.SaveChanges();
                     }
-                }   
+                }
             }
         }
 
@@ -643,7 +644,7 @@ namespace OBM.Controllers
                     col = "success";
                     state = "a";
                 }
-                compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\"" 
+                compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
                               + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td></tr>";
             }
             compStr += "</table>";
@@ -659,7 +660,7 @@ namespace OBM.Controllers
         {
             string matchStr = "<h4 align=\"left\">Brackets</h4>";
 
-            foreach(var t in db.Tournaments.Where(x =>x.EventID == id).ToList()) 
+            foreach (var t in db.Tournaments.Where(x => x.EventID == id).ToList())
             {
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
                 matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5><div>";
@@ -688,10 +689,10 @@ namespace OBM.Controllers
                         matchStr += "</td><td width=\"25%\">";
 
 
-                       
+
 
                         if (m.Score1 == null)
-                            matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch("+ JsonConvert.SerializeObject(m)+") >Start</button>";
+                            matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch(" + JsonConvert.SerializeObject(m) + ") >Start</button>";
                         else
                         {
                             //location.href='<%: Url.Action("Action", "Controller") %>'
@@ -766,16 +767,16 @@ namespace OBM.Controllers
 
             Debug.WriteLine("Keys for match lookup are:" + tournamentApiId + "   " + matchApiId);
 
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key="+apiKey);
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
             httpWebRequest.Method = "GET";
-            Debug.WriteLine("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key="+apiKey);
+            Debug.WriteLine("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
             try
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    Debug.WriteLine("OPPS POOPS"+httpResponse);
+                    Debug.WriteLine("OPPS POOPS" + httpResponse);
 
                     return result;
 
@@ -798,7 +799,7 @@ namespace OBM.Controllers
         [HttpPost]
         public void SubmitScore()
         {
-            Debug.WriteLine("Score POSTING"+ Request.Params["Competitor1ID"]);
+            Debug.WriteLine("Score POSTING" + Request.Params["Competitor1ID"]);
 
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
@@ -817,19 +818,19 @@ namespace OBM.Controllers
             httpWebRequest.Method = "PUT";
 
             var matchDetails = JObject.Parse(MatchDetails(matchApiId, tournamentApiId, apiKey));
-            Debug.WriteLine("CHALLONGE MATCH DETAILS: "+matchDetails);
+            Debug.WriteLine("CHALLONGE MATCH DETAILS: " + matchDetails);
 
             JObject match = new JObject();
-            match.Add("scores_csv",Request.Params["scoreCsv"]);
+            match.Add("scores_csv", Request.Params["scoreCsv"]);
 
-            int score1 = Int32.Parse(Request.Params["score1"].Substring(1, Request.Params["score1"].Length-1));
-            int score2 = Int32.Parse(Request.Params["score2"].Substring(1, Request.Params["score1"].Length-1));
+            int score1 = Int32.Parse(Request.Params["score1"].Substring(1, Request.Params["score1"].Length - 1));
+            int score2 = Int32.Parse(Request.Params["score2"].Substring(1, Request.Params["score1"].Length - 1));
 
             //Debug.WriteLine(Request.Params["score1"] + " " + Request.Params["score2"]);
 
 
 
-           
+
 
             if (score1 > score2)
             {
@@ -858,7 +859,7 @@ namespace OBM.Controllers
             myJson.Add("match", match);
             myJson.Add("state", "complete");
 
-            Debug.WriteLine("NOW SENDING!!!!:   "+myJson);
+            Debug.WriteLine("NOW SENDING!!!!:   " + myJson);
 
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
@@ -894,36 +895,57 @@ namespace OBM.Controllers
         [HttpPost]
         public void StartMatch()
         {
-            //FETCH NEEDED VALUES
+
+            Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
-            var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
-            var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
-            var userid = HttpContext.User.Identity.GetUserId();
-            var apiKey = db.AspNetUsers.Where(x => x.Id ==userid ).First().ApiKey;
 
-            //PREPARE REQUEST
+            Debug.WriteLine("TournamentID is: " + Request.Params["TournamentID"]);
+
+            var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
+
+            var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
+
+            var userid = HttpContext.User.Identity.GetUserId();
+            var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+
+
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/mark_as_underway.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
 
-            //BUILD REQUEST DATA
-            JObject myJson= new JObject();
+
+
+
+
+            //var myJson = JObject.FromObject(myObject);
+            Debug.WriteLine(tournamentId);
+            JObject myJson = new JObject();
             myJson.Add("match_id", matchApiId);
             myJson.Add("tournament", tournamentApiId);
             myJson.Add("api_key", apiKey);
 
-            //WRITE DATA TO REQUEST
+
+            //myJSON.Add("private", myJSON["Private"]);
+
+
+
+
             Debug.WriteLine(myJson);
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
+
+
                 streamWriter.Write(myJson);
             }
-            //TRY SENDING THE REQUEST
+
             try
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+
+
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
@@ -933,8 +955,14 @@ namespace OBM.Controllers
 
             catch (System.Net.WebException e)
             {
+
+
             }
+
             var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
+
+            //MatchUpdate(eventId);
+
         }
 
         public void MatchUpdate(int? id)
@@ -959,7 +987,7 @@ namespace OBM.Controllers
                         int matchID = (int)m["match"]["id"];
                         var temp = db.Matches.Where(x => x.ApiID == matchID).First();
                         var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
-                       // if (temp.UpdatedAt != chalUpdatedTime)
+                        // if (temp.UpdatedAt != chalUpdatedTime)
                         {
                             temp.UpdatedAt = chalUpdatedTime;
 
@@ -993,13 +1021,13 @@ namespace OBM.Controllers
                                 if (firstHyph != 0)
                                 {
                                     temp.Score1 = Int32.Parse(chalScore.Substring(0, chalScore.IndexOf('-')));
-                                    temp.Score2 = Int32.Parse(chalScore.Substring(chalScore.IndexOf('-')+1));
+                                    temp.Score2 = Int32.Parse(chalScore.Substring(chalScore.IndexOf('-') + 1));
                                 }
                                 else
                                 {
                                     int secondHyph = chalScore.IndexOf('-', 1);
                                     temp.Score1 = Int32.Parse(chalScore.Substring(0, secondHyph));
-                                    temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph+1));
+                                    temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph + 1));
                                 }
                             }
                             db.SaveChanges();
@@ -1028,7 +1056,7 @@ namespace OBM.Controllers
                     reader.Close();
                     stream.Close();
                 }
-                
+
             }
             catch (System.Net.WebException e)
             {
