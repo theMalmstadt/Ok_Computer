@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OBM;
 using OBM.Controllers;
-
+using System.Diagnostics;
 namespace OBMTester
 {
     [TestClass]
@@ -32,6 +32,18 @@ namespace OBMTester
             {
                 Assert.AreEqual(new HttpException(404, "Page not Found").Message, e.Message);
             }
+        }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            //te
+            EventsController myController = new EventsController();
+
+            var result = myController.ResponsiveEvents("asdf");
+            Debug.WriteLine(result);
+
+            Assert.IsNotNull(result);
         }
     }
 }
