@@ -14,9 +14,13 @@ namespace OBMTester
     public class UnitTest1
     {
         [TestMethod]
-        public void TestMethod1()
+        public void DuplicateParticipants_TestStringArray_NoDupes()
         {
+            string[] noDupes = { "Test1", "Test2", "Test3" };
 
+            var result = CompetitorController.DuplicateParticipants(noDupes);
+
+            Assert.IsTrue(result);
         }
 
         [TestMethod]
