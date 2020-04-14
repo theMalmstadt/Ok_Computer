@@ -156,7 +156,7 @@ namespace OBM.Controllers
         {
             //PARSE VALUES
             var userId = User.Identity.GetUserId();
-            var myobject = new {name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"], ranked_by = Request.Params["ranked_by"], open_signup = Request.Params["open_signup"], pts_for_bye = Request.Params["pts_for_bye"], signup_cap = Request.Params["signup_cap"], start_at = Request.Params["start_at"], checkin_duration = Request.Params["checkin_duration"] };
+            var myobject = new {name = Request.Params["name"], description = Request.Params["description"], game = Request.Params["game"], url = Request.Params["myURL"], event_id = Request.Params["event_id"], Private = Request.Params["private"], ranked_by = Request.Params["ranked_by"], open_signup = Request.Params["open_signup"], pts_for_bye = Request.Params["pts_for_bye"], signup_cap = Request.Params["signup_cap"], start_at = Request.Params["start_at"], checkin_duration = Request.Params["checkin_duration"], tournament_type = Request.Params["tournament_type"] };
             var myJSON = new JObject();
             var mytournament = new JObject();
 

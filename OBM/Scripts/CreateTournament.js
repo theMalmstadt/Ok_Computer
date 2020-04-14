@@ -38,7 +38,11 @@ function drawForm() {
     $("#scriptContainer").append('<div class="row"><input type="String" class="form-control" id="Game" placeholder="Game" required="true"></div>');
     $("#scriptContainer").append('<div class="row"><input type="String" class="form-control" id="url" placeholder="URL" required="true"></div>');
 
-    $("#scriptContainer").append("<div class='row'><select id='RankedBy' class='form-control'> <option value='match wins'>Match wins</option>  <option value='game wins'>Game wins</option>  <option value='points scored'>Points scored</option>    <option value= 'points difference'>Points difference</option>   <option value= 'custom'>custom</option></select></div>");
+    $("#scriptContainer").append("<div class='row'>Tournament type: <select id='TournamentType' class='form-control'> <option value='Single elimination'>Single elimination</option>  <option value='double elimination'>double elimination</option>  </select></div>");
+
+
+
+    $("#scriptContainer").append("<div class='row'>Rank by:<select id='RankedBy' class='form-control'> <option value='match wins'>Match wins</option>  <option value='game wins'>Game wins</option>  <option value='points scored'>Points scored</option>    <option value= 'points difference'>Points difference</option>   <option value= 'custom'>custom</option></select></div>");
     $("#scriptContainer").append('<div class="row">Points for Bye:<input type="Integer" class="form-control" id="pointsForBye" placeholder="Points for Bye" required="true"></div>');
     $("#scriptContainer").append('<div class="row">Signup Cap<input type="Integer" class="form-control" id="signupCap" placeholder="Sign-up cap" required="true"></div>');
 
@@ -83,7 +87,7 @@ var request = function () {
     tournament.pts_for_bye = $("#pointsForBye").val()
     tournament.signup_cap = $("#signupCap").val();
     tournament.check_in_duration = $("#checkinDuration").val();
-
+    tournament.tournament_type = $("#TournamentType").val();
 
 
 
