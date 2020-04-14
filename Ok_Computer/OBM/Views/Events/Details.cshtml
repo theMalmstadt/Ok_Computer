@@ -1,0 +1,78 @@
+﻿@model OBM.Models.ViewModels.EventViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+@if (ViewBag.Access == true)
+{
+    <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+    <div>
+        <h4>Event</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.OrganizerName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OrganizerName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.EventName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.EventName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Location)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Location)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Public)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Public)
+            </dd>
+
+            <dd>
+                @Html.ActionLink("View Standings", "Standings", new { id = Model.EventID })
+            </dd>
+        </dl>
+        <div class="col-md-10" align="center">
+            <div id="Matches"></div>
+            <div id="Competitors"></div>
+        </div>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+    }
+    else
+    {
+    <div class="form-horizontal">
+        <h4>Access Denied</h4>
+    </div>
+    }
+
+    @section scripts {
+        <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
+    }

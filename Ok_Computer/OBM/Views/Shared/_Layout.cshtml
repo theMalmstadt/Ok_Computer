@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBM - @ViewBag.Title</title>
+    <link href="~/Media/OKicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/Site.css")
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+        <a href="@Url.Action("Index", "Home")">
+            <img class="nav-logo" alt="OK" src="@Url.Content("~/Media/OKsign.png")">
+        </a>
+            
+        <div class="navbar-collapse collapse" id="navbarSupportedContent">
+            <ul class="nav navbar-nav mr-auto">
+                <li><i>@Html.ActionLink("OK Brackets", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Tournaments", "Index", "Events", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
+            </ul>
+
+
+            <!-- Search form -->
+            @using (Html.BeginForm("Search", "Home", FormMethod.Get))
+            {
+                @Html.TextBox("search", null, new { @class = "form-control", placeholder = "Search events:" })
+            }
+
+            @Html.Partial("_LoginPartial")
+        </div>
+    </nav>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <div class="container-fluid body-content">
+        @RenderBody()
+    </div>
+    <hr />
+    <footer>
+        <div class="row justify-content-center">
+            <div class="col-md-auto">
+                <a href="~/Home/About"><img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer" /></a>
+                <p class="cp">&copy; @DateTime.Now.Year</p>
+            </div>
+        </div>
+    </footer>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>
