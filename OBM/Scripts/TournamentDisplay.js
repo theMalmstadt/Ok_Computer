@@ -186,7 +186,7 @@ function drawTree(data) {
     }
 
     var ctx = document.getElementById('myChart');
-    ctx.height = 100 * largestRound;
+    ctx.height = 100 * (largestRound + 1) ;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList.reverse() },
