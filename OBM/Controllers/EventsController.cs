@@ -401,7 +401,8 @@ namespace OBM.Controllers
             try
             {
                 Tournament found = db.Tournaments.Find(id);
-                TournamentViewModel tour = new TournamentViewModel(found, HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(found.EventID).OrganizerID).UserName);
+                var user = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(found.EventID).OrganizerID).UserName;
+                TournamentViewModel tour = new TournamentViewModel(found, user, new List<string>());
 
                 if (tour == null)
                 {
@@ -410,6 +411,51 @@ namespace OBM.Controllers
                 if ((tour.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == db.Events.Find(found.EventID).OrganizerID)))
                 {
                     ViewBag.Access = true;
+                    ViewBag.keyCheck = "Log in for custom seeding options";
+                    var motherEvent = db.Events.Find(found.EventID);
+
+                    if (motherEvent.OrganizerID == User.Identity.GetUserId())
+                    {
+                        var api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(User.Identity.GetUserId()).ApiKey;
+
+                        if (api_key != null && api_key != string.Empty)
+                        {
+                            ViewBag.keyCheck = "";
+
+                            var eventCompList = db.Competitors.Where(x => x.EventID == motherEvent.EventID).Select(y => y.CompetitorName).ToList(); ;
+
+                            string participantRoute = @"https://api.challonge.com/v1/tournaments/" + found.UrlString + "/participants.json?api_key=" + api_key;
+                            string responseParticipants = "";
+                            try
+                            {
+                                HttpWebRequest requestParticipants = (HttpWebRequest)WebRequest.Create(participantRoute);
+                                requestParticipants.Method = "Get";
+                                requestParticipants.Headers.Add("api_key", api_key);
+                                HttpWebResponse response1 = (HttpWebResponse)requestParticipants.GetResponse();
+                                using (System.IO.StreamReader sr = new System.IO.StreamReader(response1.GetResponseStream()))
+                                {
+                                    responseParticipants = sr.ReadToEnd();
+                                }
+                                
+                                List<JObject> jsonParticipants = JsonConvert.DeserializeObject<List<JObject>>(responseParticipants);
+                                List<string> stringCompetitors = new List<string>();
+                                for (var i = 0; i < jsonParticipants.Count; i++)
+                                {
+                                    var temp = jsonParticipants[i]["participant"]["name"].ToString();
+                                    if (!eventCompList.Contains(temp))
+                                    {
+                                        eventCompList.Add(temp);
+                                    }
+                                }
+
+                                tour = new TournamentViewModel(found, user, eventCompList);
+                            }
+                            catch
+                            {
+                                ViewBag.Success = "Unable to seed tournament.";
+                            }
+                        }
+                    }
                 }
                 else
                 {
@@ -906,11 +952,7 @@ namespace OBM.Controllers
                 }
             }
 
-            catch (System.Net.WebException e)
-            {
-
-
-            }
+            catch { }
 
         }
 
@@ -977,11 +1019,8 @@ namespace OBM.Controllers
                 Debug.WriteLine(httpResponse);
             }
 
-            catch (System.Net.WebException e)
-            {
 
-
-            }
+            catch { }
 
             var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
 
@@ -1082,11 +1121,8 @@ namespace OBM.Controllers
                 }
 
             }
-            catch (System.Net.WebException e)
-            {
 
-
-            }
+            catch { }
             return jsonString;
         }
     }

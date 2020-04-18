@@ -75,6 +75,14 @@
                             </div>
                         </dd>
                     }
+
+                    <dt>Custom Seed</dt>
+                    <dd>@ViewBag.keyCheck</dd>
+                    <dd>@ViewBag.Success</dd>
+                    foreach (var comp in Model.CompetitorList)
+                    {
+                        <dd>@comp</dd>
+                    }
                 }
             </dl>
 
@@ -94,6 +102,8 @@
 
         <input id="EventID" type="hidden" value="@Model.EventID" />
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />
+        <input id="UrlString" type="hidden" value="@Model.UrlString" />
+
         <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
         <div id="MinimalGraph" style="display:block">
             <canvas id="myChart"></canvas>
@@ -121,7 +131,6 @@
     {
         <script type="text/javascript" src="~/Scripts/participants.js"></script>
     }
-}
 }
 
 
