@@ -686,8 +686,15 @@ namespace OBM.Controllers
 
             foreach (var t in db.Tournaments.Where(x => x.EventID == id).ToList())
             {
+                string startButton = "";
+                if(t.IsStarted==false)
+                {
+                    startButton = "<button id=" + t.TournamentID + "\" style=\"width: 100 % \" onclick=StartTournament(" + t.TournamentID + ") >Start Tournament</button>";
+                }
+
+
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
-                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5><div>";
+                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5>"+startButton+"<div>";
                 if (matchList.Any())
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
@@ -788,9 +795,7 @@ namespace OBM.Controllers
         public String MatchDetails(int matchApiId, int? tournamentApiId, String apiKey)    //takes a match from our db and finds its competitors apikeys
         {
             //get comp apikeys via match details  GET https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}.{json|xml}
-
             Debug.WriteLine("Keys for match lookup are:" + tournamentApiId + "   " + matchApiId);
-
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
             httpWebRequest.Method = "GET";
             Debug.WriteLine("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
@@ -801,21 +806,14 @@ namespace OBM.Controllers
                 {
                     var result = streamReader.ReadToEnd();
                     Debug.WriteLine("OPPS POOPS" + httpResponse);
-
                     return result;
-
                 }
-
             }
 
             catch (System.Net.WebException e)
             {
                 Debug.WriteLine(e);
             }
-
-
-
-
             return "";
         }
 
@@ -988,6 +986,57 @@ namespace OBM.Controllers
             //MatchUpdate(eventId);
 
         }
+
+        [HttpPost]
+        public void StartTournament()
+        {
+
+            var tournamentId = int.Parse(Request.Params["Id"]);
+            var tournamentApiId = db.Tournaments.Find(tournamentId).ApiId;
+            var userid = HttpContext.User.Identity.GetUserId();
+            var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId+"/start.json" );
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            JObject myJson = new JObject();
+            myJson.Add("tournament", tournamentApiId);
+            myJson.Add("api_key", apiKey);
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+
+
+                streamWriter.Write(myJson);
+            }
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
+                Debug.WriteLine(httpResponse);
+            }
+
+            catch (System.Net.WebException e)
+            {
+
+
+            }
+
+        }
+
+
+
+
+
+
+
 
         public void MatchUpdate(int? id)
         {
