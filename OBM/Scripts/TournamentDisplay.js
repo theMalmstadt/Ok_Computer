@@ -2,6 +2,10 @@
     $("#sortable-1").sortable();
 });
 
+$("#selectable-1").bind("mousedown", function (e) {
+    e.metaKey = true;
+}).selectable();
+
 var ajaxMatches = function () {
     var id = $('#EventID').val();
     $.ajax({

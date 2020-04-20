@@ -78,30 +78,71 @@
         }
     </dl>
 
-    <dl><dt>Custom Seed</dt></dl>
-    <p>@ViewBag.keyCheck</p>
-    <p>@ViewBag.Success</p>
-    <ul id="sortable-1">
-        @foreach (var comp in Model.CompetitorList)
-        {
-            <!--<dd><input type="hidden" class="comps" name="@comp" value="@comp" /></dd>-->
-            <li class="sortable-competiors">@comp</li>
-        }
-    </ul>
+    <button type="button" onclick="hideShow('seed-div');">Seed</button>
+    <div id="seed-div" style="display:block">
+        <dl><dt>Custom Seed</dt></dl>
+        <p>@ViewBag.keyCheck</p>
+        <p>@ViewBag.Success</p>
+        <ul id="sortable-1" class="ui-sortable">
+            <lh>Competitors to Rank</lh>
+            @foreach (var comp in Model.CompetitorList)
+            {
+                <!--<dd><input type="hidden" class="comps" name="@comp" value="@comp" /></dd>-->
+                <li class="ui-state-default ui-sortable-handle">@comp</li>
+            }
+        </ul>
+
+        <link href="https://code.jquery.com/ui/1.10.4/themes/ui-lightness/jquery-ui.css"
+              rel="stylesheet">
+        <style>
+            #selectable-1 .ui-selecting {
+                background: #707070;
+            }
+
+            #selectable-1 .ui-selected {
+                background: #EEEEEE;
+                color: #000000;
+            }
+
+            #selectable-1 {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                width: 20%;
+            }
+
+            .ui-widget-content {
+                background: #cedc98;
+                color: #333333;
+            }
+        </style>
+        <ul id="selectable-1" class="ui-selectable">
+            <lh>Competitors to Rank</lh>
+            @foreach (var comp in Model.CompetitorList)
+            {
+                <!--<dd><input type="hidden" class="comps" name="@comp" value="@comp" /></dd>-->
+                <li class="ui-widget-content">@comp</li>
+            }
+        </ul>
+    </div>
 
 
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Brackets</th>
-        </tr>
 
-    </table>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Competitors</th>
-        </tr>
-    </table>
-</div>
+
+
+
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
+
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Competitors</th>
+            </tr>
+        </table>
+    </div>
 
         <input id="EventID" type="hidden" value="@Model.EventID" />
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />
