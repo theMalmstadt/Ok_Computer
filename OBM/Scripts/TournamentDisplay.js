@@ -1,4 +1,8 @@
-﻿var ajaxMatches = function () {
+﻿$(function () {
+    $("#sortable-1").sortable();
+});
+
+var ajaxMatches = function () {
     var id = $('#EventID').val();
     $.ajax({
         type: 'GET',
