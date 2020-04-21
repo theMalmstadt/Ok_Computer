@@ -76,49 +76,62 @@
                 </dd>
             }
         }
-    </dl>
-  
-    <button type="button" onclick="hideShow('seed-div');">Seed</button>
-    <br />
-    <div id="seed-div" style="display:block">
-        <dl><dt>Custom Seed</dt></dl>
-        <p>@ViewBag.keyCheck</p>
-        <p>@ViewBag.Success</p>
-        <!--
-            <ul id="sortable-1" class="ui-sortable">
-        <lh>Competitors to Rank</lh>
-        foreach (var comp in Model.CompetitorList)
-        {
-            <!--<dd><input type="hidden" class="comps" name="comp" value="comp" /></dd>
-            <li class="ui-state-default ui-sortable-handle">comp</li>
-        }
-        </ul>
-        -->
+        </dl>
 
-    <p>Competitors to Rank</p>
-    <ul id="selectable-rank" class="ui-selectable">
-        @{
-            foreach (var comp in Model.CompetitorList)
-            {
-                <li class="ui-widget-content">@comp</li>
-            }
-        }
-    </ul>
+        <button type="button" onclick="hideShow('seed-div');">Seed</button>
+        <br />
+
+        <div id="seed-div" style="display:block">
+            <dl><dt>Custom Seed</dt></dl>
+            <div id="tabs-1">
+                <p>@ViewBag.keyCheck</p>
+                <p>@ViewBag.Success</p>
+
+                <ul>
+                    <li><a href="#tabs-2">Select Competitors</a></li>
+                    <li><a href="#tabs-3">Rank Selected</a></li>
+                    <li><a href="#tabs-4">Additional Seeding</a></li>
+                </ul>
+
+                <div id="tabs-2">
+                    <!--<p>Competitors to Rank</p>-->
+                    <ul id="selectable-rank" class="ui-selectable">
+                        @foreach (var comp in Model.CompetitorList)
+                        {
+                            <li class="ui-widget-content">@comp</li>
+                        }
+                    </ul>
+                </div>
+
+                <div id="tabs-3">
+                    <ol id="sortable-1" class="ui-sortable">
+                        <lh>empty</lh>
+                        <!--foreach (var comp in Model.CompetitorList)
+    {
+        <li class="ui-state-default ui-sortable-handle">comp</li>
+    }-->
+                    </ol>
+                </div>
+
+                <div id="tabs-4">
+                    <p>Hello</p>
+                </div>
+            </div>
+        </div>
+        <br />
+
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
+
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Competitors</th>
+            </tr>
+        </table>
     </div>
-    <br />
-
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Brackets</th>
-        </tr>
-
-    </table>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Competitors</th>
-        </tr>
-    </table>
-</div>
 
         <input id="EventID" type="hidden" value="@Model.EventID" />
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />
@@ -150,8 +163,7 @@
     @section scripts
     {
         <script type="text/javascript" src="~/Scripts/participants.js"></script>
+    }
 }
-}
-
 
 @Scripts.Render("~/bundles/TournamentDisplay")

@@ -1,10 +1,28 @@
 ﻿$(function () {
-    $("#sortable-1").sortable();
+    $("#tabs-1").tabs({
+        activate: function (event, ui) {
+            var ls = [];
+            var $variable = $('.ui-selected').each(function () {
+                ls.push($(this).text())
+            });
+            updateSortable(ls);
+        }
+    });
 });
 
 $("#selectable-rank").bind("mousedown", function (e) {
     e.metaKey = true;
 }).selectable();
+
+
+function updateSortable(ls) {
+    $("#sortable-1").empty();
+    for (var i = 0; i < ls.length; i++) {
+        $("#sortable-1").append("<li class=\"ui-state-default ui-sortable-handle\">" + ls[i] + "</li>");
+    }
+}
+
+$("#sortable-1").sortable();
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
