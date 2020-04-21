@@ -2,7 +2,7 @@
     $("#sortable-1").sortable();
 });
 
-$("#selectable-1").bind("mousedown", function (e) {
+$("#selectable-rank").bind("mousedown", function (e) {
     e.metaKey = true;
 }).selectable();
 
