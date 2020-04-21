@@ -10,6 +10,20 @@
     <div class="col-md-10" align="center">
         @if (ViewBag.Access == true)
         {
+        <form>
+            <label for="Round">Round:</label>
+            <input type="text" id="round" name="round" /><br />
+            <label for="player1">Player 1:</label>
+            <input type="text" id="player1" name="player1" />
+            <label for="score1">Score 1:</label>
+            <input type="number" id="score1" name="score1" /><br />
+            <label for="player2">Player 2:</label>
+            <input type="text" id="player2" name="player2" />
+            <label for="score2">Score 2:</label>
+            <input type="number" id="score2" name="score2" /><br />
+            <input type="submit" value="Update">
+
+        </form>
 
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
             <div id="Matches"></div>
