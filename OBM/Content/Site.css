@@ -181,7 +181,7 @@ table.table-bordered > tbody > tr > td {
     border: 1px solid #58585A;
     text-align: center;
     margin-bottom: 2px;
-    border-radius: 25px;
+    border-radius: 5px;
 }
 
 #selectable-rank .ui-selecting {

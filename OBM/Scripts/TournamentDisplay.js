@@ -14,15 +14,42 @@ $("#selectable-rank").bind("mousedown", function (e) {
     e.metaKey = true;
 }).selectable();
 
-
 function updateSortable(ls) {
+    var temp = rankList.concat(ls);
+    rankList = [...new Set(temp)];
+    rankList = rankList.filter(value => ls.includes(value));
+    //console.log(rankList);
     $("#sortable-1").empty();
-    for (var i = 0; i < ls.length; i++) {
-        $("#sortable-1").append("<li class=\"ui-state-default ui-sortable-handle\">" + ls[i] + "</li>");
+    for (var i = 0; i < rankList.length; i++) {
+        $("#sortable-1").append("<li id=\"" + rankList[i] + "\">" + rankList[i] + "</li>");
     }
 }
 
-$("#sortable-1").sortable();
+var rankList = [];
+
+$("#sortable-1").sortable({
+    update: function (event, ui) {
+        var data = $(this).sortable('toArray');
+        //console.log(data);
+        rankList = data;
+    }
+});
+
+//$("#sortable-2").sortable();
+
+$(function () {
+    var oldList, newList, item;
+    $(".sortable").sortable({
+        start: function (event, ui) {
+            item = ui.item;
+            newList = oldList = ui.item.parent().parent();
+        },
+        change: function (event, ui) {
+            if (ui.sender) newList = ui.placeholder.parent().parent();
+        },
+        connectWith: ".sortable"
+    }).disableSelection();
+});
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();

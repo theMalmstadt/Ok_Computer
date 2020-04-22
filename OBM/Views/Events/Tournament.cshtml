@@ -94,27 +94,57 @@
                 </ul>
 
                 <div id="tabs-2">
-                    <!--<p>Competitors to Rank</p>-->
                     <ul id="selectable-rank" class="ui-selectable">
                         @foreach (var comp in Model.CompetitorList)
                         {
-                            <li class="ui-widget-content">@comp</li>
+                            <li>@comp</li>
                         }
                     </ul>
                 </div>
 
                 <div id="tabs-3">
-                    <ol id="sortable-1" class="ui-sortable">
-                        <lh>empty</lh>
-                        <!--foreach (var comp in Model.CompetitorList)
-    {
-        <li class="ui-state-default ui-sortable-handle">comp</li>
-    }-->
-                    </ol>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Traditional
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="options" id="option2" autocomplete="off"> Sequential
+                        </label>
+                    </div>
+                    <div>
+                        <ol id="sortable-1" class="ui-sortable">
+                            <lh>empty</lh>
+                        </ol>
+                    </div>
                 </div>
 
                 <div id="tabs-4">
-                    <p>Hello</p>
+                    <div class="row">
+                        <div class="col card bg-light">
+                            <ul id="sortable-2" class="ui-sortable sortable">
+                                @foreach (var comp in Model.CompetitorList)
+                                {
+                                    <li>@comp</li>
+                                }
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <p><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></p>
+                            <div class="row card bg-light">
+                                <ul id="sortable-2" class="ui-sortable sortable">
+                                    <li>hello</li>
+                                    <li>hello</li>
+                                </ul>
+                            </div>
+                            <div class="row card bg-light">
+                                <ul id="sortable-2" class="ui-sortable sortable">
+                                    <li>hello</li>
+                                    <li>hello</li>
+                                </ul>
+                            </div>
+                            <div class="row"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
