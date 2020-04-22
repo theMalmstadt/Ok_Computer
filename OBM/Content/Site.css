@@ -206,6 +206,7 @@ table.table-bordered > tbody > tr > td {
 #tabs-1 {
     font-size: 14px;
     color: #4ac959;
+    width: 50%;
 }
 
 .ui-widget-header {
@@ -213,12 +214,3 @@ table.table-bordered > tbody > tr > td {
     color: #4ac959;
     font-weight: bold;
 }
-
-
-
-padding-top: 50px;
-padding-bottom: 20px;
-background-color: #E7E8E9;
-color: #58585A;
-overflow-x: hidden;
-width: 100%;

@@ -35,8 +35,6 @@ $("#sortable-1").sortable({
     }
 });
 
-//$("#sortable-2").sortable();
-
 $(function () {
     var oldList, newList, item;
     $(".sortable").sortable({
