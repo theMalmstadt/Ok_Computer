@@ -214,3 +214,7 @@ table.table-bordered > tbody > tr > td {
     color: #4ac959;
     font-weight: bold;
 }
+
+.hide {
+    visibility: hidden;
+}

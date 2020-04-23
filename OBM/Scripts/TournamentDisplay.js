@@ -35,19 +35,31 @@ $("#sortable-1").sortable({
     }
 });
 
-$(function () {
-    var oldList, newList, item;
-    $(".sortable").sortable({
-        start: function (event, ui) {
-            item = ui.item;
-            newList = oldList = ui.item.parent().parent();
-        },
-        change: function (event, ui) {
-            if (ui.sender) newList = ui.placeholder.parent().parent();
-        },
-        connectWith: ".sortable"
-    }).disableSelection();
-});
+var groupCount = 1;
+
+function addGroup() {
+    groupCount++;
+    $("#groups").append("<div class=\"row card bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
+    var str = 'ul[name="group-' + groupCount + '"]';
+    //$(str).append("<li class=\"hide\">bottom</li>");
+    $(function () {
+        var oldList, newList, item;
+        $(".sortable").sortable({
+            start: function (event, ui) {
+                item = ui.item;
+                newList = oldList = ui.item.parent().parent();
+            },
+            change: function (event, ui) {
+                if (ui.sender) newList = ui.placeholder.parent().parent();
+            },
+            receive: function (event, ui) {
+                $(ui.item).appendTo(this);
+            },
+            connectWith: ".sortable",
+            items: "li:not(.hide)"
+        }).disableSelection();
+    });
+}
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
@@ -333,3 +345,4 @@ function errorOnAjax(data) {
 }
 
 window.onload = ajaxMatches;
+window.onload = addGroup();

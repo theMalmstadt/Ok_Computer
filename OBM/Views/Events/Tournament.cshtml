@@ -82,7 +82,6 @@
         <br />
 
         <div id="seed-div" style="display:block">
-            <dl><dt>Custom Seed</dt></dl>
             <div id="tabs-1">
                 <p>@ViewBag.keyCheck</p>
                 <p>@ViewBag.Success</p>
@@ -129,23 +128,19 @@
                             </ul>
                         </div>
                         <div class="col">
-                            <p><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></p>
-                            <div class="row card bg-light">
-                                <ul id="sortable-2" class="ui-sortable sortable">
-                                    <li>hello</li>
-                                    <li>hello</li>
-                                </ul>
+                            <div id="groups">
+                                <div class="row card bg-light">
+                                    <ul id="sortable-2" name="group-1" class="ui-sortable sortable">
+                                        <li class="hide">bottom</li>
+                                    </ul>
+                                </div>
                             </div>
-                            <div class="row card bg-light">
-                                <ul id="sortable-2" class="ui-sortable sortable">
-                                    <li>hello</li>
-                                    <li>hello</li>
-                                </ul>
-                            </div>
-                            <div class="row"></div>
+                            <a onclick="addGroup()">Add Group</a>
                         </div>
                     </div>
                 </div>
+
+                <button type="button" class="btn btn-success">Save Seed</button>
             </div>
         </div>
         <br />
