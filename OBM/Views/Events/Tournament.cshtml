@@ -45,6 +45,9 @@
                                 <option value="Bulk">
                                     Bulk Participants
                                 </option>
+                                <option value="CSV">
+                                    CSV File
+                                </option>
                             </select>
                             <br />
 
@@ -75,6 +78,36 @@
                             </div>
                         </dd>
                     }
+
+
+
+                    using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
+                    {
+                        <dt></dt>
+                        <dd>
+                            <div class="CSV" id="participantOptions">
+                                <div>
+                                    <i>upload a .CSV file with each participant alone on each line</i>
+                                </div>
+                                <label for="bulkadd">Bulk add Participants:</label>
+                                <br />
+                                <input type="hidden" name="bulkadd" id="bulkadd" />
+
+                                <input type="file" name="CSV" accept=".csv" id="CSV" />
+                                <input type="submit" value="Submit" class="btn createbtn" />
+                                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
+                                <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                                <br />
+
+
+                            </div>
+                            <div id="participantsParsedList"></div>
+                        </dd>
+                    }
+
+
+
+
                 }
             </dl>
 
