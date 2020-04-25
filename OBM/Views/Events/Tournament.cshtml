@@ -109,10 +109,10 @@
                     </div>
                     <div class="col btn-group btn-group-toggle" data-toggle="buttons">
                         <label class="btn btn-secondary active">
-                            <input type="radio" name="options" id="option1" autocomplete="off" checked> Traditional
+                            <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
                         </label>
                         <label class="btn btn-secondary">
-                            <input type="radio" name="options" id="option2" autocomplete="off"> Sequential
+                            <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
                         </label>
                     </div>
                 </div>
@@ -134,8 +134,7 @@
                         </div>
                     </div>
                 </div>
-
-                <button type="button" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
+                <button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
             </div>
         </div>
         <br />

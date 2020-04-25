@@ -1,4 +1,7 @@
-﻿$(function () {
+﻿var groupCount = 0;
+var rankList = [];
+
+$(function () {
     $("#tabs-1").tabs({
         activate: function (event, ui) {
             var ls = [];
@@ -25,8 +28,6 @@ function updateSortable(ls) {
     }
 }
 
-var rankList = [];
-
 $("#sortable-1").sortable({
     update: function (event, ui) {
         var data = $(this).sortable('toArray');
@@ -34,8 +35,6 @@ $("#sortable-1").sortable({
         rankList = data;
     }
 });
-
-var groupCount = 0;
 
 function addGroup() {
     groupCount++;
@@ -63,6 +62,14 @@ function addGroup() {
 function saveSeed() {
     // PUT A DELAY ON THIS BUTTON SO IT CANNOT BE SPAMMED
     var id = $('#TournamentID').val();
+    var method = "";
+
+    var seedMethod = document.getElementsByName('seed-method');
+    for (var h = 0; h < seedMethod.length; h++) {
+        if (seedMethod[h].checked == true) {
+            method = seedMethod[h].value;
+        }
+    }
 
     var allGroups = [];
     for (var i = 1; i <= groupCount; i++) {
@@ -76,11 +83,19 @@ function saveSeed() {
         allGroups.push(currentGroup);
     }
 
+    var allComp = []
+    var html = document.querySelectorAll('#selectable-rank');
+    html = html[0].childNodes;
+    for (var k = 1; k < html.length; k = k+2) {
+        allComp.push(html[k].innerHTML);
+    }
+
     var data = {
         id: id,
-        method: "trad",//change this to button response
+        method: method,//change this to button response
         ranks: rankList,
-        groups: allGroups
+        groups: allGroups,
+        competitors: allComp
     };
 
     $.ajax({
@@ -91,6 +106,14 @@ function saveSeed() {
         error: errorOnAjax
     });
 }
+
+$('#saveBtn').click(function () {
+    var aaa = $(this);
+    aaa.prop('disabled', true);
+    setTimeout(function () {
+        aaa.prop('disabled', false);
+    }, 3000);
+});
 
 var ajaxMatches = function () {
     var id = $('#EventID').val();
