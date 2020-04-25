@@ -100,7 +100,7 @@ function saveSeed() {
 
     $.ajax({
         type: 'POST',
-        url: '/Events/Seed?json=' + JSON.stringify(data),
+        url: '/Competitor/Seed?json=' + JSON.stringify(data),
         dataType: "json",
         success: console.log("seed sent to Challonge"),
         error: errorOnAjax

@@ -100,6 +100,8 @@ namespace OBM.Controllers
 
                     senddata.Add("participants", participants);
 
+                    System.Diagnostics.Debug.WriteLine("\nJson: {\n" + participants + "\n}\n");
+
                     using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {
                         streamWriter.Write(senddata);
@@ -147,5 +149,13 @@ namespace OBM.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult Seed(string json)
+        {
+            var newt = JObject.Parse(json);
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
+            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
+            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
+        }
     }
 }
