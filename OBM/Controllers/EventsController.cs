@@ -470,8 +470,6 @@ namespace OBM.Controllers
             }
         }
 
-
-
         [HttpPost]
         public ActionResult Tournament(int id)
         {
@@ -491,6 +489,14 @@ namespace OBM.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult Seed(string json)
+        {
+            var newt = JObject.Parse(json);
+            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
+            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
+            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
+        }
 
         [HttpGet]
         public ActionResult Competitor(int? id)

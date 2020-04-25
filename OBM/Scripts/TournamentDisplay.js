@@ -35,13 +35,12 @@ $("#sortable-1").sortable({
     }
 });
 
-var groupCount = 1;
+var groupCount = 0;
 
 function addGroup() {
     groupCount++;
     $("#groups").append("<div class=\"row card bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
     var str = 'ul[name="group-' + groupCount + '"]';
-    //$(str).append("<li class=\"hide\">bottom</li>");
     $(function () {
         var oldList, newList, item;
         $(".sortable").sortable({
@@ -58,6 +57,38 @@ function addGroup() {
             connectWith: ".sortable",
             items: "li:not(.hide)"
         }).disableSelection();
+    });
+}
+
+function saveSeed() {
+    // PUT A DELAY ON THIS BUTTON SO IT CANNOT BE SPAMMED
+    var id = $('#TournamentID').val();
+
+    var allGroups = [];
+    for (var i = 1; i <= groupCount; i++) {
+        var currentGroup = []
+        var name = 'ul[name="group-' + i + '"]'
+        var html = document.querySelectorAll(name);
+        html = html[0].childNodes;
+        for (var j = 1; j < html.length; j++) {
+            currentGroup.push(html[j].innerHTML);
+        }
+        allGroups.push(currentGroup);
+    }
+
+    var data = {
+        id: id,
+        method: "trad",//change this to button response
+        ranks: rankList,
+        groups: allGroups
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '/Events/Seed?json=' + JSON.stringify(data),
+        dataType: "json",
+        success: console.log("seed sent to Challonge"),
+        error: errorOnAjax
     });
 }
 
@@ -345,4 +376,5 @@ function errorOnAjax(data) {
 }
 
 window.onload = ajaxMatches;
+window.onload = addGroup();
 window.onload = addGroup();
