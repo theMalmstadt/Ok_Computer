@@ -153,21 +153,18 @@ namespace OBM.Controllers
         [HttpPost]
         public JsonResult Seed(string json)
         {
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
-
             var seedObject = JObject.Parse(json);
-            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + seedObject["competitors"].Count() + "\n}\n");
-            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"][0] + "\n" + newt["groups"][0][0] + "\n}\n");
-
             /*
-                var data = {
-                    id: id,
-                    method: method,
-                    ranks: rankList,
-                    groups: allGroups,
-                    competitors: allComp
+                json = {
+                    id: id,                 <-- int
+                    method: method,         <-- int
+                    ranks: rankList,        <-- list of strings
+                    groups: allGroups,      <-- list of list of strings
+                    competitors: allComp    <-- list of strings
                 };
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
             */
+
             var rankedCompetitors = new List<string>();
             foreach (var rank in seedObject["ranks"])
             {
@@ -195,7 +192,6 @@ namespace OBM.Controllers
                     newGroup = newGroup.Except(rankedCompetitors).ToList();
                     filteredGroups.Add(newGroup);
                     leftovers = leftovers.Except(newGroup).ToList();
-                    //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + filteredGroups[i][0].ToString() + "\n}\n");
                 }
             }
 
@@ -203,97 +199,23 @@ namespace OBM.Controllers
 
             if (seedObject["method"].ToString() == "seq")
             {
-                foreach (var group in filteredGroups)
-                {
-                    int spacing = (int)Math.Floor((double)leftovers.Count() / group.Count()) + 1;
-                    for(var i = 0; i < group.Count(); i++ )
-                    {
-                        leftovers.Insert((i*spacing), group[i]);
-                    }
-                }
                 seededCompetitors.AddRange(rankedCompetitors);
-                seededCompetitors.AddRange(leftovers);
-            }
-
-            for (var i = 0; i < seededCompetitors.Count(); i++)
-            {
-
-                System.Diagnostics.Debug.WriteLine(seededCompetitors[i]);
-            }
-
-            /*for (var i = 0; i < allCompetitors.Count(); i++)
-            {
-
-                System.Diagnostics.Debug.WriteLine(allCompetitors[i]);
-            }*/
-            /*
-            var seededCompetitors = new List<string>();
-            if (seedObject["method"].ToString() == "seq")
-            {
-                //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + "seq confirmed" + "\n}\n");
-                for (var i = 0; i < seedObject["ranks"].Count(); i ++)
-                {
-                    seededCompetitors.Add(seedObject["ranks"][i].ToString());
-                }
-
-                //for (var i = 0; i < seedObject["groups"].Count)
-
-                for (var i = 0; i < seedObject["competitors"].Count(); i++)
-                {
-                    var temp = seedObject["competitors"][i].ToString();
-                    if (!seededCompetitors.Contains(temp))
-                    {
-                        seededCompetitors.Add(temp);
-                    }
-                }
-
-            }
-
-            for (var i = 0; i < seededCompetitors.Count(); i++)
-            {
-
-                System.Diagnostics.Debug.WriteLine(seededCompetitors[i].ToString());
-            }*/
-
-
-            /*var filteredGroups = new List<List<string>>();
-            if (seedObject["groups"].Any())
-            {
-                for (var i = 0; i < seedObject["groups"].Count(); i++)
-                {
-                    if (seedObject["groups"][i].Any())
-                    {
-                        var oldGroup = seedObject["groups"][i].ToList();
-                        var newGroup = new List<string>();
-                        for (var j = 0; j < oldGroup.Count(); j++ )
-                        {
-                            newGroup.Add(oldGroup[j].ToString());
-                        }
-                        filteredGroups.Add(newGroup);
-                        //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + filteredGroups[i][0].ToString() + "\n}\n");
-                    }
-                }
-            }*/
-
-            if (seedObject["ranks"].Count() == seedObject["competitors"].Count())
-            {
-                //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + "full" + "\n}\n");
             }
             else
             {
-
+                filteredGroups.Add(rankedCompetitors);
             }
+
+            foreach (var group in filteredGroups)
+            {
+                int spacing = (int)Math.Floor((double)leftovers.Count() / group.Count()) + 1;
+                for (var i = 0; i < group.Count(); i++)
+                {
+                    leftovers.Insert((i * spacing), group[i]);
+                }
+            }
+            seededCompetitors.AddRange(leftovers);
             
-
-            /*
-            var stringToSend = "[{'participant':{'name':'comp1','seed':1}},{'participant':{'name':'comp2','seed':2}},{'participant':{'name':'comp3','seed':3}},{'participant':{'name':'comp4','seed':4}}]";
-            dynamic data = System.Web.Helpers.Json.Decode(stringToSend);
-            string trying = data[0]["participant"]["name"].ToString();
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + trying + "\n}\n");
-            var finish = JsonConvert.SerializeObject(data);
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + finish + "\n}\n");
-            */
-
             return Json("Success My Guy", JsonRequestBehavior.AllowGet);
         }
     }
