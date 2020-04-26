@@ -76,6 +76,43 @@ function errorOnAjax() {
 
 window.setTimeout(ajax_call, 0);
 
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+// Start file download.
+document.getElementById("dwn-btn").addEventListener("click", function () {
+    // Generate download of hello.txt file with some content
+    var text = document.getElementById("round").value;
+    var filename = "round.txt";
+    download(filename, text);
+
+    text = document.getElementById("player1").value;
+    filename = "player1.txt";
+    download(filename, text);
+
+    text = document.getElementById("score1").value;
+    filename = "score1.txt";
+    download(filename, text);
+
+    text = document.getElementById("player2").value;
+    filename = "player2.txt";
+    download(filename, text);
+
+    text = document.getElementById("score2").value;
+    filename = "score2.txt";
+    download(filename, text);
+}, false);
+
 function StartMatch(mymatch)
 {
     console.log(mymatch);
