@@ -1,4 +1,121 @@
-﻿var ajaxMatches = function () {
+﻿var groupCount = 0;
+var rankList = [];
+
+$(function () {
+    $("#tabs-1").tabs({
+        activate: function (event, ui) {
+            var ls = [];
+            var $variable = $('.ui-selected').each(function () {
+                ls.push($(this).text())
+            });
+            updateSortable(ls);
+        }
+    });
+});
+
+$("#selectable-rank").bind("mousedown", function (e) {
+    e.metaKey = true;
+}).selectable();
+
+function updateSortable(ls) {
+    var temp = rankList.concat(ls);
+    rankList = [...new Set(temp)];
+    rankList = rankList.filter(value => ls.includes(value));
+    //console.log(rankList);
+    $("#sortable-1").empty();
+    for (var i = 0; i < rankList.length; i++) {
+        $("#sortable-1").append("<li id=\"" + rankList[i] + "\">" + rankList[i] + "</li>");
+    }
+}
+
+$("#sortable-1").sortable({
+    update: function (event, ui) {
+        var data = $(this).sortable('toArray');
+        //console.log(data);
+        rankList = data;
+    }
+});
+
+function addGroup() {
+    groupCount++;
+    $("#groups").append("<div class=\"row card bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
+    var str = 'ul[name="group-' + groupCount + '"]';
+    $(function () {
+        var oldList, newList, item;
+        $(".sortable").sortable({
+            start: function (event, ui) {
+                item = ui.item;
+                newList = oldList = ui.item.parent().parent();
+            },
+            change: function (event, ui) {
+                if (ui.sender) newList = ui.placeholder.parent().parent();
+            },
+            receive: function (event, ui) {
+                $(ui.item).appendTo(this);
+            },
+            connectWith: ".sortable",
+            items: "li:not(.hide)"
+        }).disableSelection();
+    });
+}
+
+function saveSeed() {
+    // PUT A DELAY ON THIS BUTTON SO IT CANNOT BE SPAMMED
+    var id = $('#TournamentID').val();
+    var method = "";
+
+    var seedMethod = document.getElementsByName('seed-method');
+    for (var h = 0; h < seedMethod.length; h++) {
+        if (seedMethod[h].checked == true) {
+            method = seedMethod[h].value;
+        }
+    }
+
+    var allGroups = [];
+    for (var i = 1; i <= groupCount; i++) {
+        var currentGroup = []
+        var name = 'ul[name="group-' + i + '"]'
+        var html = document.querySelectorAll(name);
+        html = html[0].childNodes;
+        for (var j = 1; j < html.length; j++) {
+            currentGroup.push(html[j].innerHTML);
+        }
+        allGroups.push(currentGroup);
+    }
+
+    var allComp = []
+    var html = document.querySelectorAll('#selectable-rank');
+    html = html[0].childNodes;
+    for (var k = 1; k < html.length; k = k+2) {
+        allComp.push(html[k].innerHTML);
+    }
+
+    var data = {
+        id: id,
+        method: method,//change this to button response
+        ranks: rankList,
+        groups: allGroups,
+        competitors: allComp
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '/Events/Seed?json=' + JSON.stringify(data),
+        dataType: "json",
+        success: console.log("seed sent to Challonge"),
+        error: errorOnAjax
+    });
+}
+
+$('#saveBtn').click(function () {
+    var aaa = $(this);
+    aaa.prop('disabled', true);
+    setTimeout(function () {
+        aaa.prop('disabled', false);
+    }, 3000);
+});
+
+var ajaxMatches = function () {
     var id = $('#EventID').val();
     $.ajax({
         type: 'GET',
@@ -186,7 +303,7 @@ function drawTree(data) {
     }
 
     var ctx = document.getElementById('myChart');
-    ctx.height = 100 * largestRound;
+    ctx.height = 100 * (largestRound + 1) ;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList.reverse() },
@@ -282,3 +399,5 @@ function errorOnAjax(data) {
 }
 
 window.onload = ajaxMatches;
+window.onload = addGroup();
+window.onload = addGroup();
