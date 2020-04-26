@@ -1,8 +1,16 @@
 ﻿
 @{
-    ViewBag.Title = "EmailConfirmation";
+    ViewBag.Title = "Email Confirmation";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>EmailConfirmation</h2>
-
+<div class="container border border-success mx-auto w-50 shadow">
+    <div class="row">
+        <div class="col-sm-12 d-flex justify-content-center">
+            <h1>Your message was successfully sent.</h1>
+        </div>
+        <div class="col-sm-12 d-flex justify-content-center pb-3">
+            @Html.ActionLink("Return Home", "Index", "Home", null, new { @class = "btn createbtn" })
+        </div>
+    </div>
+</div>

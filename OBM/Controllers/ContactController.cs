@@ -15,7 +15,7 @@ namespace OBM.Controllers
     public class ContactController : Controller
     {
         // GET: Contact
-        public ActionResult Index()
+        public ActionResult Contact()
         {
             return View();
         }
@@ -36,10 +36,10 @@ namespace OBM.Controllers
                     "<div>"+
                             "<b> User Inquiry</ b>"+
                    "</ div>"+
-                    "< div >"+
-                       "< p >< b > Sender's Name: </b>"+contact.SenderName+"</p>"+
+                    "<div>"+
+                       "<p><b> Sender's Name: </b>"+contact.SenderName+"</p>"+
                     "</ div>"+
-                    "< div >"+
+                    "<div>"+
                         "<p><b>Sender's Contact: </b>"+contact.SenderEmail+"</p>"+
                     "</ div>"+
                     "<div>"+
@@ -73,7 +73,7 @@ namespace OBM.Controllers
                     smtp.DeliveryMethod = SmtpDeliveryMethod.Network;
 
                     await smtp.SendMailAsync(email);
-                    return RedirectToAction("EmailConfirmation");
+                    return RedirectToAction("EmailConfirmation","Contact");
                 }
             }
             return View(contact);

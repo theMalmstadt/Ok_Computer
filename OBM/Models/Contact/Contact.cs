@@ -22,6 +22,7 @@ namespace OBM.Models.Contact
         public string EmailSubject { get; set; }
 
         [Required(ErrorMessage ="Body is Required.")]
+        [Display(Name = "Reason: ")]
         public string EmailBody { get; set; }
     }
 }
