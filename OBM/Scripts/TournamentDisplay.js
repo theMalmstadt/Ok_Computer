@@ -1,6 +1,56 @@
 ﻿var groupCount = 0;
 var rankList = [];
 
+function testingMySort() {
+    var ls = []
+    for (var i = 0; i < 32; i++) {
+        ls.push(i);
+    }
+    var s = []
+    for (var i = 0; i < 6; i++) {
+        s.push('s');
+    }
+    var g1 = []
+    for (var i = 6; i < 9; i++) {
+        g1.push('1');
+    }
+    var g2 = []
+    for (var i = 9; i < 14; i++) {
+        g2.push('2');
+    }
+    var g3 = []
+    for (var i = 14; i < 21; i++) {
+        g3.push('3');
+    }
+    var r = []
+    for (var i = 14; i < 21; i++) {
+        r.push('r');
+    }
+
+    var unsorted = s.concat(g1.concat(g2.concat(g3.concat(r))))
+
+    var groups = [];
+    groups.push(g1);
+    groups.push(g2);
+    groups.push(g3);
+
+    var sorted = r;
+    for (var i = 0; i < groups.length; i++) {
+        var gap = Math.floor(r.length / groups[i].length) + 1;
+        sorted.splice(0, 0, groups[i][0]);
+        for (var j = 1; j < groups[i].length; j++) {
+            var hello = (j * gap);
+            sorted.splice(hello, 0, groups[i][j]);
+        }
+    }
+    var sorted = s.concat(sorted);
+    console.log(sorted);
+    
+}
+
+window.onload = testingMySort();
+
+
 $(function () {
     $("#tabs-1").tabs({
         activate: function (event, ui) {
@@ -92,7 +142,7 @@ function saveSeed() {
 
     var data = {
         id: id,
-        method: method,//change this to button response
+        method: method,
         ranks: rankList,
         groups: allGroups,
         competitors: allComp
@@ -100,7 +150,7 @@ function saveSeed() {
 
     $.ajax({
         type: 'POST',
-        url: '/Competitor/Seed?json=' + JSON.stringify(data),
+        url: '/Competitor/Seed?json=' + encodeURIComponent(JSON.stringify(data)),
         dataType: "json",
         success: console.log("seed sent to Challonge"),
         error: errorOnAjax

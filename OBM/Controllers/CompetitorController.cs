@@ -15,7 +15,7 @@ using System.Net.Http;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-
+using System.Web.Helpers;
 
 namespace OBM.Controllers
 {
@@ -149,12 +149,129 @@ namespace OBM.Controllers
             }
         }
 
+
         [HttpPost]
         public JsonResult Seed(string json)
         {
-            var newt = JObject.Parse(json);
             System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
-            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
+
+            var seedObject = JObject.Parse(json);
+            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + seedObject["competitors"].Count() + "\n}\n");
+            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"][0] + "\n" + newt["groups"][0][0] + "\n}\n");
+
+            /*
+                var data = {
+                    id: id,
+                    method: method,
+                    ranks: rankList,
+                    groups: allGroups,
+                    competitors: allComp
+                };
+            */
+            var rankedCompetitors = new List<string>();
+            for (var i = 0; i < seedObject["ranks"].Count(); i++)
+            {
+                rankedCompetitors.Add(seedObject["ranks"][i].ToString());
+            }
+
+            var allCompetitors = new List<string>();
+            for (var i = 0; i < seedObject["competitors"].Count(); i++)
+            {
+                allCompetitors.Add(seedObject["competitors"][i].ToString());
+            }
+            allCompetitors = allCompetitors.Except(rankedCompetitors).ToList();
+
+            var filteredGroups = new List<List<string>>();
+            for (var i = 0; i < seedObject["groups"].Count(); i++)
+            {
+                if (seedObject["groups"][i].Any())
+                {
+                    var oldGroup = seedObject["groups"][i].ToList();
+                    var newGroup = new List<string>();
+                    for (var j = 0; j < oldGroup.Count(); j++)
+                    {
+                        newGroup.Add(oldGroup[j].ToString());
+                    }
+                    newGroup = newGroup.Except(rankedCompetitors).ToList();
+                    filteredGroups.Add(newGroup);
+                    allCompetitors = allCompetitors.Except(newGroup).ToList();
+                    //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + filteredGroups[i][0].ToString() + "\n}\n");
+                }
+            }
+
+            /*for (var i = 0; i < allCompetitors.Count(); i++)
+            {
+
+                System.Diagnostics.Debug.WriteLine(allCompetitors[i]);
+            }*/
+            /*
+            var seededCompetitors = new List<string>();
+            if (seedObject["method"].ToString() == "seq")
+            {
+                //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + "seq confirmed" + "\n}\n");
+                for (var i = 0; i < seedObject["ranks"].Count(); i ++)
+                {
+                    seededCompetitors.Add(seedObject["ranks"][i].ToString());
+                }
+                
+                //for (var i = 0; i < seedObject["groups"].Count)
+
+                for (var i = 0; i < seedObject["competitors"].Count(); i++)
+                {
+                    var temp = seedObject["competitors"][i].ToString();
+                    if (!seededCompetitors.Contains(temp))
+                    {
+                        seededCompetitors.Add(temp);
+                    }
+                }
+
+            }
+
+            for (var i = 0; i < seededCompetitors.Count(); i++)
+            {
+
+                System.Diagnostics.Debug.WriteLine(seededCompetitors[i].ToString());
+            }*/
+
+
+            /*var filteredGroups = new List<List<string>>();
+            if (seedObject["groups"].Any())
+            {
+                for (var i = 0; i < seedObject["groups"].Count(); i++)
+                {
+                    if (seedObject["groups"][i].Any())
+                    {
+                        var oldGroup = seedObject["groups"][i].ToList();
+                        var newGroup = new List<string>();
+                        for (var j = 0; j < oldGroup.Count(); j++ )
+                        {
+                            newGroup.Add(oldGroup[j].ToString());
+                        }
+                        filteredGroups.Add(newGroup);
+                        //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + filteredGroups[i][0].ToString() + "\n}\n");
+                    }
+                }
+            }*/
+
+            if (seedObject["ranks"].Count() == seedObject["competitors"].Count())
+            {
+                //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + "full" + "\n}\n");
+            }
+            else
+            {
+
+            }
+            
+
+            /*
+            var stringToSend = "[{'participant':{'name':'comp1','seed':1}},{'participant':{'name':'comp2','seed':2}},{'participant':{'name':'comp3','seed':3}},{'participant':{'name':'comp4','seed':4}}]";
+            dynamic data = System.Web.Helpers.Json.Decode(stringToSend);
+            string trying = data[0]["participant"]["name"].ToString();
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + trying + "\n}\n");
+            var finish = JsonConvert.SerializeObject(data);
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + finish + "\n}\n");
+            */
+
             return Json("Success My Guy", JsonRequestBehavior.AllowGet);
         }
     }
