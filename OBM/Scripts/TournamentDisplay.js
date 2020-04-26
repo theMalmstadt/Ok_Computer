@@ -92,7 +92,7 @@ function saveSeed() {
 
     var data = {
         id: id,
-        method: method,//change this to button response
+        method: method,
         ranks: rankList,
         groups: allGroups,
         competitors: allComp
@@ -100,7 +100,7 @@ function saveSeed() {
 
     $.ajax({
         type: 'POST',
-        url: '/Events/Seed?json=' + JSON.stringify(data),
+        url: '/Competitor/Seed?json=' + encodeURIComponent(JSON.stringify(data)),
         dataType: "json",
         success: console.log("seed sent to Challonge"),
         error: errorOnAjax

@@ -492,27 +492,8 @@ namespace OBM.Controllers
         [HttpPost]
         public JsonResult Seed(string json)
         {
-            //Seeding process works by deleting the competitors in an event, then re adding them with seed values
-
             var newt = JObject.Parse(json);
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt + "\n}\n");
-
-            Debug.WriteLine(newt["ranks"]);
-            //RESET CHALLONGE TOURNAMENT
-
-
-
-            //PARSE JSON STRING
-
-
-            //BUILD CHALLONGE REQUEST
-
-
-            //BULK ADD COMPETITORS
-
-
-
-
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
             //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
             return Json("Success My Guy", JsonRequestBehavior.AllowGet);
         }

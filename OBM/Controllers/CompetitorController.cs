@@ -15,7 +15,7 @@ using System.Net.Http;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-
+using System.Web.Helpers;
 
 namespace OBM.Controllers
 {
@@ -100,6 +100,8 @@ namespace OBM.Controllers
 
                     senddata.Add("participants", participants);
 
+                    System.Diagnostics.Debug.WriteLine("\nJson: {\n" + participants + "\n}\n");
+
                     using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
                     {
                         streamWriter.Write(senddata);
@@ -147,5 +149,76 @@ namespace OBM.Controllers
             }
         }
 
+
+        [HttpPost]
+        public JsonResult Seed(string json)
+        {
+            var seedObject = JObject.Parse(json);
+            /*
+                json = {
+                    id: id,                 <-- int
+                    method: method,         <-- int
+                    ranks: rankList,        <-- list of strings
+                    groups: allGroups,      <-- list of list of strings
+                    competitors: allComp    <-- list of strings
+                };
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
+            */
+
+            var rankedCompetitors = new List<string>();
+            foreach (var rank in seedObject["ranks"])
+            {
+                rankedCompetitors.Add(rank.ToString());
+            }
+
+            var leftovers = new List<string>();
+            foreach (var comp in seedObject["competitors"])
+            {
+                leftovers.Add(comp.ToString());
+            }
+            leftovers = leftovers.Except(rankedCompetitors).ToList();
+
+            var filteredGroups = new List<List<string>>();
+            foreach (var group in seedObject["groups"])
+            {
+                if (group.Any())
+                {
+                    var oldGroup = group.ToList();
+                    var newGroup = new List<string>();
+                    foreach (var element in oldGroup)
+                    {
+                        newGroup.Add(element.ToString());
+                    }
+                    newGroup = newGroup.Except(rankedCompetitors).ToList();
+                    filteredGroups.Add(newGroup);
+                    leftovers = leftovers.Except(newGroup).ToList();
+                }
+            }
+
+            var seededCompetitors = new List<string>();
+
+            if (seedObject["method"].ToString() == "seq")
+            {
+                seededCompetitors.AddRange(rankedCompetitors);
+            }
+            else
+            {
+                filteredGroups.Add(rankedCompetitors);
+            }
+
+            foreach (var group in filteredGroups)
+            {
+                int spacing = (int)Math.Floor((double)leftovers.Count() / group.Count()) + 1;
+                for (var i = 0; i < group.Count(); i++)
+                {
+                    leftovers.Insert((i * spacing), group[i]);
+                }
+            }
+            seededCompetitors.AddRange(leftovers);
+            
+            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
+        }
+
+        
     }
 }
