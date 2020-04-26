@@ -149,7 +149,6 @@ namespace OBM.Controllers
             }
         }
 
-
         [HttpPost]
         public JsonResult Seed(string json)
         {
@@ -165,58 +164,97 @@ namespace OBM.Controllers
             System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
             */
 
-            var rankedCompetitors = new List<string>();
-            foreach (var rank in seedObject["ranks"])
+            Tournament found = db.Tournaments.Find((int)seedObject["id"]);
+            if (db.Events.Find(found.EventID).OrganizerID == User.Identity.GetUserId())
             {
-                rankedCompetitors.Add(rank.ToString());
-            }
-
-            var leftovers = new List<string>();
-            foreach (var comp in seedObject["competitors"])
-            {
-                leftovers.Add(comp.ToString());
-            }
-            leftovers = leftovers.Except(rankedCompetitors).ToList();
-
-            var filteredGroups = new List<List<string>>();
-            foreach (var group in seedObject["groups"])
-            {
-                if (group.Any())
+                var rankedCompetitors = new List<string>();
+                foreach (var rank in seedObject["ranks"])
                 {
-                    var oldGroup = group.ToList();
-                    var newGroup = new List<string>();
-                    foreach (var element in oldGroup)
-                    {
-                        newGroup.Add(element.ToString());
-                    }
-                    newGroup = newGroup.Except(rankedCompetitors).ToList();
-                    filteredGroups.Add(newGroup);
-                    leftovers = leftovers.Except(newGroup).ToList();
+                    rankedCompetitors.Add(rank.ToString());
                 }
-            }
 
-            var seededCompetitors = new List<string>();
+                var leftovers = new List<string>();
+                foreach (var comp in seedObject["competitors"])
+                {
+                    leftovers.Add(comp.ToString());
+                }
+                leftovers = leftovers.Except(rankedCompetitors).ToList();
 
-            if (seedObject["method"].ToString() == "seq")
-            {
-                seededCompetitors.AddRange(rankedCompetitors);
+                var filteredGroups = new List<List<string>>();
+                foreach (var group in seedObject["groups"])
+                {
+                    if (group.Any())
+                    {
+                        var oldGroup = group.ToList();
+                        var newGroup = new List<string>();
+                        foreach (var element in oldGroup)
+                        {
+                            newGroup.Add(element.ToString());
+                        }
+                        newGroup = newGroup.Except(rankedCompetitors).ToList();
+                        filteredGroups.Add(newGroup);
+                        leftovers = leftovers.Except(newGroup).ToList();
+                    }
+                }
+
+                var seededCompetitors = new List<string>();
+
+                if (seedObject["method"].ToString() == "seq")
+                {
+                    seededCompetitors.AddRange(rankedCompetitors);
+                }
+                else
+                {
+                    filteredGroups.Add(rankedCompetitors);
+                }
+
+                foreach (var group in filteredGroups)
+                {
+                    int spacing = (int)Math.Floor((double)leftovers.Count() / group.Count()) + 1;
+                    for (var i = 0; i < group.Count(); i++)
+                    {
+                        leftovers.Insert((i * spacing), group[i]);
+                    }
+                }
+                seededCompetitors.AddRange(leftovers);
+
+                var sendingJson = "[";
+                var count = 1;
+                foreach (var comp in seededCompetitors)
+                {
+                    sendingJson += "{'participant':{'name':'" + comp + "','seed':" + count + "}},";
+                    count++;
+                }
+                sendingJson = sendingJson.Remove(sendingJson.Length - 1);
+                sendingJson += "]";
+
+                var response = sendSeed(sendingJson, found);
+
+                return Json(response, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                filteredGroups.Add(rankedCompetitors);
+                return Json("Access Denied", JsonRequestBehavior.AllowGet);
             }
+        }
 
-            foreach (var group in filteredGroups)
-            {
-                int spacing = (int)Math.Floor((double)leftovers.Count() / group.Count()) + 1;
-                for (var i = 0; i < group.Count(); i++)
-                {
-                    leftovers.Insert((i * spacing), group[i]);
-                }
-            }
-            seededCompetitors.AddRange(leftovers);
-            
-            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
+        public string sendSeed(string json, Tournament tourn)
+        {
+            // Get this string to be accepted by Challonge first.
+            // Once this string works, use the json argument above
+            var stringToSend = "[{'participant':{'name':'comp1','seed':1}},{'participant':{'name':'comp2','seed':2}},{'participant':{'name':'comp3','seed':3}},{'participant':{'name':'comp4','seed':4}}]";
+
+
+            // First API call here
+            // PUT request to clear all participants from Challonge Tournament
+
+
+            // Second API call here
+            // POST the json string above
+
+
+            string challongeResponse = "success"; //This will be the json response you get from Challonge's API
+            return challongeResponse;
         }
 
         

@@ -4,7 +4,6 @@
     ViewBag.ApiID = Model.ApiId;
     ViewBag.TourneyID = Model.TournamentID;
 
-
     <h1>@Html.DisplayFor(model => model.TournamentName)</h1>
 
     if (ViewBag.Access == true)
@@ -84,104 +83,108 @@
 
             using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
             {
-        <dt></dt>
-        <dd>
-            <div class="CSV" id="participantOptions">
-                <div>
-                    <i>upload a .CSV file with each participant alone on each line</i>
-                </div>
-                <label for="bulkadd">Bulk add Participants:</label>
-                <br />
-                <input type="hidden" name="bulkadd" id="bulkadd" />
+                <dt></dt>
+                <dd>
+                    <div class="CSV" id="participantOptions">
+                        <div>
+                            <i>upload a .CSV file with each participant alone on each line</i>
+                        </div>
+                        <label for="bulkadd">Bulk add Participants:</label>
+                        <br />
+                        <input type="hidden" name="bulkadd" id="bulkadd" />
 
-                <input type="file" name="CSV" accept=".csv" id="CSV" />
-                <input type="submit" value="Submit" class="btn createbtn" />
-                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
-                <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
-                <br />
+                        <input type="file" name="CSV" accept=".csv" id="CSV" />
+                        <input type="submit" value="Submit" class="btn createbtn" />
+                        <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
+                        <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                        <br />
 
 
-            </div>
-            <div id="participantsParsedList"></div>
-        </dd>
+                    </div>
+                    <div id="participantsParsedList"></div>
+                </dd>
+
             }
-        }
 
+
+
+
+            <button type="button" onclick="hideShow('seed-div');">Seed</button>
+            <br />
+
+            <div id="seed-div" style="display:none">
+                <div id="tabs-1">
+                    <p>@ViewBag.keyCheck</p>
+                    <p>@ViewBag.Success</p>
+
+                    <ul>
+                        <li><a href="#tabs-2">Select Competitors</a></li>
+                        <li><a href="#tabs-3">Rank Selected</a></li>
+                        <li><a href="#tabs-4">Additional Seeding</a></li>
+                    </ul>
+
+                    <div id="tabs-2">
+                        <ul id="selectable-rank" class="ui-selectable">
+                            @foreach (var comp in Model.CompetitorList)
+                            {
+                                <li>@comp</li>
+                            }
+                        </ul>
+                    </div>
+
+                    <div id="tabs-3">
+                        <div class="col">
+                            <ol id="sortable-1" class="ui-sortable">
+                                <lh>empty</lh>
+                            </ol>
+                        </div>
+                        <div class="col btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="tabs-4">
+                        <div class="row">
+                            <div class="col card bg-light">
+                                <ul id="sortable-2" class="ui-sortable sortable">
+                                    @foreach (var comp in Model.CompetitorList)
+                                    {
+                                        <li>@comp</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="col">
+                                <div id="groups">
+                                </div>
+                                <a onclick="addGroup()">Add Group</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
+                </div>
+            </div>
+            <br />
+        }
     </dl>
 
-        <button type="button" onclick="hideShow('seed-div');">Seed</button>
-        <br />
 
-        <div id="seed-div" style="display:block">
-            <div id="tabs-1">
-                <p>@ViewBag.keyCheck</p>
-                <p>@ViewBag.Success</p>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Brackets</th>
+        </tr>
 
-                <ul>
-                    <li><a href="#tabs-2">Select Competitors</a></li>
-                    <li><a href="#tabs-3">Rank Selected</a></li>
-                    <li><a href="#tabs-4">Additional Seeding</a></li>
-                </ul>
-
-                <div id="tabs-2">
-                    <ul id="selectable-rank" class="ui-selectable">
-                        @foreach (var comp in Model.CompetitorList)
-                        {
-                            <li>@comp</li>
-                        }
-                    </ul>
-                </div>
-
-                <div id="tabs-3">
-                    <div class="col">
-                        <ol id="sortable-1" class="ui-sortable">
-                            <lh>empty</lh>
-                        </ol>
-                    </div>
-                    <div class="col btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
-                        </label>
-                    </div>
-                </div>
-
-                <div id="tabs-4">
-                    <div class="row">
-                        <div class="col card bg-light">
-                            <ul id="sortable-2" class="ui-sortable sortable">
-                                @foreach (var comp in Model.CompetitorList)
-                                {
-                                    <li>@comp</li>
-                                }
-                            </ul>
-                        </div>
-                        <div class="col">
-                            <div id="groups">
-                            </div>
-                            <a onclick="addGroup()">Add Group</a>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
-            </div>
-        </div>
-        <br />
-
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Brackets</th>
-            </tr>
-
-        </table>
-        <table class="table table-bordered table-striped">
-            <tr>
-                <th>Competitors</th>
-            </tr>
-        </table>
-    </div>
+    </table>
+    <table class="table table-bordered table-striped">
+        <tr>
+            <th>Competitors</th>
+        </tr>
+    </table>
+</div>
 
         <input id="EventID" type="hidden" value="@Model.EventID" />
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />
