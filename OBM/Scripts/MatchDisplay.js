@@ -113,6 +113,15 @@ document.getElementById("dwn-btn").addEventListener("click", function () {
     download(filename, text);
 }, false);
 
+function toggleStream() {
+    var x = document.getElementById("streamForm");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
 function StartMatch(mymatch)
 {
     console.log(mymatch);
