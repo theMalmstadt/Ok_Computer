@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44321</IISExpressSSLPort>
+    <IISExpressSSLPort>44355</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -187,6 +187,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Models\API\ApiCredentials.cs" />
     <Compile Include="Models\AspNetUser.cs" />
     <Compile Include="Models\API\ChallongeApi.cs" />
+    <Compile Include="Models\Contact\Contact.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\Competitor.cs" />
     <Compile Include="Models\Event.cs" />
@@ -237,7 +239,10 @@
     <Content Include="Content\jquery.datetimepicker.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Media\ashlyn.png" />
     <Content Include="Media\cat-gif-1.gif" />
+    <Content Include="Media\ethan.png" />
+    <Content Include="Media\jacob.jpg" />
     <Content Include="Media\koi.gif" />
     <Content Include="Media\OKicon.ico" />
     <Content Include="Media\OKlogo.png" />
@@ -245,6 +250,7 @@
     <Content Include="Media\space.gif" />
     <Content Include="Media\swan.gif" />
     <Compile Include="Models\ViewModels\ParticipantTournamentViewModel.cs" />
+    <Content Include="Media\zak.jpg" />
     <Content Include="Scripts\anime.min.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -441,6 +447,8 @@
     <Content Include="Views\Account\RegisterOptions.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Events\Standings.cshtml" />
+    <Content Include="Views\Contact\Contact.cshtml" />
+    <Content Include="Views\Contact\EmailConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

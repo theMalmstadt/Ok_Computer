@@ -1,11 +1,105 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-<h2>About Us</h2>
-<hr />
 <h3>Our Team</h3>
-<p>Ashlyn Santiago</p>
-<p>Ethan Black</p>
-<p>Jacob Malmstadt</p>
-<p>Zak Keipp</p>
-<p><a class="git-link" href="https://github.com/theMalmstadt/Ok_Computer/">Our Github Repo &raquo;</a></p>
+<hr />
+<div class="container-fluid d-flex justify-content-end">
+    <div class="row">
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="~/Media/jacob.jpg" class="w-100" />
+                <div class="card-body">
+                    <h1>Jacob Malmstadt</h1>
+                    <p><b>Github: </b><a href="https://github.com/theMalmstadt">https://github.com/theMalmstadt</a></p>
+                    <p><b>Age: </b>22</p>
+                    <p><b>Description: </b>Reckless</p>
+                    <p><b>Quote: </b>"<i>Be yourself; everyone else is already taken.</i>" -Oscar Wilde</p>
+                </div>
+                <div class="card-footer">
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="~/Media/zak.jpg" class="w-100" />
+                <div class="card-body">
+                    <h1>Zak Keipp</h1>
+                    <p><b>Github: </b><a href="https://github.com/Expanseman">https://github.com/Expanseman</a></p>
+                    <p><b>Age: </b>25</p>
+                    <p><b>Description: </b>Software Engineer at Western Oregon University</p>
+                    <p>
+                        <b>Hobbies: </b>
+                        <ul>
+                            <li>Embedded Systems Development</li>
+                            <li>Synthesizers</li>
+                            <li>Music</li>
+                        </ul>
+                    </p>
+                    <p><b>Quote: </b>"<i>Beeg Yoshi</i>" -Unknown</p>
+                </div>
+                <div class="card-footer">
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="~/Media/ashlyn.png" class="w-100" />
+                <div class="card-body">
+                    <h1>Ashlyn Santiago</h1>
+                    <p><b>Github: </b><a href="https://github.com/AshlynSantiago">https://github.com/AshlynSantiago</a></p>
+                    <p><b>Age: </b>23</p>
+                    <p><b>Description: </b>Non-binary fighting game player, and local tournament assistant</p>
+                    <p><b>Quote: </b>"<i>Play Guilty Gear</i>" -Ashlyn Santiago</p>
+                </div>
+                <div class="card-footer">
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card shadow h-100">
+                <img src="~/Media/ethan.png" class="w-100" />
+                <div class="card-body">
+                    <h1>Ethan Black</h1>
+                    <p><b>Github: </b><a href="https://github.com/Expanseman">https://github.com/Expanseman</a></p>
+                    <p><b>Age: </b>23</p>
+                    <p><b>Description: </b>I'm the one that likes to party.</p>
+                    <p><b>Quote: </b>"<i>Absence of evidence is not evidence of absence.</i>" -Carl Sagan</p>
+                </div>
+                <div class="card-footer">
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center pt-5">
+            <h3>Interested in becoming a developer? Learn how today!</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 text-center">
+            <p><a class="btn createbtn" href="https://github.com/theMalmstadt/Ok_Computer/blob/master/guidelines.md">Become a Contributor</a></p>
+        </div>
+    </div>
+</div>
+
+
+<p><a class="btn registerbtn mt-3" href="https://github.com/theMalmstadt/Ok_Computer/">Our Github Repo &raquo;</a></p>
