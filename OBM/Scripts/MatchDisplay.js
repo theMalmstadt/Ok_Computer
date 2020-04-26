@@ -60,7 +60,17 @@ var ajax_match = function () {
     });
 }
 
-
+function StartTournament(id)
+{
+    $.ajax({
+        type: 'POST',
+        dataType: 'json',
+        url: '/Events/StartTournament?id=' + id,
+        success: console.log("it even went good"),
+        complete: console.log("TOURNAMENT START COMPLETED"),
+        error: errorOnAjax
+    });
+}
 
 function CompetitorList(data) {
     $('#Competitors').html(data["compTable"]);
