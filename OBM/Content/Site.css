@@ -97,13 +97,17 @@ nav {
     font-size: 200%;
 }
 
-.nav-link:hover, nav:hover, a {
-    color: #4ac959;
+.nav-link:hover, nav:hover {
+    color: #E7E8E9;
 }
 
-    a:hover {
-        color: #58585A;
-    }
+a {
+    color: #35b143;
+}
+
+a:hover {
+    color: #58585A;
+}
 
 #registerLink, #loginLink, #logoutLink, #accountLink {
     color: #E7E8E9;
@@ -169,4 +173,48 @@ table.table-bordered  > tr > th {
 
 table.table-bordered > tbody > tr > td {
     border: 1px solid darkgrey;
+}
+
+#selectable-rank .ui-selectee {
+    background: #E7E8E9;
+    color: #58585A;
+    border: 1px solid #58585A;
+    text-align: center;
+    margin-bottom: 2px;
+    border-radius: 5px;
+}
+
+#selectable-rank .ui-selecting {
+    background: #E7E8E9;
+    color: #4ac959;
+}
+
+#selectable-rank .ui-selected {
+    background: #4ac959;
+    color: #58585A;
+}
+
+#selectable-rank {
+    list-style-type: none;
+    margin: 0;
+    padding: 1px;
+    width: 100%;
+    column-count: 4;
+    column-gap: 2px;
+}
+
+#tabs-1 {
+    font-size: 14px;
+    color: #4ac959;
+    width: 50%;
+}
+
+.ui-widget-header {
+    background: #58585A;
+    color: #4ac959;
+    font-weight: bold;
+}
+
+.hide {
+    visibility: hidden;
 }

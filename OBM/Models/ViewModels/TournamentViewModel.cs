@@ -17,7 +17,7 @@ namespace OBM.Models.ViewModels
     {
         private EventContext db = new EventContext();
 
-        public TournamentViewModel(Tournament tour, string org)
+        public TournamentViewModel(Tournament tour, string org, List<string> compList)
         {
             Event motherEvent = db.Events.Find(tour.EventID);
 
@@ -34,6 +34,7 @@ namespace OBM.Models.ViewModels
             IsTeams = tour.IsTeams ? "Yes" : "No";
             IsStarted = tour.IsStarted ? "Yes" : "No";
             Public = motherEvent.Public;
+            CompetitorList = compList;
         }
 
         public int TournamentID { get; set; }
@@ -49,5 +50,6 @@ namespace OBM.Models.ViewModels
         public string IsTeams { get; set; }
         public string IsStarted { get; set; }
         public bool Public { get; set; }
+        public List<string> CompetitorList { get; set; }
     }
 }
