@@ -218,3 +218,8 @@ table.table-bordered > tbody > tr > td {
 .hide {
     visibility: hidden;
 }
+
+#select, #rank, #group {
+    font-size: 100%;
+}
+
