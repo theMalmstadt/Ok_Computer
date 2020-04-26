@@ -222,7 +222,7 @@ namespace OBM.Controllers
                 var count = 1;
                 foreach (var comp in seededCompetitors)
                 {
-                    sendingJson += "{'participant':{'name':'" + comp + "','seed':" + count + "}},";
+                    sendingJson += "{'name':'" + comp + "','seed':" + count + "}},";
                     count++;
                 }
                 sendingJson = sendingJson.Remove(sendingJson.Length - 1);
@@ -242,21 +242,101 @@ namespace OBM.Controllers
         {
             // Get this string to be accepted by Challonge first.
             // Once this string works, use the json argument above
-            var stringToSend = "[{'participant':{'name':'comp1','seed':1}},{'participant':{'name':'comp2','seed':2}},{'participant':{'name':'comp3','seed':3}},{'participant':{'name':'comp4','seed':4}}]";
+            var stringToSend = "{\"participants\":[{\"name\":\"comp1\",\"seed\":1},{\"name\":\"comp2\",\"seed\":2},{\"name\":\"comp3\",\"seed\":3},{\"name\":\"comp4\",\"seed\":4}]}";
+
+            Debug.WriteLine(json);
+
 
 
             // First API call here
             // PUT request to clear all participants from Challonge Tournament
-
+            DeleteCompetitors(tourn);
 
             // Second API call here
             // POST the json string above
 
 
-            string challongeResponse = "success"; //This will be the json response you get from Challonge's API
+            string challongeResponse = BulkAddCompetitorsSeeds(json, tourn);
+            
             return challongeResponse;
         }
+        public void DeleteCompetitors(Tournament tourn)
+        {
+            //DELETE Help https://api.challonge.com/v1/tournaments/{tournament}/participants/clear.{json|xml}
+            string userId = (HttpContext.User.Identity.GetUserId());
+            string apiKey = db.AspNetUsers.Find(userId).ApiKey;
+            string apikeyString = "api_key=" + apiKey;
+            string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + "/participants/clear.json?"+apikeyString;
+            
+            //CONFIGURE REQUEST
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
 
-        
+           
+            //SEND REQUEST
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                Debug.WriteLine(httpResponse);
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Debug.WriteLine(result);
+                }
+            }
+            catch (System.Net.WebException e)
+            {
+                Debug.WriteLine("There was a problem deleting particpants from the tournament to seed");
+            }
+
+                    
+        }
+
+        public string BulkAddCompetitorsSeeds(string json, Tournament tourn)
+        {
+            string userId = (HttpContext.User.Identity.GetUserId());
+            string apiKey = db.AspNetUsers.Find(userId).ApiKey;
+            string apikeyString = "api_key=" + apiKey;
+
+            // POST https://api.challonge.com/v1/tournaments/{tournament}/participants/bulk_add.{json|xml}
+            string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + "/participants/bulk_add.json?"+apikeyString;
+            Debug.WriteLine(json);
+
+
+            //CONFIGURE REQUEST
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+
+            //WRITEE DATA TO REQUEST BODY
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(json);
+            }
+            //SEND REQUEST
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    Debug.WriteLine(result);
+                    return result;
+                }
+            }
+            catch(System.Net.WebException e)
+            {
+                Debug.WriteLine("problem posting competitors with seeds to challonge");
+                return "seed posting failed :(";
+            }
+                    
+
+
+        }
+
+
     }
 }
