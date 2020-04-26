@@ -169,34 +169,56 @@ namespace OBM.Controllers
                 };
             */
             var rankedCompetitors = new List<string>();
-            for (var i = 0; i < seedObject["ranks"].Count(); i++)
+            foreach (var rank in seedObject["ranks"])
             {
-                rankedCompetitors.Add(seedObject["ranks"][i].ToString());
+                rankedCompetitors.Add(rank.ToString());
             }
 
-            var allCompetitors = new List<string>();
-            for (var i = 0; i < seedObject["competitors"].Count(); i++)
+            var leftovers = new List<string>();
+            foreach (var comp in seedObject["competitors"])
             {
-                allCompetitors.Add(seedObject["competitors"][i].ToString());
+                leftovers.Add(comp.ToString());
             }
-            allCompetitors = allCompetitors.Except(rankedCompetitors).ToList();
+            leftovers = leftovers.Except(rankedCompetitors).ToList();
 
             var filteredGroups = new List<List<string>>();
-            for (var i = 0; i < seedObject["groups"].Count(); i++)
+            foreach (var group in seedObject["groups"])
             {
-                if (seedObject["groups"][i].Any())
+                if (group.Any())
                 {
-                    var oldGroup = seedObject["groups"][i].ToList();
+                    var oldGroup = group.ToList();
                     var newGroup = new List<string>();
-                    for (var j = 0; j < oldGroup.Count(); j++)
+                    foreach (var element in oldGroup)
                     {
-                        newGroup.Add(oldGroup[j].ToString());
+                        newGroup.Add(element.ToString());
                     }
                     newGroup = newGroup.Except(rankedCompetitors).ToList();
                     filteredGroups.Add(newGroup);
-                    allCompetitors = allCompetitors.Except(newGroup).ToList();
+                    leftovers = leftovers.Except(newGroup).ToList();
                     //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + filteredGroups[i][0].ToString() + "\n}\n");
                 }
+            }
+
+            var seededCompetitors = new List<string>();
+
+            if (seedObject["method"].ToString() == "seq")
+            {
+                foreach (var group in filteredGroups)
+                {
+                    int spacing = (int)Math.Floor((double)leftovers.Count() / group.Count()) + 1;
+                    for(var i = 0; i < group.Count(); i++ )
+                    {
+                        leftovers.Insert((i*spacing), group[i]);
+                    }
+                }
+                seededCompetitors.AddRange(rankedCompetitors);
+                seededCompetitors.AddRange(leftovers);
+            }
+
+            for (var i = 0; i < seededCompetitors.Count(); i++)
+            {
+
+                System.Diagnostics.Debug.WriteLine(seededCompetitors[i]);
             }
 
             /*for (var i = 0; i < allCompetitors.Count(); i++)
@@ -213,7 +235,7 @@ namespace OBM.Controllers
                 {
                     seededCompetitors.Add(seedObject["ranks"][i].ToString());
                 }
-                
+
                 //for (var i = 0; i < seedObject["groups"].Count)
 
                 for (var i = 0; i < seedObject["competitors"].Count(); i++)
