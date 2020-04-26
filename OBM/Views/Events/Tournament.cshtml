@@ -75,69 +75,70 @@
                     </div>
                 </dd>
             }
-        }
-        </dl>
+            <button type="button" onclick="hideShow('seed-div');">Seed</button>
+            <br />
 
-        <button type="button" onclick="hideShow('seed-div');">Seed</button>
-        <br />
+            <div id="seed-div" style="display:none">
+                <div id="tabs-1">
+                    <p>@ViewBag.keyCheck</p>
+                    <p>@ViewBag.Success</p>
 
-        <div id="seed-div" style="display:block">
-            <div id="tabs-1">
-                <p>@ViewBag.keyCheck</p>
-                <p>@ViewBag.Success</p>
-
-                <ul>
-                    <li><a href="#tabs-2">Select Competitors</a></li>
-                    <li><a href="#tabs-3">Rank Selected</a></li>
-                    <li><a href="#tabs-4">Additional Seeding</a></li>
-                </ul>
-
-                <div id="tabs-2">
-                    <ul id="selectable-rank" class="ui-selectable">
-                        @foreach (var comp in Model.CompetitorList)
-                        {
-                            <li>@comp</li>
-                        }
+                    <ul>
+                        <li><a href="#tabs-2">Select Competitors</a></li>
+                        <li><a href="#tabs-3">Rank Selected</a></li>
+                        <li><a href="#tabs-4">Additional Seeding</a></li>
                     </ul>
-                </div>
 
-                <div id="tabs-3">
-                    <div class="col">
-                        <ol id="sortable-1" class="ui-sortable">
-                            <lh>empty</lh>
-                        </ol>
+                    <div id="tabs-2">
+                        <ul id="selectable-rank" class="ui-selectable">
+                            @foreach (var comp in Model.CompetitorList)
+                            {
+                                <li>@comp</li>
+                            }
+                        </ul>
                     </div>
-                    <div class="col btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
-                        </label>
-                    </div>
-                </div>
 
-                <div id="tabs-4">
-                    <div class="row">
-                        <div class="col card bg-light">
-                            <ul id="sortable-2" class="ui-sortable sortable">
-                                @foreach (var comp in Model.CompetitorList)
-                                {
-                                    <li>@comp</li>
-                                }
-                            </ul>
-                        </div>
+                    <div id="tabs-3">
                         <div class="col">
-                            <div id="groups">
-                            </div>
-                            <a onclick="addGroup()">Add Group</a>
+                            <ol id="sortable-1" class="ui-sortable">
+                                <lh>empty</lh>
+                            </ol>
+                        </div>
+                        <div class="col btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-secondary active">
+                                <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
+                            </label>
+                            <label class="btn btn-secondary">
+                                <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
+                            </label>
                         </div>
                     </div>
+
+                    <div id="tabs-4">
+                        <div class="row">
+                            <div class="col card bg-light">
+                                <ul id="sortable-2" class="ui-sortable sortable">
+                                    @foreach (var comp in Model.CompetitorList)
+                                    {
+                                        <li>@comp</li>
+                                    }
+                                </ul>
+                            </div>
+                            <div class="col">
+                                <div id="groups">
+                                </div>
+                                <a onclick="addGroup()">Add Group</a>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
                 </div>
-                <button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
             </div>
-        </div>
-        <br />
+            <br />
+        }
+    </dl>
+
+
 
         <table class="table table-bordered table-striped">
             <tr>
