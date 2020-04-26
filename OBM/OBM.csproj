@@ -187,6 +187,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Controllers\ErrorPageController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Models\API\ApiCredentials.cs" />
     <Compile Include="Models\AspNetUser.cs" />
     <Compile Include="Models\API\ChallongeApi.cs" />
+    <Compile Include="Models\Contact\Contact.cs" />
     <Compile Include="Models\Tournament.cs" />
     <Compile Include="Models\Competitor.cs" />
     <Compile Include="Models\Event.cs" />
@@ -436,6 +438,8 @@
     <Content Include="Views\Account\RegisterOptions.cshtml" />
     <Content Include="Views\Home\Search.cshtml" />
     <Content Include="Views\Events\Standings.cshtml" />
+    <Content Include="Views\Contact\Contact.cshtml" />
+    <Content Include="Views\Contact\EmailConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -15,8 +15,11 @@
                     <p><b>Description: </b>Reckless</p>
                     <p><b>Quote: </b>"<i>Be yourself; everyone else is already taken.</i>" -Oscar Wilde</p>
                 </div>
-                <div class="card-footer d-flex">
-                    <button class="btn registerbtn w-100">Contact</button>
+                <div class="card-footer">
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
                 </div>
             </div>
         </div>
@@ -39,7 +42,10 @@
                     <p><b>Quote: </b>"<i>Beeg Yoshi</i>" -Unknown</p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn registerbtn w-100">Contact</button>
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
                 </div>
             </div>
         </div>
@@ -54,7 +60,10 @@
                     <p><b>Quote: </b>"<i>Play Guilty Gear</i>" -Ashlyn Santiago</p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn registerbtn w-100">Contact</button>
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
                 </div>
             </div>
         </div>
@@ -69,7 +78,11 @@
                     <p><b>Quote: </b>"<i>Absence of evidence is not evidence of absence.</i>" -Carl Sagan</p>
                 </div>
                 <div class="card-footer">
-                    <button class="btn registerbtn w-100">Contact</button>
+                    @using (Html.BeginForm("Contact", "Contact", FormMethod.Get))
+                    {
+                        <button type="submit" class="btn registerbtn w-100">Contact</button>
+                    }
+
                 </div>
             </div>
         </div>
