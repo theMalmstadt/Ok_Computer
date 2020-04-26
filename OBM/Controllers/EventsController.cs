@@ -489,6 +489,15 @@ namespace OBM.Controllers
             }
         }
 
+        [HttpPost]
+        public JsonResult Seed(string json)
+        {
+            var newt = JObject.Parse(json);
+            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
+            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
+            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
+        }
+
         [HttpGet]
         public ActionResult Competitor(int? id)
         {
@@ -729,8 +738,15 @@ namespace OBM.Controllers
 
             foreach (var t in db.Tournaments.Where(x => x.EventID == id).ToList())
             {
+                string startButton = "";
+                if(t.IsStarted==false)
+                {
+                    startButton = "<button id=" + t.TournamentID + "\" style=\"width: 100 % \" onclick=StartTournament(" + t.TournamentID + ") >Start Tournament</button>";
+                }
+
+
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
-                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5><div>";
+                matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5>"+startButton+"<div>";
                 if (matchList.Any())
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
@@ -831,9 +847,7 @@ namespace OBM.Controllers
         public String MatchDetails(int matchApiId, int? tournamentApiId, String apiKey)    //takes a match from our db and finds its competitors apikeys
         {
             //get comp apikeys via match details  GET https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}.{json|xml}
-
             Debug.WriteLine("Keys for match lookup are:" + tournamentApiId + "   " + matchApiId);
-
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
             httpWebRequest.Method = "GET";
             Debug.WriteLine("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
@@ -844,21 +858,14 @@ namespace OBM.Controllers
                 {
                     var result = streamReader.ReadToEnd();
                     Debug.WriteLine("OPPS POOPS" + httpResponse);
-
                     return result;
-
                 }
-
             }
 
             catch (System.Net.WebException e)
             {
                 Debug.WriteLine(e);
             }
-
-
-
-
             return "";
         }
 
@@ -1025,6 +1032,57 @@ namespace OBM.Controllers
 
         }
 
+        [HttpPost]
+        public void StartTournament()
+        {
+
+            var tournamentId = int.Parse(Request.Params["Id"]);
+            var tournamentApiId = db.Tournaments.Find(tournamentId).ApiId;
+            var userid = HttpContext.User.Identity.GetUserId();
+            var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId+"/start.json" );
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            JObject myJson = new JObject();
+            myJson.Add("tournament", tournamentApiId);
+            myJson.Add("api_key", apiKey);
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+
+
+                streamWriter.Write(myJson);
+            }
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+
+
+
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
+                Debug.WriteLine(httpResponse);
+            }
+
+            catch (System.Net.WebException e)
+            {
+
+
+            }
+
+        }
+
+
+
+
+
+
+
+
         public void MatchUpdate(int? id)
         {
             string api_key = HttpContext.GetOwinContext().Get<ApplicationUserManager>().FindById(db.Events.Find(id).OrganizerID).ApiKey;
@@ -1032,6 +1090,8 @@ namespace OBM.Controllers
             {
                 if (t.IsStarted == true)
                 {
+                    try { 
+
                     string uriPart = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
                     string participantsData = SendRequest(uriPart);
                     var participantsObject = JToken.Parse(participantsData);
@@ -1042,56 +1102,62 @@ namespace OBM.Controllers
 
                     var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
 
-                    foreach (var m in chalMatchObject)
-                    {
-                        int matchID = (int)m["match"]["id"];
-                        var temp = db.Matches.Where(x => x.ApiID == matchID).First();
-                        var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
-                        // if (temp.UpdatedAt != chalUpdatedTime)
+                        foreach (var m in chalMatchObject)
                         {
-                            temp.UpdatedAt = chalUpdatedTime;
+                            int matchID = (int)m["match"]["id"];
+                            var temp = db.Matches.Where(x => x.ApiID == matchID).First();
+                            var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
+                            // if (temp.UpdatedAt != chalUpdatedTime)
+                            {
+                                temp.UpdatedAt = chalUpdatedTime;
 
-                            if (m["match"]["player1_id"].ToString() != "")
-                            {
-                                string tempPart1 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
-                                temp.Competitor1ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart1).First().CompetitorID;
-                            }
-                            else
-                            {
-                                temp.Competitor1ID = null;
-                            }
-                            if (m["match"]["player2_id"].ToString() != "")
-                            {
-                                string tempPart2 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
-                                temp.Competitor2ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart2).First().CompetitorID;
-                            }
-                            else
-                            {
-                                temp.Competitor2ID = null;
-                            }
-                            if (m["match"]["scores-csv"] == null)
-                            {
-                                temp.Score1 = null;
-                                temp.Score2 = null;
-                            }
-                            else
-                            {
-                                string chalScore = (string)m["match"]["scores-csv"];
-                                int firstHyph = chalScore.IndexOf('-');
-                                if (firstHyph != 0)
+                                if (m["match"]["player1_id"].ToString() != "")
                                 {
-                                    temp.Score1 = Int32.Parse(chalScore.Substring(0, chalScore.IndexOf('-')));
-                                    temp.Score2 = Int32.Parse(chalScore.Substring(chalScore.IndexOf('-') + 1));
+                                    string tempPart1 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
+                                    temp.Competitor1ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart1).First().CompetitorID;
                                 }
                                 else
                                 {
-                                    int secondHyph = chalScore.IndexOf('-', 1);
-                                    temp.Score1 = Int32.Parse(chalScore.Substring(0, secondHyph));
-                                    temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph + 1));
+                                    temp.Competitor1ID = null;
                                 }
+                                if (m["match"]["player2_id"].ToString() != "")
+                                {
+                                    string tempPart2 = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
+                                    temp.Competitor2ID = db.Competitors.Where(x => x.EventID == id).Where(x => x.CompetitorName == tempPart2).First().CompetitorID;
+                                }
+                                else
+                                {
+                                    temp.Competitor2ID = null;
+                                }
+                                if (m["match"]["scores-csv"] == null)
+                                {
+                                    temp.Score1 = null;
+                                    temp.Score2 = null;
+                                }
+                                else
+                                {
+                                    string chalScore = (string)m["match"]["scores-csv"];
+                                    int firstHyph = chalScore.IndexOf('-');
+                                    if (firstHyph != 0)
+                                    {
+                                        temp.Score1 = Int32.Parse(chalScore.Substring(0, chalScore.IndexOf('-')));
+                                        temp.Score2 = Int32.Parse(chalScore.Substring(chalScore.IndexOf('-') + 1));
+                                    }
+                                    else
+                                    {
+                                        int secondHyph = chalScore.IndexOf('-', 1);
+                                        temp.Score1 = Int32.Parse(chalScore.Substring(0, secondHyph));
+                                        temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph + 1));
+                                    }
+                                }
+                                db.SaveChanges();
                             }
-                            db.SaveChanges();
                         }
+                   
+                    }
+                    catch
+                    {
+                        Debug.Write("A request failed in matchlist() and threw an exception :,(");
                     }
                 }
             }

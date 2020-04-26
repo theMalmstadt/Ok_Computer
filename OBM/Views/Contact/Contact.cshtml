@@ -1,0 +1,63 @@
+﻿@model OBM.Models.Contact.Contact
+@using reCAPTCHA.MVC
+
+@{
+    ViewBag.Title = "Support Page";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="card w-50 mx-auto">
+    <div class="card-header bg-secondary text-light text-center">
+        <h2>
+            Contact Support
+        </h2>
+    </div>
+    <div class="card-body bg-dark text-light">
+        @using (Html.BeginForm("ContactForm", "Contact", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                @Html.ValidationMessageFor(m => m.SenderEmail, "", new { @class = "text-danger" })
+                @Html.LabelFor(m => m.SenderEmail, new { @class = "col control-label" })
+            </div>
+            <div class="row">
+                @Html.TextBoxFor(m => m.SenderEmail, new { @class = "col form-control", placeholder = "Enter Your Email" })
+            </div>
+            <div class="row">
+                @Html.ValidationMessageFor(m => m.SenderName, "", new { @class = "text-danger" })
+                @Html.LabelFor(m => m.SenderName, new { @class = "col control-label" })
+            </div>
+            <div class="row">
+                @Html.TextBoxFor(m => m.SenderName, new { @class = "col form-control", placeholder = "Enter Your Name" })
+            </div>
+            <div class="row">
+                @Html.ValidationMessageFor(m => m.EmailSubject, "", new { @class = "text-danger" })
+                @Html.LabelFor(m => m.EmailSubject, new { @class = "col control-label" })
+            </div>
+            <div class="row">
+                @Html.TextBoxFor(m => m.EmailSubject, new { @class = "col form-control", placeholder = "Enter Username" })
+            </div>
+            <div class="row">
+                @Html.ValidationMessageFor(m => m.EmailBody, "", new { @class = "text-danger" })
+                @Html.LabelFor(m => m.EmailBody, new { @class = "col control-label" })
+            </div>
+            <div class="row pb-2">
+                @Html.TextAreaFor(m => m.EmailBody, new { @class = "col form-control" })
+            </div>
+
+            @Html.Recaptcha()
+            @Html.ValidationMessage("ReCaptcha")
+
+            <div class="row">
+                <div class="col-md-6 pt-3">
+                    <input type="submit" class="btn createbtn" value="Submit" />
+                    @Html.ActionLink("Cancel", "Index", "Home", null, new { @class = "btn  registerbtn ml-3" })
+                </div>
+            </div>
+        }
+    </div>
+    <div class="card-footer bg-secondary text-light">
+        <h6>Don't know who the Developers are? <a id="accountLink" href="~/Home/About">Click Here</a></h6>
+    </div>
+</div>

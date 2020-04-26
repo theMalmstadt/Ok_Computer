@@ -8,6 +8,7 @@
 
     if (ViewBag.Access == true)
     {
+
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -49,6 +50,9 @@
                         <option value="Bulk">
                             Bulk Participants
                         </option>
+                        <option value="CSV">
+                            CSV file
+                        </option>
                     </select>
                     <br />
 
@@ -83,12 +87,38 @@
                     </div>
                 </dd>
             }
-
         </dl>
+
+        <dl class="dl-horizontal">
+            @using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
+            {
+                <dt></dt>
+                <dd>
+                    <div class="CSV" id="participantOptions">
+                        <div>
+                            <i>upload a .CSV file with each participant alone on each line</i>
+                        </div>
+                        <label for="bulkadd">Bulk add Participants:</label>
+                        <br />
+                        <input type="hidden" name="bulkadd" id="bulkadd" />
+
+                        <input type="file" name="CSV" accept=".csv" id="CSV" />
+                        <input type="submit" value="Submit" class="btn createbtn" />
+                        <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
+                        <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                        <br />
+
+
+                    </div>
+                    <div id="participantsParsedList"></div>
+                </dd>
+
+            }
+        </dl>
+
         <button type="button" onclick="hideShow('seed-div');">Seed</button>
         <br />
-
-        <div class="container card border-success">
+        <div id="seed-div" class="container card border-success" style="display:none">
             <div class="row card-body">
                 <ul class="nav nav-pills nav-stacked col col-lg-2">
                     <li class="nav-item"><a id="select" class="nav-link active" href="#tab_a" data-toggle="pill">Select Competitors</a></li>
@@ -145,19 +175,20 @@
             </div>
         </div>
     }
+        <br />
 
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Brackets</th>
-        </tr>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
 
-    </table>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Competitors</th>
-        </tr>
-    </table>
-</div>
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Competitors</th>
+            </tr>
+        </table>
+    </div>
 
         <input id="EventID" type="hidden" value="@Model.EventID" />
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />
