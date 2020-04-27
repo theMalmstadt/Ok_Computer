@@ -90,7 +90,7 @@ function download(filename, text) {
 }
 
 // Start file download.
-document.getElementById("dwn-btn").addEventListener("click", function () {
+function updateAll(){
     // Generate download of hello.txt file with some content
     var text = document.getElementById("round").value;
     var filename = "round.txt";
@@ -111,7 +111,7 @@ document.getElementById("dwn-btn").addEventListener("click", function () {
     text = document.getElementById("score2").value;
     filename = "score2.txt";
     download(filename, text);
-}, false);
+}
 
 function toggleStream() {
     var x = document.getElementById("streamForm");
@@ -120,6 +120,25 @@ function toggleStream() {
     } else {
         x.style.display = "none";
     }
+}
+
+function StreamMatch(round, player1, player2) {
+    var field = document.getElementById("round");
+    field.value = round;
+
+    field = document.getElementById("player1");
+    field.value = player1;
+
+    field = document.getElementById("score1");
+    field.value = 0;
+
+    field = document.getElementById("player2");
+    field.value = player2;
+
+    field = document.getElementById("score2");
+    field.value = 0;
+
+    updateAll();
 }
 
 function StartMatch(mymatch)
