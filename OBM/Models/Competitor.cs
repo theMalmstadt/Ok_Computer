@@ -18,7 +18,7 @@
 
         public int CompetitorID { get; set; }
 
-
+        [Required]
         [StringLength(128)]
         public string CompetitorName { get; set; }
 

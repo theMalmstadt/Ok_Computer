@@ -346,10 +346,14 @@ namespace OBM.Controllers
         [CaptchaValidator]
         public ActionResult UpdateContact(Competitor competitor)
         {
-            
-            
+            var dbCompetitior = db.Competitors.FirstOrDefault(c => c.CompetitorID.Equals(competitor.CompetitorID));
 
-            return RedirectToAction("Manage", "Events", new { competitor.EventID });
+            dbCompetitior.PhoneNumber = competitor.PhoneNumber;
+            dbCompetitior.CompetitorName = competitor.CompetitorName;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Manage", "Events", new { id = competitor.EventID });
         }
     }
 }

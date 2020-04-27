@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = "UpdateContact";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.EventID = Model.EventID;
 }
 
 <div class="card w-50 mx-auto">
@@ -18,17 +19,21 @@
             <div class="row">
                 @Html.LabelFor(m => m.PhoneNumber, new { @class = "col control-label" })
             </div>
-            <div class="row">
+            <div class="row pb-2">
                 @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "col form-control", placeholder = "555-555-5555", pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}" })
             </div>
+
+            @Html.HiddenFor(m => m.CompetitorID)
+            @Html.HiddenFor(m => m.CompetitorName)
+            @Html.HiddenFor(m => m.EventID)
 
             @Html.Recaptcha()
             @Html.ValidationMessage("ReCaptcha")
 
-            <div class="row">
+            <div class="row pt-2">
                 <div class="col-md-6">
                     <input type="submit" class="btn createbtn" value="Update" />
-                    @Html.ActionLink("Cancel", "Manage", "Events", new { Model.EventID }, new { @class = "btn  registerbtn ml-3" })
+                    @Html.ActionLink("Cancel", "Manage", "Events", new { id = ViewBag.EventID }, new { @class = "btn  registerbtn ml-3" })
                 </div>
             </div>
         }
