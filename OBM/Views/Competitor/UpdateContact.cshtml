@@ -1,0 +1,41 @@
+﻿@model OBM.Models.Competitor
+@using reCAPTCHA.MVC
+
+@{
+    ViewBag.Title = "UpdateContact";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.EventID = Model.EventID;
+}
+
+<div class="card w-50 mx-auto">
+    <div class="card-header bg-secondary text-light text-center">
+        <h2>@Model.CompetitorName</h2>
+        <h3>Update Contact Info</h3>
+    </div>
+    <div class="card-body bg-dark text-light">
+        @using (Html.BeginForm("UpdateContact", "Competitor", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                @Html.LabelFor(m => m.PhoneNumber, new { @class = "col control-label" })
+            </div>
+            <div class="row pb-2">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "col form-control", placeholder = "555-555-5555", pattern = "[0-9]{3}-[0-9]{3}-[0-9]{4}" })
+            </div>
+
+            @Html.HiddenFor(m => m.CompetitorID)
+            @Html.HiddenFor(m => m.CompetitorName)
+            @Html.HiddenFor(m => m.EventID)
+
+            @Html.Recaptcha()
+            @Html.ValidationMessage("ReCaptcha")
+
+            <div class="row pt-2">
+                <div class="col-md-6">
+                    <input type="submit" class="btn createbtn" value="Update" />
+                    @Html.ActionLink("Cancel", "Manage", "Events", new { id = ViewBag.EventID }, new { @class = "btn  registerbtn ml-3" })
+                </div>
+            </div>
+        }
+    </div>
+</div>
