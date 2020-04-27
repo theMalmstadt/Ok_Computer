@@ -18,7 +18,7 @@
 
         public int CompetitorID { get; set; }
 
-        [Required]
+
         [StringLength(128)]
         public string CompetitorName { get; set; }
 
@@ -29,6 +29,9 @@
         public string BusyState { get; set; }
 
         public virtual Event Event { get; set; }
+
+        [Display(Name = "Phone Number: ")]
+        public string PhoneNumber { get; set; }
 
         //[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         //public virtual ICollection<Match> Matches { get; set; }

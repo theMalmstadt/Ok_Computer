@@ -16,6 +16,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Web.Helpers;
+using reCAPTCHA.MVC;
 
 namespace OBM.Controllers
 {
@@ -247,8 +248,6 @@ namespace OBM.Controllers
 
             Debug.WriteLine(json);
 
-
-
             // First API call here
             // PUT request to clear all participants from Challonge Tournament
             DeleteCompetitors(tourn);
@@ -273,8 +272,7 @@ namespace OBM.Controllers
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "DELETE";
-
-           
+     
             //SEND REQUEST
 
             try
@@ -312,7 +310,7 @@ namespace OBM.Controllers
             httpWebRequest.Method = "POST";
 
 
-            //WRITEE DATA TO REQUEST BODY
+            //WRITE DATA TO REQUEST BODY
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 streamWriter.Write(json);
@@ -333,11 +331,25 @@ namespace OBM.Controllers
                 Debug.WriteLine("problem posting competitors with seeds to challonge");
                 return "seed posting failed :(";
             }
-                    
-
-
         }
 
+        [HttpGet]
+        public ActionResult UpdateContact(int id)
+        {
+            Competitor model = db.Competitors.Find(id);
+            return View(model);
+        }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [CaptchaValidator]
+        public ActionResult UpdateContact(Competitor competitor)
+        {
+            
+            
+
+            return RedirectToAction("Manage", "Events", new { competitor.EventID });
+        }
     }
 }
