@@ -197,8 +197,8 @@ namespace OBM.Controllers
                     }
                 }
 
-                var seededCompetitors = rankedCompetitors;
-                /*
+                //var seededCompetitors = rankedCompetitors;
+                var seededCompetitors = new List<string>();
                 if (seedObject["method"].ToString() == "seq")
                 {
                     seededCompetitors.AddRange(rankedCompetitors);
@@ -207,7 +207,7 @@ namespace OBM.Controllers
                 {
                     filteredGroups.Add(rankedCompetitors);
                 }
-                */
+                
 
                 foreach (var group in filteredGroups)
                 {
@@ -243,7 +243,7 @@ namespace OBM.Controllers
         {
             // Get this string to be accepted by Challonge first.
             // Once this string works, use the json argument above
-            var stringToSend = "{\"participants\":[{\"name\":\"comp1\",\"seed\":1},{\"name\":\"comp2\",\"seed\":2},{\"name\":\"comp3\",\"seed\":3},{\"name\":\"comp4\",\"seed\":4}]}";
+            //var stringToSend = "{\"participants\":[{\"name\":\"comp1\",\"seed\":1},{\"name\":\"comp2\",\"seed\":2},{\"name\":\"comp3\",\"seed\":3},{\"name\":\"comp4\",\"seed\":4}]}";
 
             Debug.WriteLine(json);
 

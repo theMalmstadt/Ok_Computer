@@ -34,7 +34,7 @@ $("#sortable-1").sortable({
 
 function addGroup() {
     groupCount++;
-    $("#groups").append("<div class=\"row card bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
+    $("#groups").append("<div class=\"row card border border-success bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
     var str = 'ul[name="group-' + groupCount + '"]';
     $(function () {
         var oldList, newList, item;

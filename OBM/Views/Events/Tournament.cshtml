@@ -120,10 +120,10 @@
         <br />
         <div id="seed-div" class="container card border-success" style="display:none">
             <div class="row card-body">
-                <ul class="nav nav-pills nav-stacked col col-lg-2">
-                    <li class="nav-item"><a id="select" class="nav-link active" href="#tab_a" data-toggle="pill">Select Competitors</a></li>
-                    <li class="nav-item"><a id="rank" class="nav-link" href="#tab_b" data-toggle="pill">Rank Selected</a></li>
-                    <li class="nav-item"><a id="group" class="nav-link" href="#tab_c" data-toggle="pill">Additional Seeding</a></li>
+                <ul class="nav nav-pills flex-column nav-stacked">
+                    <li class="nav-item" style="margin:10px 0;"><a id="select" class="nav-link text-nowrap active" href="#tab_a" data-toggle="pill">Select</a></li>
+                    <li class="nav-item" style="margin:10px 0;"><a id="rank" class="nav-link text-nowrap" href="#tab_b" data-toggle="pill">Rank</a></li>
+                    <li class="nav-item" style="margin:10px 0;"><a id="group" class="nav-link text-nowrap" href="#tab_c" data-toggle="pill">Group</a></li>
                     <li><button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button></li>
                     <li><p>@ViewBag.keyCheck</p></li>
                     <li><p>@ViewBag.Success</p></li>
@@ -134,34 +134,52 @@
                         <ul id="selectable-rank" class="ui-selectable">
                             @foreach (var comp in Model.CompetitorList)
                             {
-                                <li>@comp</li>
+                                <li class="card card-body">@comp</li>
                             }
                         </ul>
                     </div>
                     <div class="tab-pane" id="tab_b">
-                        <div class="col">
-                            <p>Assign the desired seed to all selected competitors</p>
-                            <ol id="sortable-1" class="ui-sortable">
-                                <lh></lh>
-                            </ol>
+                        <div class="row">
+                            <div class="col">
+                                <p>Assign the desired seed to all selected competitors</p>
+                                <ol id="sortable-1" class="ui-sortable">
+                                    <lh></lh>
+                                </ol>
+                            </div>
+                            <div class="col">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-success active">
+                                        <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
+                                    </label>
+                                    <label class="btn btn-success">
+                                        <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
+                                    </label>
+                                </div>
+                                <div class="card card-body">
+                                    <p>Traditional seed puts higher tier competitors against lower tier competitors.</p>
+                                    <p>Sequential seed puts similar tier competitors against each other. Only available if Challonge seed settings are set to sequential</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="tab-pane" id="tab_c">
                         <p>Add competitors to the same group to evenly distribute there seeds</p>
                         <div class="row">
-                            <div class="col card bg-light">
-                                <ul id="sortable-2" class="ui-sortable sortable">
-                                    <li class="hide">bottom</li>
-                                    @foreach (var comp in Model.CompetitorList)
-                                    {
-                                        <li>@comp</li>
-                                    }
-                                </ul>
+                            <div class="col">
+                                <div class="card bg-light border border-secondary">
+                                    <ul id="sortable-2" class="ui-sortable sortable">
+                                        <li class="hide">bottom</li>
+                                        @foreach (var comp in Model.CompetitorList)
+                                        {
+                                            <li>@comp</li>
+                                        }
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col">
                                 <div id="groups">
                                 </div>
-                                <a onclick="addGroup()">Add Group</a>
+                                <a onclick="addGroup()" style="color:#4ac959;">Add Group</a>
                             </div>
                         </div>
                     </div>
