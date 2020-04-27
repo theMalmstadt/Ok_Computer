@@ -165,14 +165,16 @@
                     <div class="tab-pane" id="tab_c">
                         <p>Add competitors to the same group to evenly distribute there seeds</p>
                         <div class="row">
-                            <div class="col card bg-light border border-secondary">
-                                <ul id="sortable-2" class="ui-sortable sortable">
-                                    <li class="hide">bottom</li>
-                                    @foreach (var comp in Model.CompetitorList)
-                                    {
-                                        <li>@comp</li>
-                                    }
-                                </ul>
+                            <div class="col">
+                                <div class="card bg-light border border-secondary">
+                                    <ul id="sortable-2" class="ui-sortable sortable">
+                                        <li class="hide">bottom</li>
+                                        @foreach (var comp in Model.CompetitorList)
+                                        {
+                                            <li>@comp</li>
+                                        }
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col">
                                 <div id="groups">
