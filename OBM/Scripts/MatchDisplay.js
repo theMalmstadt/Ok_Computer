@@ -86,6 +86,71 @@ function errorOnAjax() {
 
 window.setTimeout(ajax_call, 0);
 
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
+
+// Start file download.
+function updateAll(){
+    // Generate download of hello.txt file with some content
+    var text = document.getElementById("round").value;
+    var filename = "round.txt";
+    download(filename, text);
+
+    text = document.getElementById("player1").value;
+    filename = "player1.txt";
+    download(filename, text);
+
+    text = document.getElementById("score1").value;
+    filename = "score1.txt";
+    download(filename, text);
+
+    text = document.getElementById("player2").value;
+    filename = "player2.txt";
+    download(filename, text);
+
+    text = document.getElementById("score2").value;
+    filename = "score2.txt";
+    download(filename, text);
+}
+
+function toggleStream() {
+    var x = document.getElementById("streamForm");
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
+
+function StreamMatch(round, player1, player2) {
+    var field = document.getElementById("round");
+    field.value = round;
+
+    field = document.getElementById("player1");
+    field.value = player1;
+
+    field = document.getElementById("score1");
+    field.value = 0;
+
+    field = document.getElementById("player2");
+    field.value = player2;
+
+    field = document.getElementById("score2");
+    field.value = 0;
+
+    updateAll();
+}
+
 function StartMatch(mymatch)
 {
     console.log(mymatch);

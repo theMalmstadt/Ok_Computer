@@ -751,10 +751,26 @@ namespace OBM.Controllers
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
                     var LFinal = (int)matchList.MinBy(x => x.Round).First().Round;
+                    
                     foreach (var m in matchList)
                     {
+                        string matchRound = "-";
+                        matchRound = MatchRound(m, GFinal, LFinal);
+
                         matchStr += "<table class=\"table table-bordered\" style=\"display: inline-block; border: solid; border-color:black; width:350px\">";
                         matchStr += "<tr style=\"height:30px\"><td width=\"20%\">";
+                        string player1, player2;
+                        if (m.Competitor1ID != null)
+                            player1 = db.Competitors.Find(m.Competitor1ID).CompetitorName;
+                        else
+                            player1 = "-";
+
+                        if (m.Competitor2ID != null)
+                            player2 = db.Competitors.Find(m.Competitor2ID).CompetitorName;
+                        else
+                            player2 = "-";
+
+                        matchStr += "<button onclick=\"StreamMatch('" + matchRound + "', '" + player1 + "', '" + player2 + "')\">";
                         matchStr += m.Identifier;
                         matchStr += "</td><td width=\"55%\">";
 
@@ -769,7 +785,7 @@ namespace OBM.Controllers
                             matchStr += db.Matches.Find(m.PrereqMatch1ID).Identifier;
                         }
 
-                        matchStr += "</td><td width=\"25%\">";
+                        matchStr += "</button></td><td width=\"25%\">";
 
 
 
@@ -787,29 +803,7 @@ namespace OBM.Controllers
 
 
                         matchStr += "<tr><td>";
-                        if ((m.Round > 0) && (m.Round < (GFinal - 3)))
-                            matchStr += "W" + m.Round;
-                        else if ((m.Round < 0) && (m.Round > LFinal + 2))
-                            matchStr += "L" + Math.Abs((int)m.Round);
-                        else if (m.Round == GFinal)
-                        {
-                            if ((m.PrereqMatch1ID != null) && (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal))
-                                matchStr += "GFR";
-                            else
-                                matchStr += "GF";
-                        }
-                        else if (m.Round == GFinal - 1)
-                            matchStr += "WF";
-                        else if (m.Round == GFinal - 2)
-                            matchStr += "WSF";
-                        else if (m.Round == GFinal - 3)
-                            matchStr += "WQF";
-                        else if (m.Round == LFinal)
-                            matchStr += "LF";
-                        else if (m.Round == LFinal + 1)
-                            matchStr += "LSF";
-                        else if (m.Round == LFinal + 2)
-                            matchStr += "LQF";
+                        matchStr += matchRound;
                         matchStr += "</td><td>";
 
                         if (m.Competitor2ID != null)
@@ -842,6 +836,36 @@ namespace OBM.Controllers
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public string MatchRound(Match m, int GFinal, int LFinal)
+        {
+            string matchRound = "-";
+            if ((m.Round > 0) && (m.Round < (GFinal - 3)))
+                matchRound = "W" + m.Round;
+            else if ((m.Round < 0) && (m.Round > LFinal + 2))
+                matchRound = "L" + Math.Abs((int)m.Round);
+            else if (m.Round == GFinal)
+            {
+                if ((m.PrereqMatch1ID != null) && (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal))
+                    matchRound = "GFR";
+                else
+                    matchRound = "GF";
+            }
+            else if (m.Round == GFinal - 1)
+                matchRound = "WF";
+            else if (m.Round == GFinal - 2)
+                matchRound = "WSF";
+            else if (m.Round == GFinal - 3)
+                matchRound = "WQF";
+            else if (m.Round == LFinal)
+                matchRound = "LF";
+            else if (m.Round == LFinal + 1)
+                matchRound = "LSF";
+            else if (m.Round == LFinal + 2)
+                matchRound = "LQF";
+
+            return (matchRound);
         }
 
         public String MatchDetails(int matchApiId, int? tournamentApiId, String apiKey)    //takes a match from our db and finds its competitors apikeys
