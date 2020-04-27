@@ -7,6 +7,9 @@
     <link href="~/Media/OKicon.ico" rel="shortcut icon" type="image/x-icon" />
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Styles.Render("~/Content/jquery-ui.css")
+    @Styles.Render("~/Content/jquery-ui.structure.css")
+    @Styles.Render("~/Content/jquery-ui.theme.css")
     @Styles.Render("~/Content/Site.css")
 </head>
 
@@ -23,7 +26,7 @@
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
                 <li><i>@Html.ActionLink("OK Brackets", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "nav-item" })</i></li>
-                <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link pt-2", @id = "nav-item" })</i></li>
                 <li><i>@Html.ActionLink("Tournaments", "Index", "Events", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
             </ul>
 
