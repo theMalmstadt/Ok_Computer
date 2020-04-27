@@ -92,7 +92,7 @@ nav {
 }
 
 .navbar-brand, .nav-link {
-    color: #E7E8E9 !important;
+    color: #E7E8E9;
     padding: 4%;
     font-size: 200%;
 }
@@ -203,12 +203,6 @@ table.table-bordered > tbody > tr > td {
     column-gap: 2px;
 }
 
-#tabs-1 {
-    font-size: 14px;
-    color: #4ac959;
-    width: 50%;
-}
-
 .ui-widget-header {
     background: #58585A;
     color: #4ac959;
@@ -221,5 +215,10 @@ table.table-bordered > tbody > tr > td {
 
 #select, #rank, #group {
     font-size: 100%;
+    color: #4ac959;
 }
 
+.nav-pills .nav-link.active {
+    color: #58585A !important;
+    background-color: #4ac959;
+}

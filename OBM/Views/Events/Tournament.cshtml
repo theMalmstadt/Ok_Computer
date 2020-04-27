@@ -130,6 +130,7 @@
                 </ul>
                 <div class="tab-content col">
                     <div class="tab-pane active" id="tab_a">
+                        <p>Select all the competitors you want seed</p>
                         <ul id="selectable-rank" class="ui-selectable">
                             @foreach (var comp in Model.CompetitorList)
                             {
@@ -138,26 +139,19 @@
                         </ul>
                     </div>
                     <div class="tab-pane" id="tab_b">
-                        <div class="row">
-                            <div class="col">
-                                <ol id="sortable-1" class="ui-sortable">
-                                    <lh>empty</lh>
-                                </ol>
-                            </div>
-                            <div class="col btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-success active">
-                                    <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
-                                </label>
-                                <label class="btn btn-success">
-                                    <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
-                                </label>
-                            </div>
+                        <div class="col">
+                            <p>Assign the desired seed to all selected competitors</p>
+                            <ol id="sortable-1" class="ui-sortable">
+                                <lh></lh>
+                            </ol>
                         </div>
                     </div>
                     <div class="tab-pane" id="tab_c">
+                        <p>Add competitors to the same group to evenly distribute there seeds</p>
                         <div class="row">
                             <div class="col card bg-light">
                                 <ul id="sortable-2" class="ui-sortable sortable">
+                                    <li class="hide">bottom</li>
                                     @foreach (var comp in Model.CompetitorList)
                                     {
                                         <li>@comp</li>

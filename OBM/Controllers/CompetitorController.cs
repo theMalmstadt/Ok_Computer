@@ -197,8 +197,8 @@ namespace OBM.Controllers
                     }
                 }
 
-                var seededCompetitors = new List<string>();
-
+                var seededCompetitors = rankedCompetitors;
+                /*
                 if (seedObject["method"].ToString() == "seq")
                 {
                     seededCompetitors.AddRange(rankedCompetitors);
@@ -207,6 +207,7 @@ namespace OBM.Controllers
                 {
                     filteredGroups.Add(rankedCompetitors);
                 }
+                */
 
                 foreach (var group in filteredGroups)
                 {
@@ -218,15 +219,15 @@ namespace OBM.Controllers
                 }
                 seededCompetitors.AddRange(leftovers);
 
-                var sendingJson = "[";
+                var sendingJson = "{\"participants\":[";
                 var count = 1;
                 foreach (var comp in seededCompetitors)
                 {
-                    sendingJson += "{'name':'" + comp + "','seed':" + count + "}},";
+                    sendingJson += "{\"name\":\"" + comp + "\",\"seed\":" + count + "},";
                     count++;
                 }
                 sendingJson = sendingJson.Remove(sendingJson.Length - 1);
-                sendingJson += "]";
+                sendingJson += "]}";
 
                 var response = sendSeed(sendingJson, found);
 
@@ -302,7 +303,7 @@ namespace OBM.Controllers
 
             // POST https://api.challonge.com/v1/tournaments/{tournament}/participants/bulk_add.{json|xml}
             string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + "/participants/bulk_add.json?"+apikeyString;
-            Debug.WriteLine(json);
+            //Debug.WriteLine(json);
 
 
             //CONFIGURE REQUEST
