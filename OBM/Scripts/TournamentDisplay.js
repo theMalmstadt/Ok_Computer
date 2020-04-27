@@ -1,21 +1,17 @@
 ﻿var groupCount = 0;
 var rankList = [];
 
-$(function () {
-    $("#tabs-1").tabs({
-        activate: function (event, ui) {
-            var ls = [];
-            var $variable = $('.ui-selected').each(function () {
-                ls.push($(this).text())
-            });
-            updateSortable(ls);
-        }
-    });
-});
-
 $("#selectable-rank").bind("mousedown", function (e) {
     e.metaKey = true;
-}).selectable();
+}).selectable({
+    stop: function (event, ui) {
+        var ls = [];
+        var $variable = $('.ui-selected').each(function () {
+            ls.push($(this).text())
+        });
+        updateSortable(ls);
+    }
+});
 
 function updateSortable(ls) {
     var temp = rankList.concat(ls);
@@ -24,7 +20,7 @@ function updateSortable(ls) {
     //console.log(rankList);
     $("#sortable-1").empty();
     for (var i = 0; i < rankList.length; i++) {
-        $("#sortable-1").append("<li id=\"" + rankList[i] + "\">" + rankList[i] + "</li>");
+        $("#sortable-1").append("<li class=\"sortableRank\" id=\"" + rankList[i] + "\">" + rankList[i] + "</li>");
     }
 }
 
@@ -102,7 +98,7 @@ function saveSeed() {
         type: 'POST',
         url: '/Competitor/Seed?json=' + encodeURIComponent(JSON.stringify(data)),
         dataType: "json",
-        success: console.log("seed sent to Challonge"),
+        success: console.log("seed sent to Challonge:", JSON.stringify(data)),
         error: errorOnAjax
     });
 }

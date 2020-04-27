@@ -422,7 +422,7 @@ namespace OBM.Controllers
                         {
                             ViewBag.keyCheck = "";
 
-                            var eventCompList = db.Competitors.Where(x => x.EventID == motherEvent.EventID).Select(y => y.CompetitorName).ToList(); ;
+                            var eventCompList = new List<string>();   //db.Competitors.Where(x => x.EventID == motherEvent.EventID).Select(y => y.CompetitorName).ToList(); ;
 
                             string participantRoute = @"https://api.challonge.com/v1/tournaments/" + found.UrlString + "/participants.json?api_key=" + api_key;
                             string responseParticipants = "";
