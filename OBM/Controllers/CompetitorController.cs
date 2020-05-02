@@ -16,6 +16,7 @@ using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Web.Helpers;
+using reCAPTCHA.MVC;
 
 namespace OBM.Controllers
 {
@@ -197,8 +198,8 @@ namespace OBM.Controllers
                     }
                 }
 
+                //var seededCompetitors = rankedCompetitors;
                 var seededCompetitors = new List<string>();
-
                 if (seedObject["method"].ToString() == "seq")
                 {
                     seededCompetitors.AddRange(rankedCompetitors);
@@ -207,6 +208,7 @@ namespace OBM.Controllers
                 {
                     filteredGroups.Add(rankedCompetitors);
                 }
+                
 
                 foreach (var group in filteredGroups)
                 {
@@ -218,15 +220,15 @@ namespace OBM.Controllers
                 }
                 seededCompetitors.AddRange(leftovers);
 
-                var sendingJson = "[";
+                var sendingJson = "{\"participants\":[";
                 var count = 1;
                 foreach (var comp in seededCompetitors)
                 {
-                    sendingJson += "{'name':'" + comp + "','seed':" + count + "}},";
+                    sendingJson += "{\"name\":\"" + comp + "\",\"seed\":" + count + "},";
                     count++;
                 }
                 sendingJson = sendingJson.Remove(sendingJson.Length - 1);
-                sendingJson += "]";
+                sendingJson += "]}";
 
                 var response = sendSeed(sendingJson, found);
 
@@ -242,11 +244,9 @@ namespace OBM.Controllers
         {
             // Get this string to be accepted by Challonge first.
             // Once this string works, use the json argument above
-            var stringToSend = "{\"participants\":[{\"name\":\"comp1\",\"seed\":1},{\"name\":\"comp2\",\"seed\":2},{\"name\":\"comp3\",\"seed\":3},{\"name\":\"comp4\",\"seed\":4}]}";
+            //var stringToSend = "{\"participants\":[{\"name\":\"comp1\",\"seed\":1},{\"name\":\"comp2\",\"seed\":2},{\"name\":\"comp3\",\"seed\":3},{\"name\":\"comp4\",\"seed\":4}]}";
 
             Debug.WriteLine(json);
-
-
 
             // First API call here
             // PUT request to clear all participants from Challonge Tournament
@@ -272,8 +272,7 @@ namespace OBM.Controllers
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "DELETE";
-
-           
+     
             //SEND REQUEST
 
             try
@@ -302,7 +301,7 @@ namespace OBM.Controllers
 
             // POST https://api.challonge.com/v1/tournaments/{tournament}/participants/bulk_add.{json|xml}
             string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + "/participants/bulk_add.json?"+apikeyString;
-            Debug.WriteLine(json);
+            //Debug.WriteLine(json);
 
 
             //CONFIGURE REQUEST
@@ -311,7 +310,7 @@ namespace OBM.Controllers
             httpWebRequest.Method = "POST";
 
 
-            //WRITEE DATA TO REQUEST BODY
+            //WRITE DATA TO REQUEST BODY
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
                 streamWriter.Write(json);
@@ -332,11 +331,29 @@ namespace OBM.Controllers
                 Debug.WriteLine("problem posting competitors with seeds to challonge");
                 return "seed posting failed :(";
             }
-                    
-
-
         }
 
+        [HttpGet]
+        public ActionResult UpdateContact(int id)
+        {
+            Competitor model = db.Competitors.Find(id);
+            return View(model);
+        }
 
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [CaptchaValidator]
+        public ActionResult UpdateContact(Competitor competitor)
+        {
+            var dbCompetitior = db.Competitors.FirstOrDefault(c => c.CompetitorID.Equals(competitor.CompetitorID));
+
+            dbCompetitior.PhoneNumber = competitor.PhoneNumber;
+            dbCompetitior.CompetitorName = competitor.CompetitorName;
+
+            db.SaveChanges();
+
+            return RedirectToAction("Manage", "Events", new { id = competitor.EventID });
+        }
     }
 }

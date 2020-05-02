@@ -29,11 +29,15 @@
 
         <dt>Challonge URL:</dt>
         <dd><a href="https://challonge.com/@Html.DisplayFor(model => model.UrlString)">https://challonge.com/@Html.DisplayFor(model => model.UrlString)</a></dd>
-        @if (Model.IsStarted == "No")
-        {
-            <p>@TempData["Result"]</p>
-            using (Html.BeginForm("AddSingleParticipant", "Competitor", FormMethod.Post))
+
+    </dl>
+    @if (Model.IsStarted == "No")
+    {
+        <p>@TempData["Result"]</p>
+        <dl class="dl-horizontal">
+            @using (Html.BeginForm("AddSingleParticipant", "Competitor", FormMethod.Post))
             {
+
                 <dt>Add Participants:</dt>
                 <dd>
                     <select name="options" id="options">
@@ -62,7 +66,11 @@
                     </div>
                 </dd>
             }
-            using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
+
+        </dl>
+
+        <dl class="dl-horizontal">
+            @using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
             {
                 <dt></dt>
                 <dd>
@@ -79,9 +87,10 @@
                     </div>
                 </dd>
             }
+        </dl>
 
-
-            using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
+        <dl class="dl-horizontal">
+            @using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
             {
                 <dt></dt>
                 <dd>
@@ -105,86 +114,93 @@
                 </dd>
 
             }
+        </dl>
 
-
-
-
-            <button type="button" onclick="hideShow('seed-div');">Seed</button>
-            <br />
-
-            <div id="seed-div" style="display:none">
-                <div id="tabs-1">
-                    <p>@ViewBag.keyCheck</p>
-                    <p>@ViewBag.Success</p>
-
-                    <ul>
-                        <li><a href="#tabs-2">Select Competitors</a></li>
-                        <li><a href="#tabs-3">Rank Selected</a></li>
-                        <li><a href="#tabs-4">Additional Seeding</a></li>
-                    </ul>
-
-                    <div id="tabs-2">
+        <button type="button" onclick="hideShow('seed-div');">Seed</button>
+        <br />
+        <div id="seed-div" class="container card border-success" style="display:none">
+            <div class="row card-body">
+                <ul class="nav nav-pills flex-column nav-stacked">
+                    <li class="nav-item" style="margin:10px 0;"><a id="select" class="nav-link text-nowrap active" href="#tab_a" data-toggle="pill">Select</a></li>
+                    <li class="nav-item" style="margin:10px 0;"><a id="rank" class="nav-link text-nowrap" href="#tab_b" data-toggle="pill">Rank</a></li>
+                    <li class="nav-item" style="margin:10px 0;"><a id="group" class="nav-link text-nowrap" href="#tab_c" data-toggle="pill">Group</a></li>
+                    <li><button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button></li>
+                    <li><p>@ViewBag.keyCheck</p></li>
+                    <li><p>@ViewBag.Success</p></li>
+                </ul>
+                <div class="tab-content col">
+                    <div class="tab-pane active" id="tab_a">
+                        <p>Select all the competitors you want seed</p>
                         <ul id="selectable-rank" class="ui-selectable">
                             @foreach (var comp in Model.CompetitorList)
                             {
-                                <li>@comp</li>
+                                <li class="card card-body">@comp</li>
                             }
                         </ul>
                     </div>
-
-                    <div id="tabs-3">
-                        <div class="col">
-                            <ol id="sortable-1" class="ui-sortable">
-                                <lh>empty</lh>
-                            </ol>
-                        </div>
-                        <div class="col btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-secondary active">
-                                <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
-                            </label>
-                            <label class="btn btn-secondary">
-                                <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
-                            </label>
+                    <div class="tab-pane" id="tab_b">
+                        <div class="row">
+                            <div class="col">
+                                <p>Assign the desired seed to all selected competitors</p>
+                                <ol id="sortable-1" class="ui-sortable">
+                                    <lh></lh>
+                                </ol>
+                            </div>
+                            <div class="col">
+                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                    <label class="btn btn-success active">
+                                        <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
+                                    </label>
+                                    <label class="btn btn-success">
+                                        <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
+                                    </label>
+                                </div>
+                                <div class="card card-body">
+                                    <p>Traditional seed puts higher tier competitors against lower tier competitors.</p>
+                                    <p>Sequential seed puts similar tier competitors against each other. Only available if Challonge seed settings are set to sequential</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-                    <div id="tabs-4">
+                    <div class="tab-pane" id="tab_c">
+                        <p>Add competitors to the same group to evenly distribute there seeds</p>
                         <div class="row">
-                            <div class="col card bg-light">
-                                <ul id="sortable-2" class="ui-sortable sortable">
-                                    @foreach (var comp in Model.CompetitorList)
-                                    {
-                                        <li>@comp</li>
-                                    }
-                                </ul>
+                            <div class="col">
+                                <div class="card bg-light border border-secondary">
+                                    <ul id="sortable-2" class="ui-sortable sortable">
+                                        <li class="hide">bottom</li>
+                                        @foreach (var comp in Model.CompetitorList)
+                                        {
+                                            <li>@comp</li>
+                                        }
+                                    </ul>
+                                </div>
                             </div>
                             <div class="col">
                                 <div id="groups">
                                 </div>
-                                <a onclick="addGroup()">Add Group</a>
+                                <a onclick="addGroup()" style="color:#4ac959;">Add Group</a>
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button>
                 </div>
             </div>
-            <br />
-        }
-    </dl>
+        </div>
+    }
+        <br />
 
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Brackets</th>
+            </tr>
 
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Brackets</th>
-        </tr>
-
-    </table>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th>Competitors</th>
-        </tr>
-    </table>
-</div>
+        </table>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Competitors</th>
+            </tr>
+        </table>
+    </div>
 
         <input id="EventID" type="hidden" value="@Model.EventID" />
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />

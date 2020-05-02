@@ -422,7 +422,7 @@ namespace OBM.Controllers
                         {
                             ViewBag.keyCheck = "";
 
-                            var eventCompList = db.Competitors.Where(x => x.EventID == motherEvent.EventID).Select(y => y.CompetitorName).ToList(); ;
+                            var eventCompList = new List<string>();   //db.Competitors.Where(x => x.EventID == motherEvent.EventID).Select(y => y.CompetitorName).ToList(); ;
 
                             string participantRoute = @"https://api.challonge.com/v1/tournaments/" + found.UrlString + "/participants.json?api_key=" + api_key;
                             string responseParticipants = "";
@@ -705,7 +705,7 @@ namespace OBM.Controllers
             CompetitorUpdate(id);
 
             var j = 0;
-            string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th></tr>";
+            string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th><th>Phone Number</th><th></th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
                 var state = "";
@@ -720,8 +720,19 @@ namespace OBM.Controllers
                     col = "success";
                     state = "a";
                 }
-                compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
-                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td></tr>";
+                if(i.PhoneNumber != null)
+                {
+                    compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
+                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td>" +
+                              "<td>" + i.PhoneNumber + "</td><td><a href=\"/Competitor/UpdateContact/"+ i.CompetitorID +"\">Update</a></td></tr>";
+                }
+                else
+                {
+                    compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
+                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td>" +
+                              "<td>None</td><td><a href=\"/Competitor/UpdateContact/" + i.CompetitorID + "\">Add</a></td></tr>";
+                }
+                
             }
             compStr += "</table>";
             var data = new
@@ -751,10 +762,26 @@ namespace OBM.Controllers
                 {
                     var GFinal = (int)matchList.MaxBy(x => x.Round).First().Round;
                     var LFinal = (int)matchList.MinBy(x => x.Round).First().Round;
+                    
                     foreach (var m in matchList)
                     {
+                        string matchRound = "-";
+                        matchRound = MatchRound(m, GFinal, LFinal);
+
                         matchStr += "<table class=\"table table-bordered\" style=\"display: inline-block; border: solid; border-color:black; width:350px\">";
                         matchStr += "<tr style=\"height:30px\"><td width=\"20%\">";
+                        string player1, player2;
+                        if (m.Competitor1ID != null)
+                            player1 = db.Competitors.Find(m.Competitor1ID).CompetitorName;
+                        else
+                            player1 = "-";
+
+                        if (m.Competitor2ID != null)
+                            player2 = db.Competitors.Find(m.Competitor2ID).CompetitorName;
+                        else
+                            player2 = "-";
+
+                        matchStr += "<button onclick=\"StreamMatch('" + matchRound + "', '" + player1 + "', '" + player2 + "')\">";
                         matchStr += m.Identifier;
                         matchStr += "</td><td width=\"55%\">";
 
@@ -769,7 +796,7 @@ namespace OBM.Controllers
                             matchStr += db.Matches.Find(m.PrereqMatch1ID).Identifier;
                         }
 
-                        matchStr += "</td><td width=\"25%\">";
+                        matchStr += "</button></td><td width=\"25%\">";
 
 
 
@@ -787,29 +814,7 @@ namespace OBM.Controllers
 
 
                         matchStr += "<tr><td>";
-                        if ((m.Round > 0) && (m.Round < (GFinal - 3)))
-                            matchStr += "W" + m.Round;
-                        else if ((m.Round < 0) && (m.Round > LFinal + 2))
-                            matchStr += "L" + Math.Abs((int)m.Round);
-                        else if (m.Round == GFinal)
-                        {
-                            if ((m.PrereqMatch1ID != null) && (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal))
-                                matchStr += "GFR";
-                            else
-                                matchStr += "GF";
-                        }
-                        else if (m.Round == GFinal - 1)
-                            matchStr += "WF";
-                        else if (m.Round == GFinal - 2)
-                            matchStr += "WSF";
-                        else if (m.Round == GFinal - 3)
-                            matchStr += "WQF";
-                        else if (m.Round == LFinal)
-                            matchStr += "LF";
-                        else if (m.Round == LFinal + 1)
-                            matchStr += "LSF";
-                        else if (m.Round == LFinal + 2)
-                            matchStr += "LQF";
+                        matchStr += matchRound;
                         matchStr += "</td><td>";
 
                         if (m.Competitor2ID != null)
@@ -842,6 +847,36 @@ namespace OBM.Controllers
             };
 
             return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public string MatchRound(Match m, int GFinal, int LFinal)
+        {
+            string matchRound = "-";
+            if ((m.Round > 0) && (m.Round < (GFinal - 3)))
+                matchRound = "W" + m.Round;
+            else if ((m.Round < 0) && (m.Round > LFinal + 2))
+                matchRound = "L" + Math.Abs((int)m.Round);
+            else if (m.Round == GFinal)
+            {
+                if ((m.PrereqMatch1ID != null) && (db.Matches.Find(m.PrereqMatch1ID).Round == GFinal))
+                    matchRound = "GFR";
+                else
+                    matchRound = "GF";
+            }
+            else if (m.Round == GFinal - 1)
+                matchRound = "WF";
+            else if (m.Round == GFinal - 2)
+                matchRound = "WSF";
+            else if (m.Round == GFinal - 3)
+                matchRound = "WQF";
+            else if (m.Round == LFinal)
+                matchRound = "LF";
+            else if (m.Round == LFinal + 1)
+                matchRound = "LSF";
+            else if (m.Round == LFinal + 2)
+                matchRound = "LQF";
+
+            return (matchRound);
         }
 
         public String MatchDetails(int matchApiId, int? tournamentApiId, String apiKey)    //takes a match from our db and finds its competitors apikeys
@@ -1090,22 +1125,41 @@ namespace OBM.Controllers
             {
                 if (t.IsStarted == true)
                 {
-                    try { 
+                    
+                    
 
                     string uriPart = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
                     string participantsData = SendRequest(uriPart);
                     var participantsObject = JToken.Parse(participantsData);
-
+                    
                     string uriMatch = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/matches.json?api_key=" + api_key;
                     string chalMatchData = SendRequest(uriMatch);
                     var chalMatchObject = JToken.Parse(chalMatchData);
-
+                   
+                    
+                        Debug.WriteLine(chalMatchData);
+                    
                     var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
 
-                        foreach (var m in chalMatchObject)
+                    foreach (var m in chalMatchObject)
+                    {
+                        int matchID = (int)m["match"]["id"];
+                        Match temp= new Match();
+                        try { 
+                             temp = db.Matches.Where(x => x.ApiID == matchID).First();
+                            Debug.WriteLine("Existing Match: " + temp.ToString());
+                            }
+                        catch(Exception e)
                         {
-                            int matchID = (int)m["match"]["id"];
-                            var temp = db.Matches.Where(x => x.ApiID == matchID).First();
+                            Debug.WriteLine("new Match");
+                        }
+                        if (temp == new Match())
+                        {
+                            temp.TournamentID = t.TournamentID;
+                            temp.ApiID = (int)m["match"]["id"];
+                        }
+
+
                             var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
                             // if (temp.UpdatedAt != chalUpdatedTime)
                             {
@@ -1129,14 +1183,15 @@ namespace OBM.Controllers
                                 {
                                     temp.Competitor2ID = null;
                                 }
-                                if (m["match"]["scores-csv"] == null)
+                                if ((String)m["match"]["scores_csv"] == "")
                                 {
                                     temp.Score1 = null;
                                     temp.Score2 = null;
                                 }
                                 else
                                 {
-                                    string chalScore = (string)m["match"]["scores-csv"];
+                                    string chalScore = (string)m["match"]["scores_csv"];
+                                Debug.WriteLine("chalscore is : " + chalScore);
                                     int firstHyph = chalScore.IndexOf('-');
                                     if (firstHyph != 0)
                                     {
@@ -1149,16 +1204,13 @@ namespace OBM.Controllers
                                         temp.Score1 = Int32.Parse(chalScore.Substring(0, secondHyph));
                                         temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph + 1));
                                     }
+                                    Debug.WriteLine("score 1 is: " + temp.Score1);
                                 }
                                 db.SaveChanges();
                             }
                         }
                    
-                    }
-                    catch
-                    {
-                        Debug.Write("A request failed in matchlist() and threw an exception :,(");
-                    }
+                    
                 }
             }
         }

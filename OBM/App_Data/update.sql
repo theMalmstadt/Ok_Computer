@@ -11,3 +11,6 @@ ALTER TABLE [dbo].[Match]
 ALTER TABLE [dbo].[Match]
 	ADD UpdatedAt DATETIME NOT NULL
 	CONSTRAINT df_UpdatedAt DEFAULT (0);
+
+ALTER TABLE [dbo].[Competitor]
+	ADD PhoneNumber NVARCHAR(128) NULL;

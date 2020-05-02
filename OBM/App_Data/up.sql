@@ -130,6 +130,7 @@ CREATE TABLE [dbo].[Competitor](
     [CompetitorName] NVARCHAR (128) NOT NULL,
     [EventID] INT NOT NULL,
     [BusyState] NVARCHAR(1) NULL,
+	[PhoneNumber] NVARCHAR(128) NULL,
     CONSTRAINT [FK_dbo.Competitor_dbo.Event_EventID] Foreign KEY ([EventID]) REFERENCES [dbo].[Event] ([EventID])
 );
 GO

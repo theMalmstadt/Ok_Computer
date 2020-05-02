@@ -1,21 +1,17 @@
 ﻿var groupCount = 0;
 var rankList = [];
 
-$(function () {
-    $("#tabs-1").tabs({
-        activate: function (event, ui) {
-            var ls = [];
-            var $variable = $('.ui-selected').each(function () {
-                ls.push($(this).text())
-            });
-            updateSortable(ls);
-        }
-    });
-});
-
 $("#selectable-rank").bind("mousedown", function (e) {
     e.metaKey = true;
-}).selectable();
+}).selectable({
+    stop: function (event, ui) {
+        var ls = [];
+        var $variable = $('.ui-selected').each(function () {
+            ls.push($(this).text())
+        });
+        updateSortable(ls);
+    }
+});
 
 function updateSortable(ls) {
     var temp = rankList.concat(ls);
@@ -24,7 +20,7 @@ function updateSortable(ls) {
     //console.log(rankList);
     $("#sortable-1").empty();
     for (var i = 0; i < rankList.length; i++) {
-        $("#sortable-1").append("<li id=\"" + rankList[i] + "\">" + rankList[i] + "</li>");
+        $("#sortable-1").append("<li class=\"sortableRank\" id=\"" + rankList[i] + "\">" + rankList[i] + "</li>");
     }
 }
 
@@ -38,7 +34,7 @@ $("#sortable-1").sortable({
 
 function addGroup() {
     groupCount++;
-    $("#groups").append("<div class=\"row card bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
+    $("#groups").append("<div class=\"row card border border-success bg-light\"><ul id=\"sortable-2\" name=\"group-" + groupCount + "\" class=\"ui-sortable sortable\"><li class=\"hide\">bottom</li></ul ></div >");
     var str = 'ul[name="group-' + groupCount + '"]';
     $(function () {
         var oldList, newList, item;
@@ -102,7 +98,7 @@ function saveSeed() {
         type: 'POST',
         url: '/Competitor/Seed?json=' + encodeURIComponent(JSON.stringify(data)),
         dataType: "json",
-        success: console.log("seed sent to Challonge"),
+        success: console.log("seed sent to Challonge:", JSON.stringify(data)),
         error: errorOnAjax
     });
 }
