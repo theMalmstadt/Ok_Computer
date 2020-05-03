@@ -724,7 +724,7 @@ namespace OBM.Controllers
                 {
                     compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
                               + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td>" +
-                              "<td>" + i.PhoneNumber + "</td><td><a href=\"/Competitor/UpdateContact/"+ i.CompetitorID +"\">Update</a></td></tr>";
+                              "<td>" + i.PhoneNumber + "</td><td><a href=\"/Competitor/UpdateContact/"+ i.CompetitorID + "\">Update</a><button class=\"btn btn-outline-success ml-2\" type=\"submit\" onclick=\"sendSMS(" + i.CompetitorID+","+i.EventID+")\">Contact</button></td></tr>";
                 }
                 else
                 {

@@ -47,4 +47,7 @@
         }
     </div>
 }
-@Scripts.Render("~/bundles/MatchDisplay")
+@section scripts {
+    @Scripts.Render("~/bundles/MatchDisplay")
+    <script type="text/javascript" src="~/Scripts/sendSMS.js"></script>
+}

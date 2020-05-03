@@ -101,11 +101,11 @@ nav {
     color: #E7E8E9;
 }
 
-a {
+a, .siteStyle {
     color: #35b143;
 }
 
-a:hover {
+a:hover, .siteStyle:hover {
     color: #58585A;
 }
 

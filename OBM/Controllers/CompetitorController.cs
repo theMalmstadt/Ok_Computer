@@ -1,22 +1,26 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using Microsoft.AspNet.Identity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using OBM.DAL;
 using OBM.Models;
 using Newtonsoft.Json.Linq;
-using System.Net.Http;
 using System.IO;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-using System.Web.Helpers;
 using reCAPTCHA.MVC;
+using System.Configuration;
+using System.Text.RegularExpressions;
+
+//For SMS Contacting
+using Twilio;
+using Twilio.Rest.Api.V2010.Account;
+using Twilio.Types;
+
+using Twilio.TwiML;
+using Twilio.AspNet.Mvc;
+using Twilio.Exceptions;
 
 namespace OBM.Controllers
 {
@@ -354,6 +358,57 @@ namespace OBM.Controllers
             db.SaveChanges();
 
             return RedirectToAction("Manage", "Events", new { id = competitor.EventID });
+        }
+
+
+        public JsonResult SMSContact(int CompID, int EventID)
+        {
+            var dbComp = db.Competitors.Find(CompID);
+            var dbEvent = db.Events.Find(EventID);
+            var dbEventOrganizer = db.AspNetUsers.Find(dbEvent.OrganizerID);
+
+            var accountSid = ConfigurationManager.AppSettings["TwilioAccountSidTest"];
+            var authoToken = ConfigurationManager.AppSettings["TwilioAuthTokenTest"];
+            TwilioClient.Init(accountSid, authoToken);
+
+            string compNumTrimmed = Regex.Replace(dbComp.PhoneNumber, @"[^\d]", "");
+
+            var to = new PhoneNumber("+1" + compNumTrimmed);
+            var from = new PhoneNumber(ConfigurationManager.AppSettings["TwilioPhoneNumberTest"]);
+            try
+            {
+                var message = MessageResource.Create(
+                to: to,
+                from: from,
+                body: "Your match in: " + dbEvent.EventName + " is about to start, report to Event Organizer: " + dbEventOrganizer.UserName + ", to begin your match."
+                );
+
+                List<object> data = new List<object>();
+
+                var obj = new
+                {
+                    statusMSG = "Competitor Contacted",
+                    contactName = dbComp.CompetitorName
+                };
+
+                data.Add(obj);
+
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch(TwilioException e)
+            {
+                List<object> data = new List<object>();
+                var obj = new
+                {
+                    statusMSG = string.Format($"{e.Message}"),
+                    contactName = dbComp.CompetitorName
+                };
+
+                data.Add(obj);
+
+                return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            
         }
     }
 }
