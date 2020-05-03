@@ -151,6 +151,7 @@ function StreamMatch(round, player1, player2) {
     updateAll();
 }
 
+<<<<<<< HEAD
 
 function ResetMatch(mymatch) {
     console.log(mymatch);
@@ -169,6 +170,8 @@ function ResetMatch(mymatch) {
 }
 
 
+=======
+>>>>>>> bc9168373e2f82efc84c9d880ae16008e5bcc876
 function StartMatch(mymatch)
 {
     console.log(mymatch);
