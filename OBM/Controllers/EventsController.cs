@@ -1127,37 +1127,36 @@ namespace OBM.Controllers
                 {
                     
                     
+                    try
+                        {
+                        string uriPart = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
+                        string participantsData = SendRequest(uriPart);
+                        var participantsObject = JToken.Parse(participantsData);
 
-                    string uriPart = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/participants.json?api_key=" + api_key;
-                    string participantsData = SendRequest(uriPart);
-                    var participantsObject = JToken.Parse(participantsData);
-                    
-                    string uriMatch = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/matches.json?api_key=" + api_key;
-                    string chalMatchData = SendRequest(uriMatch);
-                    var chalMatchObject = JToken.Parse(chalMatchData);
-                   
-                    
-                        Debug.WriteLine(chalMatchData);
-                    
-                    var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
+                        string uriMatch = "https://api.challonge.com/v1/tournaments/" + t.ApiId + "/matches.json?api_key=" + api_key;
+                        string chalMatchData = SendRequest(uriMatch);
+                        var chalMatchObject = JToken.Parse(chalMatchData);
 
-                    foreach (var m in chalMatchObject)
-                    {
-                        int matchID = (int)m["match"]["id"];
-                        Match temp= new Match();
-                        try { 
-                             temp = db.Matches.Where(x => x.ApiID == matchID).First();
-                            Debug.WriteLine("Existing Match: " + temp.ToString());
+
+
+                        var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
+
+                        foreach (var m in chalMatchObject)
+                        {
+                            int matchID = (int)m["match"]["id"];
+                            Match temp = new Match();
+                            try {
+                                temp = db.Matches.Where(x => x.ApiID == matchID).First();
                             }
-                        catch(Exception e)
-                        {
-                            Debug.WriteLine("new Match");
-                        }
-                        if (temp == new Match())
-                        {
-                            temp.TournamentID = t.TournamentID;
-                            temp.ApiID = (int)m["match"]["id"];
-                        }
+                            catch (Exception e)
+                            {
+                                Debug.WriteLine("new Match");
+                            }
+                            if (temp == new Match())
+                            {
+                                temp.TournamentID = t.TournamentID;
+                                temp.ApiID = (int)m["match"]["id"];
+                            }
 
 
                             var chalUpdatedTime = DateTime.Parse((string)m["match"]["updated_at"]);
@@ -1191,7 +1190,6 @@ namespace OBM.Controllers
                                 else
                                 {
                                     string chalScore = (string)m["match"]["scores_csv"];
-                                Debug.WriteLine("chalscore is : " + chalScore);
                                     int firstHyph = chalScore.IndexOf('-');
                                     if (firstHyph != 0)
                                     {
@@ -1209,7 +1207,11 @@ namespace OBM.Controllers
                                 db.SaveChanges();
                             }
                         }
-                   
+                    }
+                    catch(Exception e)
+                    {
+                        Debug.WriteLine("Request probly failed");
+                    }
                     
                 }
             }
