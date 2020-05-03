@@ -756,6 +756,7 @@ namespace OBM.Controllers
                 }
 
 
+
                 var matchList = db.Matches.Where(x => x.TournamentID == t.TournamentID).ToList();
                 matchStr += "<div class =\"card\" style = \"background-color:lightgrey\"> <h5 align=\"left\"><a href=\"/Events/Tournament/" + t.TournamentID + "\">" + t.TournamentName + "</a></h5>"+startButton+"<div>";
                 if (matchList.Any())
@@ -805,7 +806,8 @@ namespace OBM.Controllers
                             matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch(" + JsonConvert.SerializeObject(m) + ") >Start</button>";
                         else
                         {
-                            //location.href='<%: Url.Action("Action", "Controller") %>'
+                            matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=ResetMatch(" + JsonConvert.SerializeObject(m) + ") >Reset</button>";
+
                         }
                         matchStr += m.Score1;
                         matchStr += "</td></tr>";
@@ -1005,7 +1007,6 @@ namespace OBM.Controllers
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
 
-            Debug.WriteLine("TournamentID is: " + Request.Params["TournamentID"]);
 
             var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
 
@@ -1037,7 +1038,6 @@ namespace OBM.Controllers
 
 
 
-            Debug.WriteLine(myJson);
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
 
@@ -1055,7 +1055,6 @@ namespace OBM.Controllers
                 {
                     var result = streamReader.ReadToEnd();
                 }
-                Debug.WriteLine(httpResponse);
             }
 
 
@@ -1066,6 +1065,52 @@ namespace OBM.Controllers
             //MatchUpdate(eventId);
 
         }
+
+        [HttpPost]
+        public void ResetMatch()
+        {
+            Debug.WriteLine("Resetting Match: " + Request.Params["MatchID"]);
+            var matchId = Int32.Parse(Request.Params["MatchID"]);
+            var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
+
+
+            var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
+
+            var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
+
+            var userid = HttpContext.User.Identity.GetUserId();
+            var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
+
+
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/reopen.json");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+
+            JObject myJson = new JObject();
+            myJson.Add("match_id", matchApiId);
+            myJson.Add("tournament", tournamentApiId);
+            myJson.Add("api_key", apiKey);
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                streamWriter.Write(myJson);
+            }
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
+                Debug.WriteLine(httpResponse);
+            }
+
+
+            catch { }
+        }
+
 
         [HttpPost]
         public void StartTournament()
@@ -1106,7 +1151,7 @@ namespace OBM.Controllers
             catch (System.Net.WebException e)
             {
 
-
+                Debug.WriteLine("start match request failed :(");
             }
 
         }

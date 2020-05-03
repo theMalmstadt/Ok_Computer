@@ -151,6 +151,24 @@ function StreamMatch(round, player1, player2) {
     updateAll();
 }
 
+
+function ResetMatch(mymatch) {
+    console.log(mymatch);
+    //if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
+    //MAKE REQUEST TO START MATCH
+
+    $.ajax({
+        type: 'POST',
+        url: '/Events/ResetMatch/',
+        data: (mymatch),
+        success: ajax_call,
+        error: errorOnAjax
+    });
+
+    alert("Match Reset");
+}
+
+
 function StartMatch(mymatch)
 {
     console.log(mymatch);
@@ -169,6 +187,17 @@ function StartMatch(mymatch)
 //ajax_call;
     
 }
+
+
+
+
+
+
+
+
+
+
+
 
 function SubmitScore(mymatch)
 {
