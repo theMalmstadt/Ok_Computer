@@ -46,6 +46,7 @@ namespace OBM.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public ActionResult Search(String search, String table)
         {

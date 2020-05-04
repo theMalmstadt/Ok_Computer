@@ -28,7 +28,8 @@
 
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
             <div id="Matches"></div>
-            <div id="Competitors"></div>
+            <div id="Competitors">
+            </div>
             <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
             <div id="MinimalGraph" style="display:block">
                 <canvas id="myChart"></canvas>

@@ -17,7 +17,6 @@
     <nav class="navbar navbar-expand-sm navbar-dark fixed-top">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-
         </button>
         <a href="@Url.Action("Index", "Home")">
             <img class="nav-logo" alt="OK" src="@Url.Content("~/Media/OKsign.png")">
@@ -29,7 +28,6 @@
                 <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link pt-2", @id = "nav-item" })</i></li>
                 <li><i>@Html.ActionLink("Tournaments", "Index", "Tournaments", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
             </ul>
-
 
             <!-- Search form -->
             @using (Html.BeginForm("Search", "Home", FormMethod.Get))

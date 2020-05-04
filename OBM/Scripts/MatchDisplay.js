@@ -1,21 +1,25 @@
 ﻿function sharedFunction(id) {
-    console.log("hello " + id);
-    var state = $('#busyState' + id).val();
+    var state = $('#busyState-' + id).val();
 
     if (state == "b") {
-        $("#busyState").toggleClass("btn-outline-danger btn-outline-success");
-        $("#busyState").val("a");
-        $("#busyState").text("a");
+        $("#busyState-" + id).toggleClass("btn-outline-danger btn-outline-success");
+        $("#busyState-" + id).val("a");
+        $("#busyState-" + id).text("a");
     }
     else {
-        $("#busyState").toggleClass("btn-outline-success btn-outline-danger");
-        $("#busyState").val("b");
-        $("#busyState").text("b");
+        $("#busyState-" + id).toggleClass("btn-outline-success btn-outline-danger");
+        $("#busyState-" + id).val("b");
+        $("#busyState-" + id).text("b");
     }
+
+
+    var token = $('[name=__RequestVerificationToken]').val();
+    console.log(token);
 
     $.ajax({
         type: 'POST',
         url: '/Events/Competitor/' + id,
+        data: { __RequestVerificationToken: token },
         success: ajax_match,
         error: errorOnAjax
     });

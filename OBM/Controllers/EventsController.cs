@@ -96,8 +96,6 @@ namespace OBM.Controllers
             return result;
         }
 
-
-
         // GET: Events/Details/5
         public ActionResult Details(int? id)
         {
@@ -471,6 +469,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Tournament(int id)
         {
             try
@@ -487,15 +486,6 @@ namespace OBM.Controllers
             {
                 throw new HttpException(401, "Tournament does not exist");
             }
-        }
-
-        [HttpPost]
-        public JsonResult Seed(string json)
-        {
-            var newt = JObject.Parse(json);
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
-            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
-            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -531,6 +521,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Competitor(int id)
         {
             try
@@ -904,7 +895,6 @@ namespace OBM.Controllers
             return "";
         }
 
-
         [HttpPost]
         public void SubmitScore()
         {
@@ -994,8 +984,6 @@ namespace OBM.Controllers
             catch { }
 
         }
-
-
 
         [HttpPost]
         public void StartMatch()
@@ -1110,13 +1098,6 @@ namespace OBM.Controllers
             }
 
         }
-
-
-
-
-
-
-
 
         public void MatchUpdate(int? id)
         {
