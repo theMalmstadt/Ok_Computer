@@ -1,4 +1,6 @@
-﻿function sharedFunction(id) {
+﻿var token = $('[name=__RequestVerificationToken]').val();
+
+function sharedFunction(id) {
     var state = $('#busyState-' + id).val();
 
     if (state == "b") {
@@ -11,10 +13,6 @@
         $("#busyState-" + id).val("b");
         $("#busyState-" + id).text("b");
     }
-
-
-    var token = $('[name=__RequestVerificationToken]').val();
-    console.log(token);
 
     $.ajax({
         type: 'POST',
