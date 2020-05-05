@@ -360,21 +360,28 @@ namespace OBM.Controllers
             return RedirectToAction("Manage", "Events", new { id = competitor.EventID });
         }
 
-
+        /// <summary>
+        /// This feature works, but not at full potential. Currently uses a Test account to send text messages and will not actually send a text to
+        /// the competitor without a registerd Twilio Phone Number. If you want this feature to work you need to provide an actual Twilio Accound Sid 
+        /// and Authentication Token.
+        /// </summary>
+        /// <param name="CompID">ID of the competitor to find the competitor's provided contact number</param>
+        /// <param name="EventID">ID of the event the competitor is in to make the text message personalized to the competitor, to obtain Event Organizer's name.</param>
+        /// <returns></returns>
         public JsonResult SMSContact(int CompID, int EventID)
         {
             var dbComp = db.Competitors.Find(CompID);
             var dbEvent = db.Events.Find(EventID);
             var dbEventOrganizer = db.AspNetUsers.Find(dbEvent.OrganizerID);
 
-            var accountSid = ConfigurationManager.AppSettings["TwilioAccountSidTest"];
-            var authoToken = ConfigurationManager.AppSettings["TwilioAuthTokenTest"];
+            var accountSid = ConfigurationManager.AppSettings["TwilioAccountSid"];
+            var authoToken = ConfigurationManager.AppSettings["TwilioAuthToken"];
             TwilioClient.Init(accountSid, authoToken);
 
             string compNumTrimmed = Regex.Replace(dbComp.PhoneNumber, @"[^\d]", "");
 
             var to = new PhoneNumber("+1" + compNumTrimmed);
-            var from = new PhoneNumber(ConfigurationManager.AppSettings["TwilioPhoneNumberTest"]);
+            var from = new PhoneNumber(ConfigurationManager.AppSettings["TwilioPhoneNumber"]);
             try
             {
                 var message = MessageResource.Create(
