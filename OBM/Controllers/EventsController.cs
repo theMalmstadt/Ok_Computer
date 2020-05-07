@@ -895,6 +895,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void SubmitScore()
         {
             Debug.WriteLine("Score POSTING" + Request.Params["Competitor1ID"]);
@@ -985,9 +986,10 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void StartMatch()
         {
-
+            Debug.WriteLine("\n\nhello\n\n");
             Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
@@ -1055,6 +1057,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void StartTournament()
         {
 

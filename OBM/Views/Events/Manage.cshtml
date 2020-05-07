@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Manage";
 
-
     <h2>@Html.DisplayFor(model => model.EventName)</h2>
     <p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
     <input id="EventID" type="hidden" value="@Model.EventID" />
@@ -27,7 +26,9 @@
             </form>
 
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
-            <div id="Matches"></div>
+            <div id="Matches">
+                @Html.AntiForgeryToken();
+            </div>
             <div id="Competitors">
             </div>
             <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>

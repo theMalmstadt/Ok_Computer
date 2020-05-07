@@ -68,6 +68,7 @@ function StartTournament(id)
         type: 'POST',
         dataType: 'json',
         url: '/Events/StartTournament?id=' + id,
+        data: { __RequestVerificationToken: token },
         success: console.log("it even went good"),
         complete: console.log("TOURNAMENT START COMPLETED"),
         error: errorOnAjax
@@ -155,6 +156,7 @@ function StreamMatch(round, player1, player2) {
 
 function StartMatch(mymatch)
 {
+    mymatch.__RequestVerificationToken = token;
     console.log(mymatch);
     //if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
         //MAKE REQUEST TO START MATCH
@@ -162,8 +164,8 @@ function StartMatch(mymatch)
         $.ajax({
             type: 'POST',
             url: '/Events/StartMatch/',
-            data: (mymatch),
-            success: ajax_call ,
+            data: mymatch,
+            success: ajax_call,
             error: errorOnAjax
         });
     
@@ -208,6 +210,7 @@ function ValidateScore(score)
 
 function PostScore(mymatch)
 {
+    mymatch.__RequestVerificationToken = token;
     $.ajax({
         type: 'POST',
         url: '/Events/SubmitScore/',
