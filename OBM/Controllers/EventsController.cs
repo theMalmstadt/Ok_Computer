@@ -21,6 +21,7 @@ using System.IO;
 using static MoreLinq.Extensions.MaxByExtension;
 using static MoreLinq.Extensions.MinByExtension;
 using Microsoft.Ajax.Utilities;
+using Ganss.XSS;
 
 namespace OBM.Controllers
 {
@@ -29,6 +30,7 @@ namespace OBM.Controllers
     {
 
         private EventContext db = new EventContext();
+        public HtmlSanitizer sanitizer = new HtmlSanitizer();
 
         // GET: Events
         public ActionResult Index()
@@ -349,12 +351,12 @@ namespace OBM.Controllers
                                 JObject jsonTournament = JObject.Parse(responseTournament);
                                 Tournament newTournament = new Tournament
                                 {
-                                    TournamentName = (string)jsonTournament["tournament"]["name"],
+                                    TournamentName = sanitizer.Sanitize((string)jsonTournament["tournament"]["name"]),
                                     EventID = id ?? default(int),
-                                    Description = (string)jsonTournament["tournament"]["description"],
-                                    Game = (string)jsonTournament["tournament"]["game_name"],
+                                    Description = sanitizer.Sanitize((string)jsonTournament["tournament"]["description"]),
+                                    Game = sanitizer.Sanitize((string)jsonTournament["tournament"]["game_name"]),
                                     ApiId = (int)jsonTournament["tournament"]["id"],
-                                    UrlString = (string)jsonTournament["tournament"]["url"],
+                                    UrlString = sanitizer.Sanitize((string)jsonTournament["tournament"]["url"]),
                                     IsTeams = (bool)jsonTournament["tournament"]["teams"],
                                     IsStarted = false
                                 };
