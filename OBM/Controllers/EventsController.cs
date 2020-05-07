@@ -346,7 +346,6 @@ namespace OBM.Controllers
                                 }
 
                                 JObject jsonTournament = JObject.Parse(responseTournament);
-                                Debug.WriteLine(WebUtility.HtmlEncode((string)jsonTournament["tournament"]["name"]));
                                 Tournament newTournament = new Tournament
                                 {
                                     TournamentName = WebUtility.HtmlEncode((string)jsonTournament["tournament"]["name"]),
@@ -439,7 +438,7 @@ namespace OBM.Controllers
                                 List<string> stringCompetitors = new List<string>();
                                 for (var i = 0; i < jsonParticipants.Count; i++)
                                 {
-                                    var temp = jsonParticipants[i]["participant"]["name"].ToString();
+                                    var temp = WebUtility.HtmlEncode(jsonParticipants[i]["participant"]["name"].ToString());
                                     if (!eventCompList.Contains(temp))
                                     {
                                         eventCompList.Add(temp);
@@ -606,9 +605,7 @@ namespace OBM.Controllers
                     foreach (var p in participantsObject)
                     {
                         Boolean InDB = false;
-                        //Debug.WriteLine("\nhello\n");
                         var participant = WebUtility.HtmlEncode((string)p["participant"]["name"]);
-                        //Debug.WriteLine(participant);
                         foreach (var c in db.Competitors.Where(x => x.EventID == id))
                         {
                             if (c.CompetitorName == participant)
@@ -670,12 +667,12 @@ namespace OBM.Controllers
                 }
                 if (m["match"]["player1_id"].ToString() != "")
                 {
-                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
+                    string temp = WebUtility.HtmlEncode((string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"]);
                     newMatch.Competitor1ID = db.Competitors.Where(x => x.EventID == eid).Where(x => x.CompetitorName == temp).First().CompetitorID;
                 }
                 if (m["match"]["player2_id"].ToString() != "")
                 {
-                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
+                    string temp = WebUtility.HtmlEncode((string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"]);
                     newMatch.Competitor2ID = db.Competitors.Where(x => x.EventID == eid).Where(x => x.CompetitorName == temp).First().CompetitorID;
                 }
                 if (m["match"]["player1_prereq_match_id"].ToString() != "")

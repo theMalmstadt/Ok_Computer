@@ -111,17 +111,6 @@ $('#saveBtn').click(function () {
     }, 3000);
 });
 
-var ajaxMatches = function () {
-    var id = $('#EventID').val();
-    $.ajax({
-        type: 'GET',
-        dataType: 'json',
-        url: '/Events/Matches/' + id.toString(),
-        success: drawTree,
-        error: errorOnAjax
-    });
-}
-
 function lineage(data, current, currY, childY, e, compList) {
     var dataList = [];
     var base = 1;
@@ -394,6 +383,18 @@ function errorOnAjax(data) {
     console.log("ERROR in ajax request.");
 }
 
-window.onload = ajaxMatches;
+function ajaxMatches () {
+    console.log("hello2");
+    var id = $('#EventID').val();
+    $.ajax({
+        type: 'GET',
+        dataType: 'json',
+        url: '/Events/Matches/' + id.toString(),
+        success: drawTree,
+        error: errorOnAjax
+    });
+}
+
+window.onload = ajaxMatches ();
 window.onload = addGroup();
 window.onload = addGroup();

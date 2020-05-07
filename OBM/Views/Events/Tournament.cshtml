@@ -1,10 +1,10 @@
 ﻿@model OBM.Models.ViewModels.TournamentViewModel
 @{
-    ViewBag.Title = Model.TournamentName;
+    ViewBag.Title = WebUtility.HtmlDecode(Model.TournamentName);
     ViewBag.ApiID = Model.ApiId;
     ViewBag.TourneyID = Model.TournamentID;
 
-    <h1>@Html.DisplayFor(model => model.TournamentName)</h1>
+    <h1>@WebUtility.HtmlDecode(Model.TournamentName)</h1>
 
     if (ViewBag.Access == true)
     {
@@ -13,10 +13,10 @@
             <hr />
             <dl class="dl-horizontal">
                 <dt>Description</dt>
-                <dd>@Html.DisplayFor(model => model.Description)</dd>
+                <dd>@WebUtility.HtmlDecode(Model.Description)</dd>
 
                 <dt>Game</dt>
-                <dd>@Html.DisplayFor(model => model.Game)</dd>
+                <dd>@WebUtility.HtmlDecode(Model.Game)</dd>
 
                 <dt>Team Based?</dt>
                 <dd>@Html.DisplayFor(model => model.IsTeams)</dd>
