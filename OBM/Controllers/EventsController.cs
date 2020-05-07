@@ -21,16 +21,13 @@ using System.IO;
 using static MoreLinq.Extensions.MaxByExtension;
 using static MoreLinq.Extensions.MinByExtension;
 using Microsoft.Ajax.Utilities;
-using Ganss.XSS;
 
 namespace OBM.Controllers
 {
 
     public class EventsController : Controller
     {
-
         private EventContext db = new EventContext();
-        public HtmlSanitizer sanitizer = new HtmlSanitizer();
 
         // GET: Events
         public ActionResult Index()
@@ -349,14 +346,15 @@ namespace OBM.Controllers
                                 }
 
                                 JObject jsonTournament = JObject.Parse(responseTournament);
+                                Debug.WriteLine(WebUtility.HtmlEncode((string)jsonTournament["tournament"]["name"]));
                                 Tournament newTournament = new Tournament
                                 {
-                                    TournamentName = sanitizer.Sanitize((string)jsonTournament["tournament"]["name"]),
+                                    TournamentName = WebUtility.HtmlEncode((string)jsonTournament["tournament"]["name"]),
                                     EventID = id ?? default(int),
-                                    Description = sanitizer.Sanitize((string)jsonTournament["tournament"]["description"]),
-                                    Game = sanitizer.Sanitize((string)jsonTournament["tournament"]["game_name"]),
+                                    Description = WebUtility.HtmlEncode((string)jsonTournament["tournament"]["description"]),
+                                    Game = WebUtility.HtmlEncode((string)jsonTournament["tournament"]["game_name"]),
                                     ApiId = (int)jsonTournament["tournament"]["id"],
-                                    UrlString = sanitizer.Sanitize((string)jsonTournament["tournament"]["url"]),
+                                    UrlString = WebUtility.HtmlEncode((string)jsonTournament["tournament"]["url"]),
                                     IsTeams = (bool)jsonTournament["tournament"]["teams"],
                                     IsStarted = false
                                 };
@@ -608,7 +606,9 @@ namespace OBM.Controllers
                     foreach (var p in participantsObject)
                     {
                         Boolean InDB = false;
-                        var participant = (string)p["participant"]["name"];
+                        //Debug.WriteLine("\nhello\n");
+                        var participant = WebUtility.HtmlEncode((string)p["participant"]["name"]);
+                        //Debug.WriteLine(participant);
                         foreach (var c in db.Competitors.Where(x => x.EventID == id))
                         {
                             if (c.CompetitorName == participant)

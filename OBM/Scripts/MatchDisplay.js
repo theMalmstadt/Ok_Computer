@@ -198,9 +198,6 @@ function SubmitScore(mymatch)
         alert("Please Enter a number for each score.");
 }
 
-
-
-
 function ValidateScore(score)
 {
     if (score.isInteger)
