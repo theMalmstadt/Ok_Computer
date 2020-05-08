@@ -5,6 +5,7 @@
 
     <h2>@Html.DisplayFor(model => model.EventName)</h2>
     <p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
+    <p>@Html.ActionLink("Create and import a new Challonge Tournament", controllerName: "Tournaments", actionName: "Create")</p>
     <input id="EventID" type="hidden" value="@Model.EventID" />
     <div class="col-md-10" align="center">
         @if (ViewBag.Access == true)
