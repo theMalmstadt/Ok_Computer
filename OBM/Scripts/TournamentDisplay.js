@@ -224,7 +224,7 @@ function recursiveCall(data, current, currY, childY, e, next, compList) {
 
 function drawTree(data) {
     var id = $('#TournamentID').val();
-    var largestRound = 2;
+    var largestRound = 15;
     var endNode = data[0];
     var preciseData = [];
     var compList = [];
@@ -234,9 +234,6 @@ function drawTree(data) {
         if (data[i].TournamentID == id) {
             if (data[i].Round > endNode.Round) {
                 endNode = data[i];
-                if (data[i].Round > largestRound) {
-                    largestRound = data[i].Round;
-                }
             }
 
             if (!compIDs.includes(data[i].Competitor1ID) && data[i].Competitor1ID != null) {
@@ -284,13 +281,8 @@ function drawTree(data) {
 
     dataList = dataList.concat(hidden);
 
-    largestRound = largestRound - 2;
-    if (largestRound < 1) {
-        largestRound = 1;
-    }
-
     var ctx = document.getElementById('myChart');
-    ctx.height = 100 * (largestRound + 1) ;
+    ctx.height = 100 * (largestRound) ;
     var myChart = new Chart(ctx, {
         type: 'line',
         data: { datasets: dataList.reverse() },
