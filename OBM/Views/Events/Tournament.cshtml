@@ -3,6 +3,7 @@
     ViewBag.Title = WebUtility.HtmlDecode(Model.TournamentName);
     ViewBag.ApiID = Model.ApiId;
     ViewBag.TourneyID = Model.TournamentID;
+    ViewBag.clearAll = "true";
 
     <h1>@WebUtility.HtmlDecode(Model.TournamentName)</h1>
 
@@ -73,19 +74,16 @@
                 <dl class="dl-horizontal">
                     @using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
                     {
-                        @Html.AntiForgeryToken()
-
                         <dt></dt>
                         <dd>
                             <div class="Bulk add" id="participantOptions">
                                 <div>
                                     <i>Format input like; participant,participant,...</i>
                                 </div>
-                                <label for="bulkadd">Bulk add Participants:</label>
+                                <label id="bulkAdd" for="bulkadd">Bulk add Participants:</label>
                                 <br />
                                 <input type="text" name="bulkadd" />
                                 <input type="submit" value="Bulk Add" class="btn createbtn" />
-                                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
                                 <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                             </div>
                         </dd>
@@ -96,28 +94,63 @@
                     @using (Html.BeginForm("BulkAddParticipants", "Competitor", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
-
                         <dt></dt>
                         <dd>
-                            <div class="CSV" id="participantOptions">
+                            <div class="CSV add" id="participantOptions">
                                 <div>
                                     <i>upload a .CSV file with each participant alone on each line</i>
                                 </div>
-                                <label for="bulkadd">Bulk add Participants:</label>
+                                <label id="bulkAdd" for="bulkadd">Bulk add Participants:</label>
                                 <br />
                                 <input type="hidden" name="bulkadd" id="bulkadd" />
-
                                 <input type="file" name="CSV" accept=".csv" id="CSV" />
                                 <input type="submit" value="Submit" class="btn createbtn" />
-                                <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
                                 <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                                 <br />
-
-
                             </div>
                             <div id="participantsParsedList"></div>
                         </dd>
-
+                    }
+                </dl>
+                <h6 class="font-weight-bold">Remove Participants:</h6>
+                <button id="CompTablebtn" onclick="ShowAndHideTable()" class="btn btn-success mb-2">Show</button>
+                using (Html.BeginForm("DeleteCompetitors","Competitor", FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to remove ALL competitors from this tournament?')" }))
+                {
+                    <input type="hidden" name="clearAll" value="@ViewBag.clearAll" />
+                    <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                    <input id="ClearTableBtn" type="submit"  value="Clear All" class="btn btn-warning mb-2" style="display: none"/>
+                }
+                <dl class="dl-horizontal">
+                    @using (Html.BeginForm("DeleteCompetitors", "Competitor", FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete?')" }))
+                    {
+                        <dd id="CompTableCard" style="display: none">
+                            <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
+                            <div class="card bg-secondary w-25">
+                                <div class="card-body">
+                                    <table id="CompTable" class="table table-responsive-md table-dark table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Competitor Name
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var Comp in Model.CompetitorList)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" name="CompNames" value="@Comp" />
+                                                        @Comp
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                    <input type="submit" class="btn-danger" value="Delete"/>
+                                </div>
+                            </div>
+                        </dd>
                     }
                 </dl>
 
@@ -217,23 +250,24 @@
         </div>
 
         using (Html.BeginForm(FormMethod.Post))
+
         {
             @Html.AntiForgeryToken()
 
             <div class="form-group">
                 <input id="delete-tournament" type="submit" value="Delete Tournament" class="btn btn-danger" />
             </div>
-        }
+       }
         <div>
             @Html.ActionLink("Back to Event", "Manage", "Events", routeValues: new { id = Model.EventID }, htmlAttributes: new { @class = "btn registerbtn" })
         </div>
-    }
+   }
     else
-    {
+   {
         <div class="form-horizontal">
             <h4>Access Denied</h4>
         </div>
-    }
+   }
 
 
     @section scripts

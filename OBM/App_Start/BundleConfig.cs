@@ -47,6 +47,7 @@ namespace OBM
                 ));
 
             bundles.Add(new ScriptBundle("~/bundles/TournamentDisplay").Include(
+                "~/Scripts/datatables.min.js",
                 "~/Scripts/jquery-ui.js",
                 "~/Scripts/moment.js",
                 "~/Scripts/Chart.min.js",

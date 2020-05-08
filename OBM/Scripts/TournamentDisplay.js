@@ -385,6 +385,7 @@ function errorOnAjax(data) {
     console.log("ERROR in ajax request.");
 }
 
+
 function ajaxMatches () {
     var id = $('#EventID').val();
     $.ajax({
@@ -397,5 +398,38 @@ function ajaxMatches () {
 }
 
 window.onload = ajaxMatches ();
+
+$(document).ready(function () {
+    $('#CompTable').DataTable({
+        "ordering": false
+    });
+    $('.dataTables_info').addClass('text-light');
+    $('label').addClass('text-light'); 
+});
+
+function ShowAndHideTable() {
+    var table = document.getElementById("CompTableCard");
+    var tableBtn = document.getElementById("CompTablebtn");
+    
+    if (tableBtn.innerText === "Show") {
+        tableBtn.innerText = "Hide";
+        tableBtn.classList.add("btn-secondary");
+        tableBtn.classList.remove("btn-success");
+        $("#ClearTableBtn").toggle();
+    } else {
+        tableBtn.innerText = "Show";
+        tableBtn.classList.add("btn-success");
+        tableBtn.classList.remove("btn-secondary");
+        $("#ClearTableBtn").toggle();
+    }
+        
+    if (table.style.display === "none") {
+        table.style.display = "block";
+    } else {
+        table.style.display = "none";
+    }
+}
+
+window.onload = ajaxMatches();
 window.onload = addGroup();
 window.onload = addGroup();
