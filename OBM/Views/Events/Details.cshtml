@@ -65,14 +65,15 @@
         @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
-    }
-    else
-    {
+}
+else
+{
     <div class="form-horizontal">
         <h4>Access Denied</h4>
     </div>
-    }
+}
 
-    @section scripts {
-        <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
-    }
+@section scripts {
+    <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
+    <script type="text/javascript" src="~/Scripts/sendSMS.js"></script>
+}
