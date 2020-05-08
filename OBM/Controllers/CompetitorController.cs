@@ -29,13 +29,14 @@ namespace OBM.Controllers
         private EventContext db = new EventContext();
 
         [HttpPost]
-        public ActionResult AddSingleParticipant(string singleAdd, int ApiID, int? TourneyID)
+        public ActionResult AddSingleParticipant(string singleAdd, int? TourneyID)
         {
-            if(!string.IsNullOrEmpty(singleAdd))
+            var tourney = db.Tournaments.Find(TourneyID);
+            if (!string.IsNullOrEmpty(singleAdd))
             {
                 var userApiKey = db.AspNetUsers.FindAsync(User.Identity.GetUserId()).Result.ApiKey;
 
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + ApiID + "/participants.json");
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tourney.ApiId + "/participants.json");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
@@ -74,14 +75,15 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
-        public ActionResult BulkAddParticipants(string bulkadd, int ApiID, int TourneyID)
+        public ActionResult BulkAddParticipants(string bulkadd, int TourneyID)
         {
+            var tourney = db.Tournaments.Find(TourneyID);
             //CheckDBParticipants();
-            if(!string.IsNullOrEmpty(bulkadd))
+            if (!string.IsNullOrEmpty(bulkadd))
             {
                 var userApiKey = db.AspNetUsers.FindAsync(User.Identity.GetUserId()).Result.ApiKey;
 
-                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + ApiID + "/participants/bulk_add.json");
+                var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tourney.ApiId + "/participants/bulk_add.json");
                 httpWebRequest.ContentType = "application/json";
                 httpWebRequest.Method = "POST";
 
@@ -254,7 +256,7 @@ namespace OBM.Controllers
 
             // First API call here
             // PUT request to clear all participants from Challonge Tournament
-            DeleteCompetitors(tourn);
+            ClearCompetitors(tourn.TournamentID);
 
             // Second API call here
             // POST the json string above
@@ -264,13 +266,14 @@ namespace OBM.Controllers
             
             return challongeResponse;
         }
-        public void DeleteCompetitors(Tournament tourn)
+        public void ClearCompetitors(int? TourneyId)
         {
+            var tourney = db.Tournaments.Find(TourneyId);
             //DELETE Help https://api.challonge.com/v1/tournaments/{tournament}/participants/clear.{json|xml}
             string userId = (HttpContext.User.Identity.GetUserId());
             string apiKey = db.AspNetUsers.Find(userId).ApiKey;
-            string apikeyString = "api_key=" + apiKey;
-            string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + "/participants/clear.json?"+apikeyString;
+            string apikeyString = $"api_key={apiKey}";
+            string url = $"https://api.challonge.com/v1/tournaments/{tourney.ApiId}/participants/clear.json?{apikeyString}";
             
             //CONFIGURE REQUEST
             var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
@@ -297,14 +300,133 @@ namespace OBM.Controllers
                     
         }
 
+        public ActionResult DeleteCompetitors(int TourneyID, List<string> CompNames = null, bool clearAll = false)
+        {
+            var tourney = db.Tournaments.Find(TourneyID);
+            var TourneyComps = GetCompetitors(tourney.UrlString);
+            if (CompNames != null)
+            {
+                if ((TourneyComps.Count == CompNames.Count) || clearAll)
+                {
+                    ClearCompetitors(tourney.TournamentID);
+                }
+                else
+                {
+                    //CompsToRemove["CompName"]["ChallongeUID"]
+                    var compsToRemove = ParseMatchingCompetitiorsAndUID(ParseCompNameAndId(TourneyComps), CompNames);
+
+                    foreach (var item in compsToRemove)
+                    {
+                        SingleDeleteCompetitors(item.Item2, tourney.ApiId);
+                    }
+                }
+            }
+            else if (clearAll == true)
+            {
+                ClearCompetitors(tourney.TournamentID);
+            }
+
+            return RedirectToAction("Tournament", "Events", new { id = TourneyID });
+        }
+
+        public void SingleDeleteCompetitors(string CompChallongeUID, int? ApiId)
+        {
+            //DELETE Help https://api.challonge.com/v1/tournaments/{tournament}/participants/clear.{json|xml}
+            string userId = (HttpContext.User.Identity.GetUserId());
+            string apiKey = db.AspNetUsers.Find(userId).ApiKey;
+            string apikeyString = $"api_key={apiKey}";
+            string url = $"https://api.challonge.com/v1/tournaments/{ApiId}/participants/{CompChallongeUID}.json?{apikeyString}";
+
+            //CONFIGURE REQUEST
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "DELETE";
+
+            //SEND REQUEST
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                }
+            }
+            catch (System.Net.WebException e)
+            {
+                Debug.WriteLine("There was a problem deleting particpants from the tournament to seed");
+            }
+        }
+
+        public JArray GetCompetitors(string TourneyUrl) 
+        {
+            //GET all Competitors
+            string userId = (HttpContext.User.Identity.GetUserId());
+            string apiKey = db.AspNetUsers.Find(userId).ApiKey;
+            string apikeyString = $"api_key={apiKey}";
+            string url = $"https://api.challonge.com/v1/tournaments/{TourneyUrl}/participants.json?{apikeyString}";
+
+            var participants = new JArray();
+            //Form the Request
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "GET";
+
+            try
+            {
+                var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+                using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+                {
+                    var result = streamReader.ReadToEnd();
+                    participants = JArray.Parse(result);
+                }
+                return participants;
+            }
+            catch (System.Net.WebException e)
+            {
+                Debug.WriteLine("There was a problem deleting particpants from the tournament to seed");
+                return participants;
+            }
+        }
+
+        public List<Tuple<string, string>> ParseCompNameAndId(JArray competitors)
+        {
+            var competitorAndId = new List<Tuple<string, string>>();
+            foreach (var item in competitors)
+            {
+                var compName = $"{item["participant"]["name"]}";
+                var compUID = $"{item["participant"]["id"]}";
+                var nameUID = new Tuple<string, string>(compName, compUID);
+                competitorAndId.Add(nameUID);
+            }
+            return competitorAndId;
+        }
+
+        public List<Tuple<string, string>> ParseMatchingCompetitiorsAndUID(List<Tuple<string, string>> bulkComps, List<string> matchingComps)
+        {
+            var Competitors = new List<Tuple<string, string>>();
+            foreach (var bulk in bulkComps)
+            { 
+                foreach(var matching in matchingComps)
+                {
+                    if(bulk.Item1 == matching)
+                    {
+                        Competitors.Add(bulk);
+                    }
+                }
+            }
+
+            return Competitors;
+        }
+
         public string BulkAddCompetitorsSeeds(string json, Tournament tourn)
         {
             string userId = (HttpContext.User.Identity.GetUserId());
             string apiKey = db.AspNetUsers.Find(userId).ApiKey;
-            string apikeyString = "api_key=" + apiKey;
+            string apikeyString = $"api_key={apiKey}";
 
             // POST https://api.challonge.com/v1/tournaments/{tournament}/participants/bulk_add.{json|xml}
-            string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + "/participants/bulk_add.json?"+apikeyString;
+            string url = "https://api.challonge.com/v1/tournaments/" + tourn.ApiId + $"/participants/bulk_add.json?{apikeyString}";
             //Debug.WriteLine(json);
 
 
@@ -387,7 +509,7 @@ namespace OBM.Controllers
                 var message = MessageResource.Create(
                 to: to,
                 from: from,
-                body: "Your match in: " + dbEvent.EventName + " is about to start, report to Event Organizer: " + dbEventOrganizer.UserName + ", to begin your match."
+                body: $"Your match in: {dbEvent.EventName} is about to start, report to Event Organizer: {dbEventOrganizer.UserName}, to begin your match."
                 );
 
                 List<object> data = new List<object>();
