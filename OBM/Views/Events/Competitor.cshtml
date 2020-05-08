@@ -31,9 +31,11 @@
                             text = "available";
                         }
 
+
+                        Html.AntiForgeryToken();
                         <button id="busyState" type="submit" class="btn btn-outline-@col" value="@state">@text</button>
-                    }
-                </div>
+                        }
+                    </div>
             </div>
             <h3>Matches</h3>
             <hr />

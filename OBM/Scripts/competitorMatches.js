@@ -16,6 +16,10 @@
     $.ajax({
         type: 'POST',
         url: '/Events/Competitor/' + id,
+        data: {
+            AddAntiForgeryToken({ }),
+            id: parseInt($(this).attr("title"))
+        },
         error: errorOnAjax
     });
 });

@@ -9,11 +9,14 @@ using OBM.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Net;
+using Ganss.XSS;
 
 namespace OBM.Controllers
 {
     public class HomeController : Controller
     {
+        HtmlSanitizer sani = new HtmlSanitizer();
         public ActionResult Index()
         {
             string date = "2015-01-19T16:57:17-05:00";
@@ -46,10 +49,11 @@ namespace OBM.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public ActionResult Search(String search, String table)
         {
-            ViewBag.search = search;
+            ViewBag.search = WebUtility.HtmlEncode(sani.Sanitize(search));
             ViewBag.table = table;
             return View();
         }

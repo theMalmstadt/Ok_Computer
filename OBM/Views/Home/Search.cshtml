@@ -2,10 +2,11 @@
 @{
     ViewBag.Title = "Search";
 }
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
+<script type="text/javascript" charset="utf8" src="~/Scripts/umd/popper-utils.js"></script>
+<script type="text/javascript" charset="utf8" src="~/Scripts/umd/popper.js"></script>
 
 <h2>Search</h2>
 
@@ -57,8 +58,7 @@
     </table>
 </div>
 
-
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+<link rel="stylesheet" type="text/css" href="~/Content/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="~/Scripts/jquery.dataTables.js"></script>
 <script src="~/Scripts/Search.js"></script>
 

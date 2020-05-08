@@ -29,6 +29,7 @@ namespace OBM.Controllers
         private EventContext db = new EventContext();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult AddSingleParticipant(string singleAdd, int? TourneyID)
         {
             var tourney = db.Tournaments.Find(TourneyID);
@@ -75,6 +76,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult BulkAddParticipants(string bulkadd, int TourneyID)
         {
             var tourney = db.Tournaments.Find(TourneyID);
@@ -157,6 +159,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Seed(string json)
         {
             var seedObject = JObject.Parse(json);
