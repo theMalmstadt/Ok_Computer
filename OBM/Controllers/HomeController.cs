@@ -9,6 +9,7 @@ using OBM.Models.ViewModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Net;
 
 namespace OBM.Controllers
 {
@@ -50,7 +51,7 @@ namespace OBM.Controllers
         [HttpGet]
         public ActionResult Search(String search, String table)
         {
-            ViewBag.search = search;
+            ViewBag.search = WebUtility.HtmlEncode(search);
             ViewBag.table = table;
             return View();
         }

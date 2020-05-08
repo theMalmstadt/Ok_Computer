@@ -1,4 +1,5 @@
-﻿var groupCount = 0;
+﻿var token = $('[name=__RequestVerificationToken]').val();
+var groupCount = 0;
 var rankList = [];
 
 $("#selectable-rank").bind("mousedown", function (e) {
@@ -98,6 +99,7 @@ function saveSeed() {
         type: 'POST',
         url: '/Competitor/Seed?json=' + encodeURIComponent(JSON.stringify(data)),
         dataType: "json",
+        data: { __RequestVerificationToken: token },
         success: console.log("seed sent to Challonge:", JSON.stringify(data)),
         error: errorOnAjax
     });
@@ -384,7 +386,6 @@ function errorOnAjax(data) {
 }
 
 function ajaxMatches () {
-    console.log("hello2");
     var id = $('#EventID').val();
     $.ajax({
         type: 'GET',
