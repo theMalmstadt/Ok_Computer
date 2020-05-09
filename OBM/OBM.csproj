@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44355</IISExpressSSLPort>
+    <IISExpressSSLPort>44321</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -306,14 +306,17 @@
     <None Include="Properties\PublishProfiles\OBMTestAsh - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\okbrackets-dev - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\okbracketsdev - Web Deploy.pubxml" />
+    <Content Include="Scripts\challonge.jquery.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <Content Include="Scripts\jquery.challonge.js.coffee" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.challonge.js" />
     <Content Include="Scripts\jquery.datetimepicker.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />

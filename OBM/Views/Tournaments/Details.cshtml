@@ -1,4 +1,5 @@
-﻿@model OBM.Models.Tournament
+﻿
+@model OBM.Models.Tournament
 
 @{
     ViewBag.Title = "Details";
@@ -19,14 +20,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.EventID)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EventID)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Description)
         </dt>
 
@@ -42,33 +35,64 @@
             @Html.DisplayFor(model => model.Game)
         </dd>
 
+
+
         <dt>
-            @Html.DisplayNameFor(model => model.ApiId)
+            Parent Event:
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.ApiId)
+            <a href="/Events/Details/@Model.EventID">Event Details</a>
         </dd>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.UrlString)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.UrlString)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsTeams)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsTeams)
-        </dd>
 
     </dl>
+    @{
+        var urlString = "https://challonge.com/" + Model.UrlString + "/module?theme=1";
+
+    }
+    <a href="https://challonge.com/@(Model.UrlString)">Challonge Page</a>
+
+    <div class="demo_iframe_container">
+        <iframe id="bracket" src=@urlString width="100%" height="500" frameborder="0" scrolling="auto" allowtransparency="true"></iframe>
+    </div>
+
+
+
+    <div id="competitorList">
+
+    </div>
+    <script>
+        tournament_id =@Model.TournamentID;
+        console.log(tournament_id);
+        $.ajax({
+            url: "/Tournaments/CompetitorListJson?tournament_id="+tournament_id,
+            data: tournament_id,
+            type: 'GET',
+            dataType: 'json',
+            success:
+                function (data)
+                {
+                    $("#competitorList").append('<table class="table"><thead><tr>');
+
+                    i = 0;
+                    while (i < data.length)
+                    {
+
+                        $("#competitorList").append("<tr><th>"+i+":    </th><td>"+data[i]+"</tr></td>");
+
+                        i++;
+                    }
+
+
+                    $("#competitorList").append('</table></thead></tr>');
+                }
+});
+    </script>
+
 </div>
+
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.TournamentID }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

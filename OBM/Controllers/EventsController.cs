@@ -1247,7 +1247,6 @@ namespace OBM.Controllers
                                         temp.Score1 = Int32.Parse(chalScore.Substring(0, secondHyph));
                                         temp.Score2 = Int32.Parse(chalScore.Substring(secondHyph + 1));
                                     }
-                                    Debug.WriteLine("score 1 is: " + temp.Score1);
                                 }
                                 db.SaveChanges();
                             }
