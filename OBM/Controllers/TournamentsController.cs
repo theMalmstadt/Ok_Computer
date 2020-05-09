@@ -151,7 +151,6 @@ namespace OBM.Controllers
             base.Dispose(disposing);
         }
 
-
         [HttpPost]
         public string ChallongeCreate()
         {
@@ -172,8 +171,6 @@ namespace OBM.Controllers
             return ChallongePost(mytournament).ToString();
 
         }
-
-
 
         public JObject ChallongePost(JObject myJSON)
         {

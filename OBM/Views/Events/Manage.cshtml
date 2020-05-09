@@ -3,9 +3,9 @@
 @{
     ViewBag.Title = "Manage";
 
-
     <h2>@Html.DisplayFor(model => model.EventName)</h2>
     <p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
+    <p>@Html.ActionLink("Create and import a new Challonge Tournament", controllerName: "Tournaments", actionName: "Create")</p>
     <input id="EventID" type="hidden" value="@Model.EventID" />
     <div class="col-md-10" align="center">
         @if (ViewBag.Access == true)
@@ -27,8 +27,11 @@
             </form>
 
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
-            <div id="Matches"></div>
-            <div id="Competitors"></div>
+            <div id="Matches">
+                @Html.AntiForgeryToken();
+            </div>
+            <div id="Competitors">
+            </div>
             <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
             <div id="MinimalGraph" style="display:block">
                 <canvas id="myChart"></canvas>

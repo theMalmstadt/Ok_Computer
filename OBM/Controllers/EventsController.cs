@@ -21,14 +21,15 @@ using System.IO;
 using static MoreLinq.Extensions.MaxByExtension;
 using static MoreLinq.Extensions.MinByExtension;
 using Microsoft.Ajax.Utilities;
+using Ganss.XSS;
 
 namespace OBM.Controllers
 {
 
     public class EventsController : Controller
     {
-
         private EventContext db = new EventContext();
+        HtmlSanitizer sani = new HtmlSanitizer();
 
         // GET: Events
         public ActionResult Index()
@@ -95,8 +96,6 @@ namespace OBM.Controllers
             result.Replace(']', '}');
             return result;
         }
-
-
 
         // GET: Events/Details/5
         public ActionResult Details(int? id)
@@ -351,12 +350,12 @@ namespace OBM.Controllers
                                 JObject jsonTournament = JObject.Parse(responseTournament);
                                 Tournament newTournament = new Tournament
                                 {
-                                    TournamentName = (string)jsonTournament["tournament"]["name"],
+                                    TournamentName = WebUtility.HtmlEncode(sani.Sanitize((string)jsonTournament["tournament"]["name"])),
                                     EventID = id ?? default(int),
-                                    Description = (string)jsonTournament["tournament"]["description"],
-                                    Game = (string)jsonTournament["tournament"]["game_name"],
+                                    Description = WebUtility.HtmlEncode(sani.Sanitize((string)jsonTournament["tournament"]["description"])),
+                                    Game = WebUtility.HtmlEncode(sani.Sanitize((string)jsonTournament["tournament"]["game_name"])),
                                     ApiId = (int)jsonTournament["tournament"]["id"],
-                                    UrlString = (string)jsonTournament["tournament"]["url"],
+                                    UrlString = WebUtility.HtmlEncode(sani.Sanitize((string)jsonTournament["tournament"]["url"])),
                                     IsTeams = (bool)jsonTournament["tournament"]["teams"],
                                     IsStarted = false
                                 };
@@ -376,7 +375,7 @@ namespace OBM.Controllers
                                     ViewBag.Success = "Tournament was not saved";
                                 }
                             }
-                            catch
+                            catch (Exception e)
                             {
                                 ViewBag.Success = "Unable to get tournament data. Please review and re-enter the URL and Api Key above.";
                             }
@@ -441,7 +440,7 @@ namespace OBM.Controllers
                                 List<string> stringCompetitors = new List<string>();
                                 for (var i = 0; i < jsonParticipants.Count; i++)
                                 {
-                                    var temp = jsonParticipants[i]["participant"]["name"].ToString();
+                                    var temp = WebUtility.HtmlEncode(sani.Sanitize(jsonParticipants[i]["participant"]["name"].ToString()));
                                     if (!eventCompList.Contains(temp))
                                     {
                                         eventCompList.Add(temp);
@@ -471,6 +470,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Tournament(int id)
         {
             try
@@ -487,15 +487,6 @@ namespace OBM.Controllers
             {
                 throw new HttpException(401, "Tournament does not exist");
             }
-        }
-
-        [HttpPost]
-        public JsonResult Seed(string json)
-        {
-            var newt = JObject.Parse(json);
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
-            //System.Diagnostics.Debug.WriteLine("\nJson: {\n" + newt["id"] + "\n" + newt["ranks"] + "\n}\n");
-            return Json("Success My Guy", JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -531,6 +522,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Competitor(int id)
         {
             try
@@ -615,7 +607,7 @@ namespace OBM.Controllers
                     foreach (var p in participantsObject)
                     {
                         Boolean InDB = false;
-                        var participant = (string)p["participant"]["name"];
+                        var participant = WebUtility.HtmlEncode(sani.Sanitize((string)p["participant"]["name"]));
                         foreach (var c in db.Competitors.Where(x => x.EventID == id))
                         {
                             if (c.CompetitorName == participant)
@@ -677,12 +669,12 @@ namespace OBM.Controllers
                 }
                 if (m["match"]["player1_id"].ToString() != "")
                 {
-                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"];
+                    string temp = WebUtility.HtmlEncode(sani.Sanitize((string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player1_id"]).First()["participant"]["name"]));
                     newMatch.Competitor1ID = db.Competitors.Where(x => x.EventID == eid).Where(x => x.CompetitorName == temp).First().CompetitorID;
                 }
                 if (m["match"]["player2_id"].ToString() != "")
                 {
-                    string temp = (string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"];
+                    string temp = WebUtility.HtmlEncode(sani.Sanitize((string)participantsObject.Where(x => (int)x["participant"]["id"] == (int)m["match"]["player2_id"]).First()["participant"]["name"]));
                     newMatch.Competitor2ID = db.Competitors.Where(x => x.EventID == eid).Where(x => x.CompetitorName == temp).First().CompetitorID;
                 }
                 if (m["match"]["player1_prereq_match_id"].ToString() != "")
@@ -906,8 +898,8 @@ namespace OBM.Controllers
             return "";
         }
 
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void SubmitScore()
         {
             Debug.WriteLine("Score POSTING" + Request.Params["Competitor1ID"]);
@@ -997,12 +989,11 @@ namespace OBM.Controllers
 
         }
 
-
-
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void StartMatch()
         {
-
+            Debug.WriteLine("\n\nhello\n\n");
             Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
@@ -1067,6 +1058,7 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void ResetMatch()
         {
             Debug.WriteLine("Resetting Match: " + Request.Params["MatchID"]);
@@ -1113,6 +1105,7 @@ namespace OBM.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public void StartTournament()
         {
 
@@ -1155,13 +1148,6 @@ namespace OBM.Controllers
             }
 
         }
-
-
-
-
-
-
-
 
         public void MatchUpdate(int? id)
         {
