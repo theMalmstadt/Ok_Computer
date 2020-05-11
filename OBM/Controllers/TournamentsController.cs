@@ -239,9 +239,46 @@ namespace OBM.Controllers
         }
 
         [HttpGet]
+        public JArray CompetitorListJson()
+        {
+            int Tournament_id =Int32.Parse(Request.Params["tournament_id"]);
+            JArray result = new JArray();
+            foreach(Match match in db.Matches.Where(x=>x.TournamentID==Tournament_id).ToList())
+            {
+
+                if (match.Competitor1ID != null)
+                {
+                    var comp1ID = match.Competitor1ID;
+
+                    var comp1 = db.Competitors.Where(x => x.CompetitorID == comp1ID).First();
+                    var comp1Name = comp1.CompetitorName;
+
+                    if(!result.ToString().Contains(comp1Name))
+                        result.Add(comp1Name);
+                }
+
+                if (match.Competitor2ID != null)
+                {
+                    var comp2ID = match.Competitor2ID;
+
+                    var comp2Name = db.Competitors.Where(x => x.CompetitorID == comp2ID).First().CompetitorName;
+
+                    if (!result.ToString().Contains(comp2Name))
+                        result.Add(comp2Name);
+                }
+            }
+
+            
+            
+            Debug.WriteLine(result);
+            return result;
+        }
+
+
+        [HttpGet]
         public String PublicTournaments()
         {
-            var tournamentsDb = db.Tournaments.Select(x => new { x.TournamentID, x.TournamentName, x.Game, x.Description, url = ("/Tournament/Details/" + x.TournamentID) }).ToList();
+            var tournamentsDb = db.Tournaments.Select(x => new { x.TournamentID, x.TournamentName, x.Game, x.Description, url = ("/Tournaments/Details/" + x.TournamentID) }).ToList();
             var jsonResponse = new JArray();
             var mylist = new List<Object>();
 
@@ -263,5 +300,22 @@ namespace OBM.Controllers
             result.Replace(']', '}');
             return result;
         }
+
+
+        [HttpGet]
+        public JsonResult TournamentListGet()
+        {
+            int id = Int32.Parse(Request.Params["EventID"]);
+            List<Tournament> TournamentList = new List<Tournament>();
+
+            foreach (var i in db.Tournaments.Where(x => x.EventID == id).ToList())
+            {
+                TournamentList.Add(i);
+                Debug.WriteLine(i);
+            }
+
+            return Json(JsonConvert.SerializeObject(TournamentList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
