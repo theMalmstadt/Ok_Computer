@@ -76,12 +76,11 @@ namespace OBM.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult BulkAddParticipants(string bulkadd, int TourneyID)
+        public ActionResult BulkAddParticipants(string bulkAdd, int TourneyID)
         {
             var tourney = db.Tournaments.Find(TourneyID);
             //CheckDBParticipants();
-            if (!string.IsNullOrEmpty(bulkadd))
+            if (!string.IsNullOrEmpty(bulkAdd))
             {
                 var userApiKey = db.AspNetUsers.FindAsync(User.Identity.GetUserId()).Result.ApiKey;
 
@@ -91,7 +90,7 @@ namespace OBM.Controllers
 
                 char[] parser = { ' ', ',' };
 
-                string[] bulkaddnames = bulkadd.Split(parser, StringSplitOptions.RemoveEmptyEntries);
+                string[] bulkaddnames = bulkAdd.Split(parser, StringSplitOptions.RemoveEmptyEntries);
                 if (DuplicateParticipants(bulkaddnames))
                 {
                     JObject senddata = new JObject();
