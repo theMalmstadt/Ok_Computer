@@ -293,6 +293,10 @@ namespace OBM.Controllers
             return Json(JsonConvert.SerializeObject(TournamentList, Formatting.Indented), JsonRequestBehavior.AllowGet);
         }
 
+
+
+        
+
         [HttpGet]
         public ActionResult NewTournament(int? id)
         {

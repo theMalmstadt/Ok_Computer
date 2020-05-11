@@ -300,5 +300,22 @@ namespace OBM.Controllers
             result.Replace(']', '}');
             return result;
         }
+
+
+        [HttpGet]
+        public JsonResult TournamentListGet()
+        {
+            int id = Int32.Parse(Request.Params["EventID"]);
+            List<Tournament> TournamentList = new List<Tournament>();
+
+            foreach (var i in db.Tournaments.Where(x => x.EventID == id).ToList())
+            {
+                TournamentList.Add(i);
+                Debug.WriteLine(i);
+            }
+
+            return Json(JsonConvert.SerializeObject(TournamentList, Formatting.Indented), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

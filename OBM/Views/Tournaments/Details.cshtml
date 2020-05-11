@@ -61,7 +61,7 @@
 
 
     <div id="competitorList">
-
+        <h1>Competitors:</h1>
     </div>
     <script>
         tournament_id =@Model.TournamentID;
@@ -76,8 +76,8 @@
                 {
                     $("#competitorList").append('<table class="table"><thead><tr>');
 
-                    i = 0;
-                    while (i < data.length)
+                    i = 1;
+                    while (i <= data.length)
                     {
 
                         $("#competitorList").append("<tr><th>"+i+":    </th><td>"+data[i]+"</tr></td>");

@@ -4,9 +4,8 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
-@if (ViewBag.Access == true)
-{
+    <h2>@Model.EventName</h2>
+
     <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
     <div>
         <h4>Event</h4>
@@ -20,13 +19,8 @@
                 @Html.DisplayFor(model => model.OrganizerName)
             </dd>
 
-            <dt>
-                @Html.DisplayNameFor(model => model.EventName)
-            </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.EventName)
-            </dd>
+            
 
             <dt>
                 @Html.DisplayNameFor(model => model.Description)
@@ -56,24 +50,46 @@
                 @Html.ActionLink("View Standings", "Standings", new { id = Model.EventID })
             </dd>
         </dl>
-        <div class="col-md-10" align="center">
-            <div id="Matches"></div>
-            <div id="Competitors"></div>
+
+
+        <div class="dl-horizontal" id="TournamentList">
+            <h1>
+                Tournaments      
+            </h1>
         </div>
+        <script>
+             EventID =@Model.EventID;
+        console.log(EventID);
+        $.ajax({
+            url: "/Tournaments/TournamentListGet?EventID="+EventID,
+            data: EventID,
+            type: 'GET',
+            dataType: 'json',
+            success:
+                function (data)
+                {
+                    $("#TournamentList").append('<table class="table"><thead><tr>');
+
+                    i = 1;
+                    data = JSON.parse(data);
+                    while (i <= data.length)
+                    {
+
+                        $("#TournamentList").append("<tr><th>"+i+":    </th><td><a href=/Tournaments/Details/"+data[i]["TournamentID"]+">"+data[i]["TournamentName"]+"</tr></td>");
+
+                        i++;
+                    }
+
+
+                    $("#TournamentList").append('</table></thead></tr>');
+                }
+});
+        </script>
     </div>
+</br>
     <p>
-        @Html.ActionLink("Edit", "Edit", new { id = Model.EventID }) |
         @Html.ActionLink("Back to List", "Index")
     </p>
-}
-else
-{
-    <div class="form-horizontal">
-        <h4>Access Denied</h4>
-    </div>
-}
 
-@section scripts {
-    <script type="text/javascript" src="~/Scripts/MatchDisplay.js"></script>
-    <script type="text/javascript" src="~/Scripts/sendSMS.js"></script>
-}
+
+

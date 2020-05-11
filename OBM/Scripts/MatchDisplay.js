@@ -155,11 +155,12 @@ function StreamMatch(round, player1, player2) {
 }
 
 
+
 function ResetMatch(mymatch) {
     console.log(mymatch);
     //if (mymatch["PrereqMatch1ID"] == null && mymatch["PrereqMatch1ID"] == null) {
     //MAKE REQUEST TO START MATCH
-
+    mymatch.__RequestVerificationToken = token;
     $.ajax({
         type: 'POST',
         url: '/Events/ResetMatch/',
