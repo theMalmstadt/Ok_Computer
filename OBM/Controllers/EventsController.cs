@@ -64,6 +64,11 @@ namespace OBM.Controllers
             return View(eventView);
         }
 
+        public ActionResult StreamHelp()
+        {
+            return View();
+        }
+
         [HttpGet]
         public String PublicEvents()
         {
