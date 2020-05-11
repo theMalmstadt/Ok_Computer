@@ -63,7 +63,7 @@ label input:focus, label .custom-select:focus {
 }
 
 option:checked, .page-item.active .page-link {
-    background-color: #2cab3b !important;
+    background-color: #0b8a1a !important;
     cursor: pointer !important;
     border-color: #2cab3b !important;
 }
@@ -87,7 +87,7 @@ option:checked, .page-item.active .page-link {
 
 .paginate_button {
     background: #2cab3b !important;
-    color: #58585A !important;
+    color: #2e2e30 !important;
 }
 
 nav {
@@ -325,4 +325,12 @@ input:checked + .slider:before {
 
 .btn-outline-danger {
     color: #ca2333;
+}
+
+.darker {
+    background-color: #6b747c;
+}
+
+.nublu {
+    color: #0070f4;
 }

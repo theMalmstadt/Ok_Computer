@@ -36,3 +36,8 @@ $(document).ready(function () {
     $('.dataTables_info').addClass('text-light');
     $('label').addClass('text-light');
 });
+
+
+$(document).ready(function () {
+    $('.page-link ').addClass('nublu');
+});
