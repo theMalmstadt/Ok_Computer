@@ -21,7 +21,7 @@
         <a href="@Url.Action("Index", "Home")">
             <img class="nav-logo" alt="OK Computer icon logo" src="@Url.Content("~/Media/OKsign.png")">
         </a>
-            
+
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
                 <li><i>@Html.ActionLink("OK Brackets", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "nav-item" })</i></li>
@@ -40,15 +40,32 @@
     </nav>
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/Scripts/grayscale.js")
     <div class="container-fluid body-content">
         @RenderBody()
     </div>
     <hr />
     <footer>
         <div class="row justify-content-center">
-            <div class="col-md-auto">
+            <div class="col"></div>
+            <div class="col-auto" align="center">
+
                 <a href="~/Home/About"><img class="team-logo" src="~/Media/OKlogo.png" alt="OK Computer full logo" /></a>
                 <p class="cp">&copy; @DateTime.Now.Year</p>
+            </div>
+            <div class="col" align="right">
+                
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <p>Colorblind</p>
+                    </div>
+                    <div class="col-auto">
+                        <label class="switch">
+                            <input type="checkbox" onclick="changeGrayscale()">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>

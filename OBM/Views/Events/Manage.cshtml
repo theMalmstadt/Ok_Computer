@@ -3,14 +3,20 @@
 @{
     ViewBag.Title = "Manage";
 
-    <h2>@Html.DisplayFor(model => model.EventName)</h2>
-    <p>@Html.ActionLink("Add Tournament", "NewTournament/" + Model.EventID)</p>
-    <p>@Html.ActionLink("Create and import a new Challonge Tournament", controllerName: "Tournaments", actionName: "Create")</p>
-    <input id="EventID" type="hidden" value="@Model.EventID" />
-    <div class="col-md-10" align="center">
-        @if (ViewBag.Access == true)
-        {
-            <button onclick="toggleStream()">Stream Tools</button>
+    <div class="row">
+        <div class="col" align="center">
+            <h1><i>@Html.DisplayFor(model => model.EventName)</i></h1>
+        </div>
+        <div class="col" align="center">
+            <p>@Html.ActionLink("Add Tournament from Challonge", "NewTournament/" + Model.EventID)</p>
+            <p>@Html.ActionLink("Create new Challonge Tournament", controllerName: "Tournaments", actionName: "Create")</p>
+            <input id="EventID" type="hidden" value="@Model.EventID" />
+        </div>
+    </div>
+    if (ViewBag.Access == true)
+    {
+        <div class="col-md-10" align="center">
+            <button type="button" class ="btn createbtn" onclick="toggleStream()">Stream Tools</button>
             <form id="streamForm" style="display: none">
                 <br />
                 <label for="round">Round:</label>
@@ -25,30 +31,31 @@
                 <input type="number" id="score2" name="score2" value="0" /><br />
                 <input type="button" onclick="updateAll()" value="Update">
             </form>
-
-            <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
-            <div id="Matches">
-                @Html.AntiForgeryToken();
-            </div>
-            <div id="Competitors">
-            </div>
-            <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
-            <div id="MinimalGraph" style="display:block">
-                <canvas id="myChart"></canvas>
-            </div>
-
-            <p>
-                @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
-                @Html.ActionLink("Back to List", "Index")
-            </p>
-        }
-        else
-        {
-            <div class="form-horizontal">
-                <h4>Access Denied</h4>
-            </div>
-        }
-    </div>
+        <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+        <div id="Matches">
+            @Html.AntiForgeryToken();
+        </div>
+        <div id="Competitors">
+        </div>
+        <br />
+        <button type="button" onclick="hideShow('MinimalGraph');" class="btn createbtn">Show Estimated Time Line</button>
+        <div id="MinimalGraph" style="display:none">
+            <canvas id="EventGraph" aria-label="Estimated Event Timeline"></canvas>
+        </div>
+        <br />
+            <br />
+        <p>
+            @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+        </div>
+    }
+    else
+    {
+        <div class="form-horizontal">
+            <h4>Access Denied</h4>
+        </div>
+    }
 }
 @section scripts {
     @Scripts.Render("~/bundles/MatchDisplay")

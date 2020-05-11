@@ -433,7 +433,7 @@ function drawTree(data) {
         largestRound = 0;
     }
     
-    var ctx = document.getElementById('myChart');
+    var ctx = document.getElementById('EventGraph');
     ctx.height = 100 * trees.length * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
