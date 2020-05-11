@@ -24,6 +24,7 @@
                 <label for="score2">Score 2:</label>
                 <input type="number" id="score2" name="score2" value="0" /><br />
                 <input type="button" onclick="updateAll()" value="Update">
+                <p>@Html.ActionLink("Need help with stream files?", controllerName:"Events", actionName:"StreamHelp")</p>
             </form>
 
             <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
