@@ -84,6 +84,10 @@ namespace OBM.Controllers
             ViewBag.TournamentID = id;
             return View(eventView);
         }
+        public ActionResult StreamHelp()
+        {
+            return View();
+        }
 
         [HttpGet]
         public String PublicEvents()
@@ -1033,7 +1037,9 @@ namespace OBM.Controllers
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "PUT";
 
-            var matchDetails = JObject.Parse(MatchDetails(matchApiId, tournamentApiId, apiKey));
+            var details = MatchDetails(matchApiId, tournamentApiId, apiKey);
+            Debug.WriteLine(details);
+            var matchDetails = JObject.Parse(details);
             Debug.WriteLine("CHALLONGE MATCH DETAILS: " + matchDetails);
 
             JObject match = new JObject();

@@ -492,6 +492,7 @@
     <Content Include="Scripts\popper-utils.min.js.map" />
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Events\HiddenMatches.cshtml" />
+    <Content Include="Views\Events\StreamHelp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
