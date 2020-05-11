@@ -407,9 +407,9 @@ namespace OBM.Controllers
                 {
                     throw new HttpException(404, "Page not Found");
                 }
-                if ((tour.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == db.Events.Find(found.EventID).OrganizerID)))
+                if (Request.IsAuthenticated && (User.Identity.GetUserId() == db.Events.Find(found.EventID).OrganizerID))
                 {
-                    ViewBag.Access = true;
+                    ViewBag.Access = "full";
                     ViewBag.keyCheck = "Log in for custom seeding options";
                     var motherEvent = db.Events.Find(found.EventID);
 
@@ -458,7 +458,14 @@ namespace OBM.Controllers
                 }
                 else
                 {
-                    ViewBag.Access = false;
+                    if (tour.Public == true)
+                    {
+                        ViewBag.Access = "some";
+                    }
+                    else
+                    {
+                        ViewBag.Access = "none";
+                    }
                 }
                 return View(tour);
 

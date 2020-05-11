@@ -7,7 +7,7 @@
 
     <h1>@WebUtility.HtmlDecode(Model.TournamentName)</h1>
 
-    if (ViewBag.Access == true)
+    if (ViewBag.Access == "some" || ViewBag.Access == "full")
     {
 
         <div>
@@ -32,7 +32,7 @@
                 <dd><a href="https://challonge.com/@Html.DisplayFor(model => model.UrlString)">https://challonge.com/@Html.DisplayFor(model => model.UrlString)</a></dd>
 
             </dl>
-            @if (Model.IsStarted == "No")
+            @if ((Model.IsStarted == "No") && (ViewBag.Access == "full"))
             {
                 <p>@TempData["Result"]</p>
                 <dl class="dl-horizontal">
