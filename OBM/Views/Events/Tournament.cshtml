@@ -59,10 +59,10 @@
                             <br />
 
                             <div class="Single add" id="participantOptions">
-                                <label for="create">Participant's Name or Gamer Tag: </label>
+                                <label class="default-OBM-text" for="create">Participant's Name or Gamer Tag: </label>
                                 <br />
                                 <input type="text" name="singleAdd" />
-                                <input type="submit" value="Add" class="btn createbtn" />
+                                <input type="submit" value="Add" class="btn createbtn2" />
                                 <input type="hidden" name="ApiID" value="@ViewBag.ApiID" />
                                 <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                             </div>
@@ -80,10 +80,10 @@
                                 <div>
                                     <i>Format input like; participant,participant,...</i>
                                 </div>
-                                <label id="bulkAdd" for="bulkadd">Bulk add Participants:</label>
+                                <label id="bulkAdd" class="default-OBM-text" for="bulkadd">Bulk add Participants:</label>
                                 <br />
                                 <input type="text" name="bulkadd" />
-                                <input type="submit" value="Bulk Add" class="btn createbtn" />
+                                <input type="submit" value="Bulk Add" class="btn createbtn2" />
                                 <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                             </div>
                         </dd>
@@ -100,11 +100,11 @@
                                 <div>
                                     <i>upload a .CSV file with each participant alone on each line</i>
                                 </div>
-                                <label id="bulkAdd" for="bulkadd">Bulk add Participants:</label>
+                                <label id="bulkAdd" class="default-OBM-text" for="bulkadd">Bulk add Participants:</label>
                                 <br />
                                 <input type="hidden" name="bulkadd" id="bulkadd" />
                                 <input type="file" name="CSV" accept=".csv" id="CSV" />
-                                <input type="submit" value="Submit" class="btn createbtn" />
+                                <input type="submit" value="Submit" class="btn createbtn2" />
                                 <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
                                 <br />
                             </div>
@@ -113,7 +113,7 @@
                     }
                 </dl>
                 <h6 class="font-weight-bold">Remove Participants:</h6>
-                <button id="CompTablebtn" onclick="ShowAndHideTable()" class="btn btn-success mb-2">Show</button>
+                <button id="CompTablebtn" onclick="ShowAndHideTable()" class="btn createbtn2 mb-2">Show</button>
                 using (Html.BeginForm("DeleteCompetitors","Competitor", FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to remove ALL competitors from this tournament?')" }))
                 {
                     <input type="hidden" name="clearAll" value="@ViewBag.clearAll" />
@@ -153,16 +153,16 @@
                         </dd>
                     }
                 </dl>
-
-                <button type="button" onclick="hideShow('seed-div');">Seed</button>
+                <dl><dt>Seed Competitors</dt></dl>
+                <button type="button" class="btn createbtn2" onclick="hideShow('seed-div');">Seed</button>
                 <br />
                 <div id="seed-div" class="container card border-success" style="display:none">
                     <div class="row card-body">
                         <ul class="nav nav-pills flex-column nav-stacked">
-                            <li class="nav-item" style="margin:10px 0;"><a id="select" class="nav-link text-nowrap active" href="#tab_a" data-toggle="pill">Select</a></li>
-                            <li class="nav-item" style="margin:10px 0;"><a id="rank" class="nav-link text-nowrap" href="#tab_b" data-toggle="pill">Rank</a></li>
-                            <li class="nav-item" style="margin:10px 0;"><a id="group" class="nav-link text-nowrap" href="#tab_c" data-toggle="pill">Group</a></li>
-                            <li><button type="button" id="saveBtn" onclick="saveSeed()" class="btn btn-success">Save Seed</button></li>
+                            <li class="nav-item" style="margin:10px 0;"><a id="select" class="nav-link text-nowrap default-OBM-text active" href="#tab_a" data-toggle="pill">Select</a></li>
+                            <li class="nav-item" style="margin:10px 0;"><a id="rank" class="nav-link text-nowrap default-OBM-text" href="#tab_b" data-toggle="pill">Rank</a></li>
+                            <li class="nav-item" style="margin:10px 0;"><a id="group" class="nav-link text-nowrap default-OBM-text" href="#tab_c" data-toggle="pill">Group</a></li>
+                            <li><button type="button" id="saveBtn" onclick="saveSeed()" class="btn">Save Seed</button></li>
                             <li><p>@ViewBag.keyCheck</p></li>
                             <li><p>@ViewBag.Success</p></li>
                         </ul>
@@ -186,10 +186,10 @@
                                     </div>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-success active">
+                                            <label id="trad" class="btn btn-success active">
                                                 <input type="radio" name="seed-method" value="trad" autocomplete="off" checked="checked">Traditional
                                             </label>
-                                            <label class="btn btn-success">
+                                            <label id="seq" class="btn btn-success">
                                                 <input type="radio" name="seed-method" value="seq" autocomplete="off">Sequential
                                             </label>
                                         </div>
@@ -217,7 +217,7 @@
                                     <div class="col">
                                         <div id="groups">
                                         </div>
-                                        <a onclick="addGroup()" style="color:#4ac959;">Add Group</a>
+                                        <a class="linker" onclick="addGroup()" style="color:#4ac959;">Add Group</a>
                                     </div>
                                 </div>
                             </div>
@@ -229,13 +229,13 @@
 
             <table class="table table-bordered table-striped">
                 <tr>
-                    <th>Brackets</th>
+                    <th class="col">Brackets</th>
                 </tr>
 
             </table>
             <table class="table table-bordered table-striped">
                 <tr>
-                    <th>Competitors</th>
+                    <th class="col">Competitors</th>
                 </tr>
             </table>
         </div>
@@ -244,10 +244,12 @@
         <input id="TournamentID" type="hidden" value="@Model.TournamentID" />
         <input id="UrlString" type="hidden" value="@Model.UrlString" />
 
-        <button type="button" onclick="hideShow('MinimalGraph');">Show Time Line</button>
-        <div id="MinimalGraph" style="display:block">
+        <button type="button" onclick="hideShow('MinimalGraph');" class="btn createbtn2">Show Time Line</button>
+        <div id="MinimalGraph" style="display:none">
             <canvas id="myChart"></canvas>
         </div>
+        <br />
+        <br />
 
         using (Html.BeginForm(FormMethod.Post))
 

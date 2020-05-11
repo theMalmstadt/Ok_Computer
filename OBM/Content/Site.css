@@ -22,7 +22,13 @@
     color: white;
     font-size: 1.5em;
 }
-.createbtn:hover {
+
+.createbtn2 {
+    background-color: #0b8a1a !important;
+    color: white;
+}
+
+.createbtn:hover, .createbtn2:hover {
     cursor: pointer;
     color: #444b53;
 }
@@ -81,6 +87,7 @@ option:checked, .page-item.active .page-link {
 
 .paginate_button {
     background: #2cab3b !important;
+    color: #58585A !important;
 }
 
 nav {
@@ -285,4 +292,29 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.default-OBM-text {
+    color: #2e2e30 !important;
+}
+
+#select.active, #rank.active, #group.active {
+    color: #2e2e30 !important;
+}
+
+#saveBtn {
+    background-color: #0b8a1a;
+    color: white;
+}
+
+#seq, #trad {
+    background-color: dimgray;
+}
+
+#seq.active, #trad.active {
+    background-color: #078616;
+}
+
+.linker {
+    color: #0b8a1a !important;
 }
