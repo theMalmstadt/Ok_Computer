@@ -250,6 +250,8 @@ var ajaxMatches = function () {
     });
 }
 
+var graphText = "";
+
 function lineage(data, current, currY, childY, e, offset) {
     var compList = [];
     var dataList = [];

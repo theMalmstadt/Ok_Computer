@@ -318,3 +318,11 @@ input:checked + .slider:before {
 .linker {
     color: #0b8a1a !important;
 }
+
+.btn-outline-success {
+    color: #006b15;
+}
+
+.btn-outline-danger {
+    color: #ca2333;
+}
