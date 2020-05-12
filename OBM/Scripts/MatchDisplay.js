@@ -326,6 +326,8 @@ function lineage(data, current, currY, childY, e, offset) {
         pointHoverRadius: 30
     }];
 
+    graphText += "(" + node[0].title + " at " + node[0].label + ") ";
+
     return {
         node: node,
         nodeLineColor: nodeLineColor,
@@ -517,6 +519,7 @@ function drawTree(data) {
             }
         }
     });
+    $('#EventGraph').html(graphText);
 }
 
 window.onload = ajaxMatches;
