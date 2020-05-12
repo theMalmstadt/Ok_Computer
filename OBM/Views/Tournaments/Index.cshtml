@@ -12,25 +12,25 @@
 <table class="table" id="TournamentTable">
     <thead>
         <tr>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.TournamentName)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.EventID)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Game)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.ApiId)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.UrlString)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.IsTeams)
             </th>
         </tr>
@@ -41,16 +41,16 @@
             
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TournamentName)
+                    @WebUtility.HtmlDecode(item.TournamentName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EventID)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Description)
+                    @WebUtility.HtmlDecode(item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Game)
+                    @WebUtility.HtmlDecode(item.Game)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ApiId)
@@ -58,15 +58,25 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UrlString)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsTeams)
-                </td>
+                @{ 
+                    if(item.IsTeams)
+                    {
+                        <td>
+                            Yes
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            No   
+                        </td>
+                    }
+                }
             </tr>
         }
     </tbody>
 </table>
 <table id="table2"></table>
-<link rel="stylesheet" type="text/css" href="~/Content/jquery.dataTables.css">
 
 <script type="text/javascript" charset="utf8" src="~/Scripts/jquery.dataTables.js"></script>
 <script src="~/Scripts/TournamentSearch.js"></script>

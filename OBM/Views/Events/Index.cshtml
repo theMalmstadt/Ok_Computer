@@ -9,34 +9,36 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+<table class="table table-bordered table-striped">
     <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.OrganizerName)
+        <th scope="col">
+            Event Name
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EventName)
+        <th scope="col">
+            Organizer
         </th>
-        <th>
+        <th scope="col">
             @Html.DisplayNameFor(model => model.Description)
         </th>
-        <th>
+        <th scope="col">
             @Html.DisplayNameFor(model => model.Location)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Public)
+        <th scope="col">
+            Access
         </th>
-        <th></th>
+        <th scope="col">
+            Options
+        </th>
     </tr>
 
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.OrganizerName)
+                @Html.DisplayFor(modelItem => item.EventName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EventName)
+                @Html.DisplayFor(modelItem => item.OrganizerName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
@@ -44,9 +46,20 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Location)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Public)
-            </td>
+            @{ 
+                if(item.Public)
+                {
+                    <td>
+                        Public
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        Private   
+                    </td>
+                }
+            }
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.EventID }) |
                 @Html.ActionLink("Details", "Details", new { id = item.EventID }) |
