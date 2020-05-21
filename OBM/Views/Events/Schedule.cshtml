@@ -1,7 +1,30 @@
-﻿
+﻿@model IEnumerable<OBM.Models.Tournament>
 @{
     ViewBag.Title = "Schedule";
 }
-
 <h2>Schedule</h2>
 
+<div class="container">
+    <div>
+        @foreach (var tourn in Model)
+        {
+            <div class="card card-body">
+                <p>@tourn.TournamentName</p>
+
+                <input name="@tourn.TournamentName-timepicker" class="timepicker border border-dark" width="276" type="time" format="h:mm p" required/>
+
+            </div>
+        }
+    </div>
+</div>
+
+
+
+
+
+    <script src="~/Scripts/gijgo/combined/gijgo.js" type="text/javascript"></script>
+    <link href="~/Content/gijgo/combined/gijgo.css" rel="stylesheet" type="text/css" />
+
+
+
+<script src="~/Scripts/ScheduleOptions.js"></script>

@@ -1401,7 +1401,8 @@ namespace OBM.Controllers
 
         public ActionResult Schedule(int id)
         {
-            return View();
+            var tourns = db.Tournaments.Where(x => x.EventID == id);
+            return View(tourns);
         }
     }
 }
