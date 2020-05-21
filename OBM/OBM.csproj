@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44355</IISExpressSSLPort>
+    <IISExpressSSLPort>44321</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -497,6 +497,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
     <Content Include="Views\Events\HiddenMatches.cshtml" />
     <Content Include="Views\Events\StreamHelp.cshtml" />
+    <Content Include="Views\Events\Schedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

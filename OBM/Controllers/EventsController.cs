@@ -1398,5 +1398,10 @@ namespace OBM.Controllers
             catch { }
             return jsonString;
         }
+
+        public ActionResult Schedule(int id)
+        {
+            return View();
+        }
     }
 }
