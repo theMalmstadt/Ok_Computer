@@ -13,29 +13,39 @@
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label for="@tourn.TournamentID-timePicker">Start Time</label>
-                        <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border border-dark form-control" type="time" format="h:mm p" value="@time" required />
+                        <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border-dark form-control" type="time" format="h:mm p" value="@time" required />
                     </div>
                     <div class="form-group col-md-2">
                         <label for="@tourn.TournamentID-matchTime">Match Time</label>
-                        <input id="@tourn.TournamentID-matchTime" type="number" class="form-control" aria-describedby="minutesBetweenMatches" value="10" min="1" , max="1440" />
+                        <input id="@tourn.TournamentID-matchTime" type="number" class="border-dark form-control" aria-describedby="minutesBetweenMatches" value="10" min="1" max="1440" />
                     </div>
                     <div class="form-group col-md-2">
                         <label for="@tourn.TournamentID-stations">Stations</label>
-                        <input id="@tourn.TournamentID-stations" type="number" class="form-control" aria-describedby="numberOfStations" value="1" min="1" , max="100" />
+                        <input id="@tourn.TournamentID-stations" type="number" class="border-dark form-control" aria-describedby="numberOfStations" value="1" min="1" max="100" />
                     </div>
                 </div>
             </div>
         }
         <div class="card card-body">
-            <h3>Entire Event</h3>
-            <div>
-                <label for="break-1">Break 1: </label>
-                <input type="text" id="break-1" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            <div class="form-row">
+                <div class="form-group col">
+                    <h3>Entire Event</h3>
+                </div>
+                <div class="form-group col" align="right">
+                    <a class="linker" onclick="addGroup()" style="color:#4ac959;">Add Group</a>
+                </div>
             </div>
-
-            <div id="slider-range"></div>
-
-
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="break-1-name">Break Name</label>
+                    <input id="break-1-name" type="text" class="border-dark form-control" aria-describedby="breakName" value="Break 1" />
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="break-1-value">Break Period</label>
+                    <input type="text" id="break-1-value" readonly style="border:0; color:#0b8a1a; font-weight:bold;">
+                </div>
+            </div>
+        <div id="slider-range"></div>
         </div>
     <br />
     <div align="center">

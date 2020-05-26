@@ -17,10 +17,7 @@ $('input.timepicker').each(function () {
 function breakSlider(n) {
     $(function () {
         var dummy = new Date();
-        dummy.setMinutes(-1);
-        //console.log(dummy);
-        dummy.setMinutes(1);
-        //console.log(dummy.getMinutes());
+        dummy.setMinutes(0);
         $("#slider-range").slider({
             range: true,
             min: dummy.setHours(0),
@@ -30,11 +27,13 @@ function breakSlider(n) {
             slide: function (event, ui) {
                 data.breakStart = formatAMPM(new Date(ui.values[0]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[0]).getMinutes());
                 data.breakStop = formatAMPM(new Date(ui.values[1]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[1]).getMinutes());
-                $("#break-1").val(data.breakStart + " - " + data.breakStop);
-                //console.log(data);
+                $("#break-1-value").val(data.breakStart + " - " + data.breakStop);
             }
         });
     });
+    var dummy = new Date();
+    dummy.setMinutes(0);
+    $("#break-1-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
 }
 
 function formatAMPM(date) {
