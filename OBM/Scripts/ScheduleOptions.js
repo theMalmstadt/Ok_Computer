@@ -1,4 +1,5 @@
 ﻿var data = [];
+var breakCount = 0;
 
 $('input.timepicker').each(function () {
     var tourn = {
@@ -14,11 +15,20 @@ $('input.timepicker').each(function () {
     })
 });
 
+function addBreak() {
+    $("#breaks").append('<div class="form - row"><div class= "form-group col-md-4" ><label for="break-' + breakCount + '-name">Break Name</label>' +
+        '<input id="break-' + breakCount + '-name" type="text" class="border-dark form-control" aria-describedby="breakName" value="Break ' + (breakCount+1) + '" />' +
+        '</div><div class="form-group col-md-4"><label for="break-' + breakCount + '-value">Break Period</label>' +
+        '<input type="text" id="break-' + breakCount + '-value" readonly style="border:0; color:#0b8a1a; font-weight:bold;"></div></div><div id="slider-range-' + breakCount +'"></div>');
+    breakSlider(breakCount);
+    breakCount++;
+}
+
 function breakSlider(n) {
     $(function () {
         var dummy = new Date();
         dummy.setMinutes(0);
-        $("#slider-range").slider({
+        $("#slider-range-" + n).slider({
             range: true,
             min: dummy.setHours(0),
             max: dummy.setHours(23),
@@ -27,13 +37,13 @@ function breakSlider(n) {
             slide: function (event, ui) {
                 data.breakStart = formatAMPM(new Date(ui.values[0]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[0]).getMinutes());
                 data.breakStop = formatAMPM(new Date(ui.values[1]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[1]).getMinutes());
-                $("#break-1-value").val(data.breakStart + " - " + data.breakStop);
+                $("#break-" + n + "-value").val(data.breakStart + " - " + data.breakStop);
             }
         });
     });
     var dummy = new Date();
     dummy.setMinutes(0);
-    $("#break-1-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
+    $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
 }
 
 function formatAMPM(date) {
@@ -56,4 +66,4 @@ function sendData() {
     console.log(data);
 }
 
-window.onload = breakSlider(1);
+//window.onload = breakSlider(1);
