@@ -1,4 +1,14 @@
-﻿$('input.timepicker').each(function () {
+﻿var data = [];
+
+$('input.timepicker').each(function () {
+    var tourn = {
+        tournID : this.getAttribute('tournid'),
+        tournName: this.name,
+        startTime: 0,
+        matchTime: 10,
+        stations: 1
+    }
+    data[data.length] = tourn;
     $(this).timepicker({
         uiLibrary: 'bootstrap4'
     })
@@ -8,9 +18,9 @@ function breakSlider(n) {
     $(function () {
         var dummy = new Date();
         dummy.setMinutes(-1);
-        console.log(dummy);
+        //console.log(dummy);
         dummy.setMinutes(1);
-        console.log(dummy.getMinutes());
+        //console.log(dummy.getMinutes());
         $("#slider-range").slider({
             range: true,
             min: dummy.setHours(0),
@@ -18,9 +28,10 @@ function breakSlider(n) {
             step: 15,
             values: [dummy.setHours(12), dummy.setHours(13)],
             slide: function (event, ui) {
-                var l = formatAMPM(new Date(ui.values[0]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[0]).getMinutes());
-                var r = formatAMPM(new Date(ui.values[1]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[1]).getMinutes());
-                $("#amount").val(l + " - " + r);
+                data.breakStart = formatAMPM(new Date(ui.values[0]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[0]).getMinutes());
+                data.breakStop = formatAMPM(new Date(ui.values[1]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[1]).getMinutes());
+                $("#break-1").val(data.breakStart + " - " + data.breakStop);
+                //console.log(data);
             }
         });
     });
@@ -35,6 +46,15 @@ function formatAMPM(date) {
     minutes = minutes < 10 ? '0' + minutes : minutes;
     var strTime = hours + ':' + minutes + ' ' + ampm;
     return strTime;
+}
+
+function sendData() {
+    for (var i = 0; i < data.length; i++) {
+        data[i].startTime = document.getElementById(data[i].tournID + "-timePicker").value;
+        data[i].matchTime = Number(document.getElementById(data[i].tournID + "-matchTime").value);
+        data[i].stations = Number(document.getElementById(data[i].tournID + "-stations").value);
+    }
+    console.log(data);
 }
 
 window.onload = breakSlider(1);

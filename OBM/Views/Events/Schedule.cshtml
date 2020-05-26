@@ -5,27 +5,44 @@
 <h2>Schedule</h2>
 
 <div class="container">
-    @foreach (var tourn in Model)
-    {
+        @foreach (var tourn in Model)
+        {
+            string time = DateTime.Now.AddMinutes(5).ToString("hh:mm");
+            <div id="@tourn.TournamentID" class="card card-body">
+                <h3>@tourn.TournamentName</h3>
+                <div class="form-row">
+                    <div class="form-group col-md-3">
+                        <label for="@tourn.TournamentID-timePicker">Start Time</label>
+                        <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border border-dark form-control" type="time" format="h:mm p" value="@time" required />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="@tourn.TournamentID-matchTime">Match Time</label>
+                        <input id="@tourn.TournamentID-matchTime" type="number" class="form-control" aria-describedby="minutesBetweenMatches" value="10" min="1" , max="1440" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="@tourn.TournamentID-stations">Stations</label>
+                        <input id="@tourn.TournamentID-stations" type="number" class="form-control" aria-describedby="numberOfStations" value="1" min="1" , max="100" />
+                    </div>
+                </div>
+            </div>
+        }
         <div class="card card-body">
-            <p>@tourn.TournamentName</p>
+            <h3>Entire Event</h3>
+            <div>
+                <label for="break-1">Break 1: </label>
+                <input type="text" id="break-1" readonly style="border:0; color:#f6931f; font-weight:bold;">
+            </div>
 
-            <input name="@tourn.TournamentName-timepicker" class="timepicker border border-dark" width="276" type="time" format="h:mm p" required />
+            <div id="slider-range"></div>
+
 
         </div>
-    }
-    <div class="card card-body">
-        <p>
-            <label for="amount">Break period:</label>
-            <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
-        </p>
-
-        <div id="slider-range"></div>
+    <br />
+    <div align="center">
+        <button type="button" id="generate" onclick="sendData()" class="btn">Generate Schedule</button>
     </div>
+    <br />
 </div>
-
-
-
 
 
 
