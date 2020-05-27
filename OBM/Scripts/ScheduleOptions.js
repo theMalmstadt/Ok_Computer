@@ -1,5 +1,5 @@
 ﻿var token = $('[name=__RequestVerificationToken]').val();
-var data = [];
+var tourns = [];
 var breaks = [];
 var breakCount = 0;
 
@@ -11,7 +11,7 @@ $('input.timepicker').each(function () {
         matchTime: 10,
         stations: 1
     }
-    data[data.length] = tourn;
+    tourns[tourns.length] = tourn;
     $(this).timepicker({
         uiLibrary: 'bootstrap4'
     })
@@ -76,13 +76,21 @@ function formatAMPM(date) {
 }
 
 function sendData() {
-    for (var i = 0; i < data.length; i++) {
-        data[i].startTime = document.getElementById(data[i].tournID + "-timePicker").value;
-        data[i].matchTime = Number(document.getElementById(data[i].tournID + "-matchTime").value);
-        data[i].stations = Number(document.getElementById(data[i].tournID + "-stations").value);
+    for (var i = 0; i < tourns.length; i++) {
+        var tourn = {
+            tournID: tourns[i].tournID,
+            tournName: tourns[i].tournName,
+            startTime: document.getElementById(tourns[i].tournID + "-timePicker").value,
+            matchTime: Number(document.getElementById(tourns[i].tournID + "-matchTime").value),
+            stations: Number(document.getElementById(tourns[i].tournID + "-stations").value)
+        }
+        tourns[i] = tourn;
     } 
-    data.breaks = breaks;
-    //console.log(data);
+    var data = {
+        breaks: breaks,
+        tourns: tourns
+    }
+    console.log(data);
 
     $.ajax({
         type: 'POST',
