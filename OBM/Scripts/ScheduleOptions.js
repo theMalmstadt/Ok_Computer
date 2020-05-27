@@ -87,9 +87,9 @@ function sendData() {
     $.ajax({
         type: 'POST',
         url: '/Events/GenerateSchedule?json=' + encodeURIComponent(JSON.stringify(data)),
-        dataType: "json",
         data: { __RequestVerificationToken: token },
-        success: console.log("schedule requested", JSON.stringify(data)),
-        error: console.log("POST request was unsuccessful")
+        success: function (response) {
+            console.log(response);
+        }
     });
 }

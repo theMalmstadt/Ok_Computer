@@ -1404,5 +1404,12 @@ namespace OBM.Controllers
             var tourns = db.Tournaments.Where(x => x.EventID == id);
             return View(tourns);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult GenerateSchedule(string json)
+        {
+            return Json(new { success = true, responseText = "Your message successfuly sent!"});
+        }
     }
 }
