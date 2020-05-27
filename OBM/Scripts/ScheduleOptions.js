@@ -1,4 +1,6 @@
-﻿var data = [];
+﻿var token = $('[name=__RequestVerificationToken]').val();
+var data = [];
+var breaks = [];
 var breakCount = 0;
 
 $('input.timepicker').each(function () {
@@ -16,7 +18,8 @@ $('input.timepicker').each(function () {
 });
 
 function addBreak() {
-    $("#breaks").append('<div id="break-div-' + breakCount + '" style="padding: 40px;"><div class="form-row"><div class="form-group col-md-4" ><label for="break-' + breakCount + '-name">Break Name</label>' +
+    $("#breaks").append('<div id="break-div-' + breakCount + '" style="padding: 30px;" class="card"><div class="form-row">' +
+        '<div class= "form-group col-md-4" > <label for="break-' + breakCount + '-name">Break Name</label>' +
         '<input id="break-' + breakCount + '-name" type="text" class="border-dark form-control" aria-describedby="breakName" value="Break ' + (breakCount+1) + '" />' +
         '</div><div class="form-group col-md-4"><label for="break-' + breakCount + '-value">Break Period</label>' +
         '<input type="text" id="break-' + breakCount + '-value" readonly style="border:0; color:#0b8a1a; font-weight:bold;"></div>' +
@@ -28,6 +31,7 @@ function addBreak() {
 
 function removeBreak(n) {
     $('#break-div-' + n).remove();
+    breaks.splice(n, 1);
 }
 
 function breakSlider(n) {
@@ -41,13 +45,23 @@ function breakSlider(n) {
             step: 300000,
             values: [dummy.setHours(12), dummy.setHours(13)],
             slide: function (event, ui) {
-                data.breakStart = formatAMPM(new Date(ui.values[0]));
-                data.breakStop = formatAMPM(new Date(ui.values[1]));
-                $("#break-" + n + "-value").val(data.breakStart + " - " + data.breakStop);
+                $("#break-" + n + "-value").val(formatAMPM(new Date(ui.values[0])) + " - " + formatAMPM(new Date(ui.values[1])));
+                breakPeriod = {
+                    breakName: document.getElementById("break-" + n + "-name").value,
+                    breakStart: ui.values[0],       //formatAMPM(new Date(ui.values[0])),
+                    breakStop: ui.values[1]         //formatAMPM(new Date(ui.values[1]))
+                }
+                breaks[n] = breakPeriod;
             }
         });
     });
     $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
+    breakPeriod = {
+        breakName: document.getElementById("break-" + n + "-name").value,
+        breakStart: dummy.setHours(12),
+        breakStop: dummy.setHours(13)
+    }
+    breaks[n] = breakPeriod;
 }
 
 function formatAMPM(date) {
@@ -66,8 +80,16 @@ function sendData() {
         data[i].startTime = document.getElementById(data[i].tournID + "-timePicker").value;
         data[i].matchTime = Number(document.getElementById(data[i].tournID + "-matchTime").value);
         data[i].stations = Number(document.getElementById(data[i].tournID + "-stations").value);
-    }
-    console.log(data);
-}
+    } 
+    data.breaks = breaks;
+    //console.log(data);
 
-//window.onload = breakSlider(1);
+    $.ajax({
+        type: 'POST',
+        url: '/Events/GenerateSchedule?json=' + encodeURIComponent(JSON.stringify(data)),
+        dataType: "json",
+        data: { __RequestVerificationToken: token },
+        success: console.log("schedule requested", JSON.stringify(data)),
+        error: console.log("POST request was unsuccessful")
+    });
+}
