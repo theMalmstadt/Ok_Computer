@@ -1399,9 +1399,26 @@ namespace OBM.Controllers
             return jsonString;
         }
 
-        public ActionResult Schedule(int id)
+        public ActionResult Schedule(int? id)
         {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+
+            var eve = db.Events.Find(id);
+            if (eve == null)
+            {
+                throw new HttpException(404, "Page not Found");
+            }
+
             var tourns = db.Tournaments.Where(x => x.EventID == id);
+            if ((Request.IsAuthenticated && (User.Identity.GetUserId() == eve.OrganizerID)))
+            {
+                ViewBag.Access = true;
+            }
+            else
+                ViewBag.Access = false;
             return View(tourns);
         }
 
