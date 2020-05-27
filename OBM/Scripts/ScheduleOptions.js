@@ -16,33 +16,37 @@ $('input.timepicker').each(function () {
 });
 
 function addBreak() {
-    $("#breaks").append('<div class="form - row"><div class= "form-group col-md-4" ><label for="break-' + breakCount + '-name">Break Name</label>' +
+    $("#breaks").append('<div id="break-div-' + breakCount + '" style="padding: 40px;"><div class="form-row"><div class="form-group col-md-4" ><label for="break-' + breakCount + '-name">Break Name</label>' +
         '<input id="break-' + breakCount + '-name" type="text" class="border-dark form-control" aria-describedby="breakName" value="Break ' + (breakCount+1) + '" />' +
         '</div><div class="form-group col-md-4"><label for="break-' + breakCount + '-value">Break Period</label>' +
-        '<input type="text" id="break-' + breakCount + '-value" readonly style="border:0; color:#0b8a1a; font-weight:bold;"></div></div><div id="slider-range-' + breakCount +'"></div>');
+        '<input type="text" id="break-' + breakCount + '-value" readonly style="border:0; color:#0b8a1a; font-weight:bold;"></div>' +
+        '<div class="form-group col" align="right"><a onclick="removeBreak(' + breakCount + ')" style="color:red;">Remove</a>' +
+        '</div></div><div id="slider-range-' + breakCount +'"></div></div>');
     breakSlider(breakCount);
     breakCount++;
 }
 
+function removeBreak(n) {
+    $('#break-div-' + n).remove();
+}
+
 function breakSlider(n) {
+    var dummy = new Date();
+    dummy.setMinutes(0);
     $(function () {
-        var dummy = new Date();
-        dummy.setMinutes(0);
         $("#slider-range-" + n).slider({
             range: true,
             min: dummy.setHours(0),
             max: dummy.setHours(23),
-            step: 15,
+            step: 300000,
             values: [dummy.setHours(12), dummy.setHours(13)],
             slide: function (event, ui) {
-                data.breakStart = formatAMPM(new Date(ui.values[0]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[0]).getMinutes());
-                data.breakStop = formatAMPM(new Date(ui.values[1]));//.getHours()) + ":" + formatAMPM(new Date(ui.values[1]).getMinutes());
+                data.breakStart = formatAMPM(new Date(ui.values[0]));
+                data.breakStop = formatAMPM(new Date(ui.values[1]));
                 $("#break-" + n + "-value").val(data.breakStart + " - " + data.breakStop);
             }
         });
     });
-    var dummy = new Date();
-    dummy.setMinutes(0);
     $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
 }
 
