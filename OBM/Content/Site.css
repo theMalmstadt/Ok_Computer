@@ -302,7 +302,7 @@ input:checked + .slider:before {
     color: #2e2e30 !important;
 }
 
-#saveBtn {
+#saveBtn, #generate {
     background-color: #0b8a1a;
     color: white;
 }

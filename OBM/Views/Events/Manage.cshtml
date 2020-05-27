@@ -39,6 +39,7 @@
         <div id="Competitors">
         </div>
         <br />
+        @Html.ActionLink("See Schedule", "Schedule", new { id = Model.EventID })
         <button type="button" onclick="hideShow('MinimalGraph');" class="btn createbtn">Show Estimated Time Line</button>
         <div id="MinimalGraph" style="display:none">
             <canvas id="EventGraph" aria-label="Estimated Event Timeline"></canvas>
