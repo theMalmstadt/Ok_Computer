@@ -1470,19 +1470,34 @@ namespace OBM.Controllers
             var foundEvent = db.Events.Find((int)options["event"]);
             var breaks = (JArray)options["breaks"];
             var tourns = (JArray)options["tourns"];
+
+            var schedule = new List<ScheduleViewModel>();
+
             foreach (var tourn in tourns)
             {
-               // System.Diagnostics.Debug.WriteLine((int)tourn["tournID"]);
-                int temp = (int)tourn["tournID"];
-                List<Match> matches = db.Matches.Where(x => x.TournamentID == temp).ToList();
+                var currentTourn = db.Tournaments.Find((int)tourn["tournID"]);
+                var startTime = (int)tourn["startTime"];
+                var matchInterval = (int)tourn["matchTime"];
+                var stations = (int)tourn["stations"];
 
-                System.TimeSpan start = (System.TimeSpan)tourn["tournID"];
-                System.Diagnostics.Debug.WriteLine(start.ToString());
-
+                var movingTime = startTime;
+                var currentStation = 1;
+                List<Match> matches = db.Matches.Where(x => x.TournamentID == currentTourn.TournamentID).ToList();
+                List<Match> filteredMatches = new List<Match>();
                 foreach (var match in matches)
                 {
-                    //System.Diagnostics.Debug.WriteLine(match.Round+","+ match.Competitor1ID);
+                    if ((new MatchViewModel(match).Winner == null) && (match.PrereqMatch1ID == null) && (match.PrereqMatch2ID == null))
+                    {
+                        schedule.Add(new ScheduleViewModel(match, movingTime, currentStation, 100));
+                        movingTime += matchInterval;
+                        //System.Diagnostics.Debug.WriteLine(match.MatchID+"(1)");
+                    }
+                    else
+                    {
+                        filteredMatches.Add(match);
+                    }
                 }
+                System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
             }
 
             return Json(new { success = true, responseText = "Your message successfuly sent!"});

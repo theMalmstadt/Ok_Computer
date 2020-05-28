@@ -63,8 +63,8 @@ function breakSlider(n) {
     $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
     breakPeriod = {
         breakName: document.getElementById("break-" + n + "-name").value,
-        breakStart: dummy.setHours(12) - sub.getTime(),
-        breakStop: dummy.setHours(13) - sub.getTime()
+        breakStart: (dummy.setHours(12) - sub.getTime()) / 60000,
+        breakStop: (dummy.setHours(13) - sub.getTime()) / 60000
     }
     breaks[n] = breakPeriod;
 }
@@ -89,9 +89,9 @@ function formatMilliseconds(time) {
 function sendData() {
     for (var i = 0; i < tourns.length; i++) {
         var tourn = {
-            tournID: tourns[i].tournID,
+            tournID: Number(tourns[i].tournID),
             tournName: tourns[i].tournName,
-            startTime: formatMilliseconds(document.getElementById(tourns[i].tournID + "-timePicker").value),
+            startTime: formatMilliseconds(document.getElementById(tourns[i].tournID + "-timePicker").value) / 60000,
             matchTime: Number(document.getElementById(tourns[i].tournID + "-matchTime").value),
             stations: Number(document.getElementById(tourns[i].tournID + "-stations").value)
         }
@@ -100,7 +100,7 @@ function sendData() {
 
     var data = {
         breaks: breaks,
-        event: document.getElementById("EventID").value,
+        event: Number(document.getElementById("EventID").value),
         tourns: tourns
     }
     console.log(data);
