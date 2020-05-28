@@ -6,16 +6,17 @@
 
 @if (ViewBag.Access == true)
 {
+    <input id="EventID" type="hidden" value="@Model.First().EventID" />
     <div class="container">
             @foreach (var tourn in Model)
             {
-                string time = DateTime.Now.AddMinutes(5).ToString("hh:mm");
+                string time = DateTime.Now.AddMinutes(5).ToString("HH:mm");
                 <div id="@tourn.TournamentID" class="card card-body">
                     <h3>@tourn.TournamentName</h3>
                     <div class="form-row">
                         <div class="form-group col-md-3">
                             <label for="@tourn.TournamentID-timePicker">Start Time</label>
-                            <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border-dark form-control" type="time" format="h:mm p" value="@time" required />
+                            <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border-dark form-control" type="time" format="h:mm" value="@time" required />
                         </div>
                         <div class="form-group col-md-2">
                             <label for="@tourn.TournamentID-matchTime">Match Time</label>

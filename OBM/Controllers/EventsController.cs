@@ -1427,48 +1427,65 @@ namespace OBM.Controllers
         public JsonResult GenerateSchedule(string json)
         {
             /*
-            json = {
-                id: id,                 <-- int
-                method: method,         <-- int
-                ranks: rankList,        <-- list of strings
-                groups: allGroups,      <-- list of list of strings
-                competitors: allComp    <-- list of strings
-            };
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
+            json = 
+                "{
+                    "breaks":
+                        [
+                            {
+                                "breakName": "Break 1",
+                                "breakStart": 43200000,
+                                "breakStop": 46800000
+                            },
+                            {
+                                "breakName": "Break 2",
+                                "breakStart": 43200000,
+                                "breakStop": 46800000
+                            }  
+                        ],
+                    "event": "1",
+                    "tourns":
+                        [
+                            {
+                                "tournID": "1",
+                                "tournName": "one",
+                                "startTime": 36900000,
+                                "matchTime": 10,
+                                "stations": 1
+                            },
+                            {
+                                "tournID": "2",
+                                "tournName": "two",
+                                "startTime": 36900000,
+                                "matchTime": 10,
+                                "stations": 1
+                            }
+                        ]
+                    }";
+            System.Diagnostics.Debug.WriteLine("\nJson: \n" + json + "\n\n");
             */
+
+            System.Diagnostics.Debug.WriteLine("\nJson: \n" + json + "\n\n");
+            var options = JObject.Parse(json);
+
+            var foundEvent = db.Events.Find((int)options["event"]);
+            var breaks = (JArray)options["breaks"];
+            var tourns = (JArray)options["tourns"];
+            foreach (var tourn in tourns)
+            {
+               // System.Diagnostics.Debug.WriteLine((int)tourn["tournID"]);
+                int temp = (int)tourn["tournID"];
+                List<Match> matches = db.Matches.Where(x => x.TournamentID == temp).ToList();
+
+                System.TimeSpan start = (System.TimeSpan)tourn["tournID"];
+                System.Diagnostics.Debug.WriteLine(start.ToString());
+
+                foreach (var match in matches)
+                {
+                    //System.Diagnostics.Debug.WriteLine(match.Round+","+ match.Competitor1ID);
+                }
+            }
 
             return Json(new { success = true, responseText = "Your message successfuly sent!"});
         }
     }
 }
-
-/*
- *             var seedObject = JObject.Parse(json);
-            /*
-                json = {
-                    id: id,                 <-- int
-                    method: method,         <-- int
-                    ranks: rankList,        <-- list of strings
-                    groups: allGroups,      <-- list of list of strings
-                    competitors: allComp    <-- list of strings
-                };
-            System.Diagnostics.Debug.WriteLine("\nJson: {\n" + json + "\n}\n");
-            
-
-Tournament found = db.Tournaments.Find((int)seedObject["id"]);
-            if (db.Events.Find(found.EventID).OrganizerID == User.Identity.GetUserId())
-            {
-                var rankedCompetitors = new List<string>();
-                foreach (var rank in seedObject["ranks"])
-                {
-                    rankedCompetitors.Add(rank.ToString());
-                }
-
-                var leftovers = new List<string>();
-                foreach (var comp in seedObject["competitors"])
-                {
-                    leftovers.Add(comp.ToString());
-                }
-                leftovers = leftovers.Except(rankedCompetitors).ToList();
-
-var filteredGroups = new List<List<string>>(); */

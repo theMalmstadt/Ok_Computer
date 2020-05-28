@@ -36,7 +36,11 @@ function removeBreak(n) {
 
 function breakSlider(n) {
     var dummy = new Date();
+    dummy.setHours(0);
     dummy.setMinutes(0);
+    var sub = new Date();
+    sub.setHours(0);
+    sub.setMinutes(0);
     $(function () {
         $("#slider-range-" + n).slider({
             range: true,
@@ -48,18 +52,19 @@ function breakSlider(n) {
                 $("#break-" + n + "-value").val(formatAMPM(new Date(ui.values[0])) + " - " + formatAMPM(new Date(ui.values[1])));
                 breakPeriod = {
                     breakName: document.getElementById("break-" + n + "-name").value,
-                    breakStart: ui.values[0],       //formatAMPM(new Date(ui.values[0])),
-                    breakStop: ui.values[1]         //formatAMPM(new Date(ui.values[1]))
+                    breakStart: ui.values[0] - sub.getTime(),
+                    breakStop: ui.values[1] - sub.getTime()
                 }
                 breaks[n] = breakPeriod;
+                console.log(ui.values[0]);
             }
         });
     });
     $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
     breakPeriod = {
         breakName: document.getElementById("break-" + n + "-name").value,
-        breakStart: dummy.setHours(12),
-        breakStop: dummy.setHours(13)
+        breakStart: dummy.setHours(12) - sub.getTime(),
+        breakStop: dummy.setHours(13) - sub.getTime()
     }
     breaks[n] = breakPeriod;
 }
@@ -75,22 +80,31 @@ function formatAMPM(date) {
     return strTime;
 }
 
+function formatMilliseconds(time) {
+    var temp = time.split(':');
+    var time = ((60 * 60 * parseInt(temp[0])) + (60 * parseInt(temp[1]))) * 1000;
+    return time;
+}
+
 function sendData() {
     for (var i = 0; i < tourns.length; i++) {
         var tourn = {
             tournID: tourns[i].tournID,
             tournName: tourns[i].tournName,
-            startTime: document.getElementById(tourns[i].tournID + "-timePicker").value,
+            startTime: formatMilliseconds(document.getElementById(tourns[i].tournID + "-timePicker").value),
             matchTime: Number(document.getElementById(tourns[i].tournID + "-matchTime").value),
             stations: Number(document.getElementById(tourns[i].tournID + "-stations").value)
         }
         tourns[i] = tourn;
-    } 
+    }
+
     var data = {
         breaks: breaks,
+        event: document.getElementById("EventID").value,
         tourns: tourns
     }
     console.log(data);
+    console.log(JSON.stringify(data));
 
     $.ajax({
         type: 'POST',
