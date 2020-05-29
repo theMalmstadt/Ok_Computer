@@ -52,8 +52,8 @@ function breakSlider(n) {
                 $("#break-" + n + "-value").val(formatAMPM(new Date(ui.values[0])) + " - " + formatAMPM(new Date(ui.values[1])));
                 breakPeriod = {
                     breakName: document.getElementById("break-" + n + "-name").value,
-                    breakStart: ui.values[0] - sub.getTime(),
-                    breakStop: ui.values[1] - sub.getTime()
+                    breakStart: (ui.values[0] - sub.getTime()) / 60000,
+                    breakStop: (ui.values[1] - sub.getTime()) / 60000
                 }
                 breaks[n] = breakPeriod;
                 console.log(ui.values[0]);

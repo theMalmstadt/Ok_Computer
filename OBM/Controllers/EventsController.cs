@@ -1433,13 +1433,13 @@ namespace OBM.Controllers
                         [
                             {
                                 "breakName": "Break 1",
-                                "breakStart": 43200000,
-                                "breakStop": 46800000
+                                "breakStart": 720,
+                                "breakStop": 780
                             },
                             {
                                 "breakName": "Break 2",
-                                "breakStart": 43200000,
-                                "breakStop": 46800000
+                                "breakStart": 720,
+                                "breakStop": 780
                             }  
                         ],
                     "event": "1",
@@ -1448,20 +1448,19 @@ namespace OBM.Controllers
                             {
                                 "tournID": "1",
                                 "tournName": "one",
-                                "startTime": 36900000,
+                                "startTime": 660,
                                 "matchTime": 10,
                                 "stations": 1
                             },
                             {
                                 "tournID": "2",
                                 "tournName": "two",
-                                "startTime": 36900000,
+                                "startTime": 670,
                                 "matchTime": 10,
                                 "stations": 1
                             }
                         ]
                     }";
-            System.Diagnostics.Debug.WriteLine("\nJson: \n" + json + "\n\n");
             */
 
             System.Diagnostics.Debug.WriteLine("\nJson: \n" + json + "\n\n");
@@ -1471,8 +1470,11 @@ namespace OBM.Controllers
             var breaks = (JArray)options["breaks"];
             var tourns = (JArray)options["tourns"];
 
-            var schedule = new List<ScheduleViewModel>();
+            List<Competitor> allEventComps = db.Competitors.Where(x => x.EventID == foundEvent.EventID).ToList();
+            List<Competitor> multiTournComps = new List<Competitor>();
 
+            // create schedule
+            var schedule = new List<ScheduleViewModel>();
             foreach (var tourn in tourns)
             {
                 var currentTourn = db.Tournaments.Find((int)tourn["tournID"]);
@@ -1486,19 +1488,70 @@ namespace OBM.Controllers
                 List<Match> filteredMatches = new List<Match>();
                 foreach (var match in matches)
                 {
+                    if (match.Competitor1ID != null)
+                    {
+                        var comp1 = db.Competitors.Find(match.Competitor1ID);
+                        if (allEventComps.Contains(comp1))
+                        {
+                            allEventComps.Remove(comp1);
+                        }
+                        else
+                        {
+                            multiTournComps.Add(comp1);
+                        }
+                    }
+                    if (match.Competitor2ID != null)
+                    {
+                        var comp2 = db.Competitors.Find(match.Competitor2ID);
+                        if (allEventComps.Contains(comp2))
+                        {
+                            allEventComps.Remove(comp2);
+                        }
+                        else
+                        {
+                            multiTournComps.Add(comp2);
+                        }
+                    }
+
+                    foreach (var b in breaks)
+                    {
+                            System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + " > " + (int)b["breakStart"]);
+                        if ((movingTime) < (int)b["breakStart"])
+                        {
+                            if ((movingTime + matchInterval) >= (int)b["breakStart"])
+                            {
+                                movingTime = (int)b["breakStop"];
+                                System.Diagnostics.Debug.WriteLine("new time: " + movingTime);
+                            }
+                        }
+                    }
+
                     if ((new MatchViewModel(match).Winner == null) && (match.PrereqMatch1ID == null) && (match.PrereqMatch2ID == null))
                     {
+                        //System.Diagnostics.Debug.WriteLine(match.MatchID+"@"+ movingTime);
                         schedule.Add(new ScheduleViewModel(match, movingTime, currentStation, 100));
-                        movingTime += matchInterval;
-                        //System.Diagnostics.Debug.WriteLine(match.MatchID+"(1)");
+                        //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + ", " + currentStation);
+
+                        if ((currentStation + 1) > stations)
+                        {
+                            currentStation = stations;
+                            movingTime += matchInterval;
+                        }
+                        else
+                        {
+                            currentStation++;
+                        }
                     }
                     else
                     {
                         filteredMatches.Add(match);
                     }
+
                 }
-                System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
+                //System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
             }
+            //+System.Diagnostics.Debug.WriteLine(multiTournComps.Count + ", " + allEventComps.Count);
+
 
             return Json(new { success = true, responseText = "Your message successfuly sent!"});
         }
