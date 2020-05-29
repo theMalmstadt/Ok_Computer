@@ -1513,21 +1513,28 @@ namespace OBM.Controllers
                         }
                     }
 
-                    foreach (var b in breaks)
-                    {
-                            System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + " > " + (int)b["breakStart"]);
-                        if ((movingTime) < (int)b["breakStart"])
-                        {
-                            if ((movingTime + matchInterval) >= (int)b["breakStart"])
-                            {
-                                movingTime = (int)b["breakStop"];
-                                System.Diagnostics.Debug.WriteLine("new time: " + movingTime);
-                            }
-                        }
-                    }
-
                     if ((new MatchViewModel(match).Winner == null) && (match.PrereqMatch1ID == null) && (match.PrereqMatch2ID == null))
                     {
+                        foreach (var b in breaks)
+                        {
+                            //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + " > " + (int)b["breakStart"]);
+                            if ((movingTime) < (int)b["breakStart"])
+                            {
+                                if ((movingTime + matchInterval) >= (int)b["breakStart"])
+                                {
+                                    movingTime = (int)b["breakStop"];
+                                    //System.Diagnostics.Debug.WriteLine("new time: " + movingTime);
+                                }
+                            }
+                            else
+                            {
+                                if ((movingTime) < (int)b["breakStop"])
+                                {
+                                    movingTime = (int)b["breakStop"];
+                                }
+                            }
+                        }
+
                         //System.Diagnostics.Debug.WriteLine(match.MatchID+"@"+ movingTime);
                         schedule.Add(new ScheduleViewModel(match, movingTime, currentStation, 100));
                         //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + ", " + currentStation);
@@ -1552,8 +1559,27 @@ namespace OBM.Controllers
             }
             //+System.Diagnostics.Debug.WriteLine(multiTournComps.Count + ", " + allEventComps.Count);
 
+            foreach (var tourn in tourns)
+            {
+                var currentTourn = db.Tournaments.Find((int)tourn["tournID"]);
+                var startTime = (int)tourn["startTime"];
+                var matchInterval = (int)tourn["matchTime"];
+                var stations = (int)tourn["stations"];
 
-            return Json(new { success = true, responseText = "Your message successfuly sent!"});
+                var movingTime = startTime;
+                var currentStation = 1;
+                List<Match> matches = db.Matches.Where(x => x.TournamentID == currentTourn.TournamentID).ToList();
+                List<Match> filteredMatches = new List<Match>();
+                foreach (var match in matches)
+                {
+                    if ((new MatchViewModel(match).Winner == null) && (match.PrereqMatch1ID != null) && (match.PrereqMatch2ID != null))
+                    {
+
+                    }
+                }
+                //System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
+            }
+            return Json(schedule, JsonRequestBehavior.AllowGet);
         }
     }
 }

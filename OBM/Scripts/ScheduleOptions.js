@@ -103,15 +103,28 @@ function sendData() {
         event: Number(document.getElementById("EventID").value),
         tourns: tourns
     }
-    console.log(data);
-    console.log(JSON.stringify(data));
+    //console.log(data);
+    //console.log(JSON.stringify(data));
 
     $.ajax({
         type: 'POST',
         url: '/Events/GenerateSchedule?json=' + encodeURIComponent(JSON.stringify(data)),
         data: { __RequestVerificationToken: token },
-        success: function (response) {
-            console.log(response);
-        }
+        success: printGraph
     });
+}
+
+function printGraph(schedule) {
+    console.log(schedule);
+    var tournIDs = [schedule[0].TournamentID];
+    var tournNames = [schedule[0].TournamentID];
+    var tournColumns = [[]];
+    for (match in schedule) {
+        if (!tournIDs.includes(match.TournamentID)) {
+            tournIDs.push(match.TournamentID);
+            tournNames.push(match.TournamentName);
+            tournColumns.push([]);
+        }
+    }
+    console.log(tournColumns);
 }

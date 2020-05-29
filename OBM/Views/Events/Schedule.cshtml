@@ -8,37 +8,37 @@
 {
     <input id="EventID" type="hidden" value="@Model.First().EventID" />
     <div class="container">
-            @foreach (var tourn in Model)
-            {
-                string time = DateTime.Now.AddMinutes(5).ToString("HH:mm");
-                <div id="@tourn.TournamentID" class="card card-body">
-                    <h3>@tourn.TournamentName</h3>
-                    <div class="form-row">
-                        <div class="form-group col-md-3">
-                            <label for="@tourn.TournamentID-timePicker">Start Time</label>
-                            <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border-dark form-control" type="time" format="h:mm" value="@time" required />
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="@tourn.TournamentID-matchTime">Match Time</label>
-                            <input id="@tourn.TournamentID-matchTime" type="number" class="border-dark form-control" aria-describedby="minutesBetweenMatches" value="10" min="1" max="1440" />
-                        </div>
-                        <div class="form-group col-md-2">
-                            <label for="@tourn.TournamentID-stations">Stations</label>
-                            <input id="@tourn.TournamentID-stations" type="number" class="border-dark form-control" aria-describedby="numberOfStations" value="1" min="1" max="100" />
-                        </div>
-                    </div>
-                </div>
-            }
-            <div id="breaks" class="card card-body">
+        @foreach (var tourn in Model)
+        {
+            string time = DateTime.Now.AddMinutes(5).ToString("HH:mm");
+            <div id="@tourn.TournamentID" class="card card-body">
+                <h3>@tourn.TournamentName</h3>
                 <div class="form-row">
-                    <div class="form-group col">
-                        <h3>Entire Event</h3>
+                    <div class="form-group col-md-3">
+                        <label for="@tourn.TournamentID-timePicker">Start Time</label>
+                        <input id="@tourn.TournamentID-timePicker" tournID="@tourn.TournamentID" name="@tourn.TournamentName" class="timepicker border-dark form-control" type="time" format="h:mm" value="@time" required />
                     </div>
-                    <div class="form-group col" align="right">
-                        <a class="linker" onclick="addBreak()" style="color:#4ac959;">Add Break</a>
+                    <div class="form-group col-md-2">
+                        <label for="@tourn.TournamentID-matchTime">Match Time</label>
+                        <input id="@tourn.TournamentID-matchTime" type="number" class="border-dark form-control" aria-describedby="minutesBetweenMatches" value="10" min="1" max="1440" />
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label for="@tourn.TournamentID-stations">Stations</label>
+                        <input id="@tourn.TournamentID-stations" type="number" class="border-dark form-control" aria-describedby="numberOfStations" value="1" min="1" max="100" />
                     </div>
                 </div>
             </div>
+        }
+        <div id="breaks" class="card card-body">
+            <div class="form-row">
+                <div class="form-group col">
+                    <h3>Entire Event</h3>
+                </div>
+                <div class="form-group col" align="right">
+                    <a class="linker" onclick="addBreak()" style="color:#4ac959;">Add Break</a>
+                </div>
+            </div>
+        </div>
         <br />
         <div align="center">
             @Html.AntiForgeryToken()
@@ -46,7 +46,73 @@
         </div>
         <br />
     </div>
-}    else
+
+    <div id="schedule-table" class="row" align="center" style="padding-left:50px; padding-right:50px;">
+        <div class="col" style="padding:0px;">
+            <table class="col">
+                <tr align="center">
+                    <th>
+                        Huge Station 1
+                    </th>
+                </tr>
+                <tr>
+                    <td class="card border-info">
+                        9:00 am - Comp1 vs Comp2
+                    </td>
+                </tr>
+                <tr>
+                    <td class="card border-info">
+                        9:10 am - Match D
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col" style="padding:0px;">
+            <table class="col">
+                <tr align="center">
+                    <th>
+                        Huge Station 2
+                    </th>
+                </tr>
+                <tr>
+                    <td class="card border-info">
+                        9:00 am - Comp1 vs Comp2
+                    </td>
+                </tr>
+                <tr>
+                    <td class="card border-info">
+                        9:10 am - Match E
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col" style="padding:0px;">
+            <table class="col">
+                <tr align="center">
+                    <th>
+                        Smol
+                    </th>
+                </tr>
+                <tr>
+                    <td class="card border-info">
+                        9:10 am - Comp3 vs Comp4
+                    </td>
+                </tr>
+                <tr>
+                    <td class="card border-info" style="height:100px;">
+                        9:10 am - Match B
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div id="schedule-table" class="row" align="center" style="padding-left:50px; padding-right:50px;">
+       <div class="col card border-info">
+           10:00 - Lunch break
+       </div>
+    </div>
+}
+else
 {
     <div class="form-horizontal">
         <h4>Access Denied</h4>
