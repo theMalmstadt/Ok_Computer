@@ -829,7 +829,22 @@ namespace OBM.Controllers
                             matchStr += "</button></td><td width=\"25%\">";
 
                             if (m.Score1 == null)
-                                matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch(" + JsonConvert.SerializeObject(m) + ") >Start</button>";
+                            {
+                                if(m.Competitor1ID != null && m.Competitor2ID != null)
+                                {
+                                    if (db.Competitors.Find(m.Competitor1ID).BusyState != "b" && db.Competitors.Find(m.Competitor2ID).BusyState != "b")
+                                        matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch(" + JsonConvert.SerializeObject(m) + ") >Start</button>";
+                                    else
+                                        matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=\"alert('Match cannot start with busy competitors.')\" >Start</button>";
+                                }
+                                else if(m.Competitor1ID != null)
+                                {
+                                    if(db.Competitors.Find(m.Competitor1ID).BusyState != "b")
+                                        matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=StartMatch(" + JsonConvert.SerializeObject(m) + ") >Start</button>";
+                                    else
+                                        matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=\"alert('Match cannot start with busy competitors.')\" >Start</button>";
+                                } 
+                            }
                             else
                             {
                                 matchStr += "<button id=" + m.ApiID + "\" style=\"width: 100 % \" onclick=ResetMatch(" + JsonConvert.SerializeObject(m) + ") >Reset</button>";
@@ -893,7 +908,7 @@ namespace OBM.Controllers
                     if (!(((m.Competitor1ID != null) || (m.Competitor2ID != null)) && (m.Score1 == null)))
                     {
                         matchStr += "<table class=\"table table-bordered\" style=\"display: inline-block; border: solid; border-color:black; width:350px\">";
-                        matchStr += "<tr style=\"height:30px\"><td width=\"20%\">";
+                        matchStr += "<tr style=\"height:30px;\"><td width=\"20%\">";
                         string player1, player2;
                         if (m.Competitor1ID != null)
                             player1 = db.Competitors.Find(m.Competitor1ID).CompetitorName;
@@ -1000,17 +1015,14 @@ namespace OBM.Controllers
         public String MatchDetails(int matchApiId, int? tournamentApiId, String apiKey)    //takes a match from our db and finds its competitors apikeys
         {
             //get comp apikeys via match details  GET https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}.{json|xml}
-            Debug.WriteLine("Keys for match lookup are:" + tournamentApiId + "   " + matchApiId);
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
             httpWebRequest.Method = "GET";
-            Debug.WriteLine("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json?api_key=" + apiKey);
             try
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    Debug.WriteLine("OPPS POOPS" + httpResponse);
                     return result;
                 }
             }
@@ -1026,18 +1038,19 @@ namespace OBM.Controllers
         [ValidateAntiForgeryToken]
         public void SubmitScore()
         {
-            Debug.WriteLine("Score POSTING" + Request.Params["Competitor1ID"]);
-
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
-
 
             var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
             var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
             var userid = HttpContext.User.Identity.GetUserId();
             var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
 
+            var comp1ID = Int32.Parse(Request.Params["Competitor1ID"]);
+            var comp2ID = Int32.Parse(Request.Params["Competitor2ID"]);
 
+            ChangeBusyState(comp1ID, false);
+            ChangeBusyState(comp2ID, false);
 
             //PUT Help https://api.challonge.com/v1/tournaments/{tournament}/matches/{match_id}.{json|xml}
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + ".json");
@@ -1045,9 +1058,8 @@ namespace OBM.Controllers
             httpWebRequest.Method = "PUT";
 
             var details = MatchDetails(matchApiId, tournamentApiId, apiKey);
-            Debug.WriteLine(details);
+
             var matchDetails = JObject.Parse(details);
-            Debug.WriteLine("CHALLONGE MATCH DETAILS: " + matchDetails);
 
             JObject match = new JObject();
             match.Add("scores_csv", Request.Params["scoreCsv"]);
@@ -1055,32 +1067,18 @@ namespace OBM.Controllers
             int score1 = Int32.Parse(Request.Params["score1"].Substring(1, Request.Params["score1"].Length - 1));
             int score2 = Int32.Parse(Request.Params["score2"].Substring(1, Request.Params["score1"].Length - 1));
 
-            //Debug.WriteLine(Request.Params["score1"] + " " + Request.Params["score2"]);
-
-
-
-
-
             if (score1 > score2)
             {
-                Debug.WriteLine("player 1 is winner: " + matchDetails["match"]["player1_id"]);
                 match.Add("winner_id", matchDetails["match"]["player1_id"]);
 
             }
 
             if (score1 < score2)
             {
-                Debug.WriteLine("player 2 is winner: " + matchDetails["match"]["player2_id"]);
-
                 match.Add("winner_id", matchDetails["match"]["player2_id"]);
 
             }
 
-            Debug.WriteLine("");
-            Debug.WriteLine("");
-            Debug.WriteLine(matchDetails["match"]["player1_id"]);
-            Debug.WriteLine("");
-            Debug.WriteLine("");
             JObject myJson = new JObject();
             myJson.Add("match_id", matchApiId);
             myJson.Add("tournament", tournamentApiId);
@@ -1088,12 +1086,8 @@ namespace OBM.Controllers
             myJson.Add("match", match);
             myJson.Add("state", "complete");
 
-            Debug.WriteLine("NOW SENDING!!!!:   " + myJson);
-
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-
-
                 streamWriter.Write(myJson);
             }
 
@@ -1101,16 +1095,11 @@ namespace OBM.Controllers
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 
-
-
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
                     var result = streamReader.ReadToEnd();
-                    //Debug.WriteLine(result);
-
                 }
             }
-
             catch { }
 
         }
@@ -1119,11 +1108,15 @@ namespace OBM.Controllers
         [ValidateAntiForgeryToken]
         public void StartMatch()
         {
-            Debug.WriteLine("\n\nhello\n\n");
-            Debug.WriteLine("Starting Match: " + Request.Params["MatchID"]);
+
+            var comp1ID = Int32.Parse(Request.Params["Competitor1ID"]);
+            var comp2ID = Int32.Parse(Request.Params["Competitor2ID"]);
+
+            ChangeBusyState(comp1ID, true);
+            ChangeBusyState(comp2ID, true);
+
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
-
 
             var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
 
@@ -1132,41 +1125,23 @@ namespace OBM.Controllers
             var userid = HttpContext.User.Identity.GetUserId();
             var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
 
-
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/mark_as_underway.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
 
-
-
-
-
-
-            //var myJson = JObject.FromObject(myObject);
-            Debug.WriteLine(tournamentId);
             JObject myJson = new JObject();
             myJson.Add("match_id", matchApiId);
             myJson.Add("tournament", tournamentApiId);
             myJson.Add("api_key", apiKey);
 
-
-            //myJSON.Add("private", myJSON["Private"]);
-
-
-
-
             using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
             {
-
-
                 streamWriter.Write(myJson);
             }
 
             try
             {
                 var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-
-
 
                 using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
                 {
@@ -1179,31 +1154,30 @@ namespace OBM.Controllers
 
             var eventId = db.Tournaments.Where(y => y.TournamentID == tournamentId).First().EventID;
 
-            //MatchUpdate(eventId);
-
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public void ResetMatch()
         {
-            Debug.WriteLine("Resetting Match: " + Request.Params["MatchID"]);
             var matchId = Int32.Parse(Request.Params["MatchID"]);
             var matchApiId = db.Matches.Where(x => x.MatchID == matchId).First().ApiID;
 
-
             var tournamentId = Int32.Parse(Request.Params["TournamentID"]);
-
             var tournamentApiId = db.Tournaments.Where(x => x.TournamentID == tournamentId).First().ApiId;
 
             var userid = HttpContext.User.Identity.GetUserId();
             var apiKey = db.AspNetUsers.Where(x => x.Id == userid).First().ApiKey;
 
+            var comp1ID = Int32.Parse(Request.Params["Competitor1ID"]);
+            var comp2ID = Int32.Parse(Request.Params["Competitor2ID"]);
+
+            ChangeBusyState(comp1ID, false);
+            ChangeBusyState(comp2ID, false);
 
             var httpWebRequest = (HttpWebRequest)WebRequest.Create("https://api.challonge.com/v1/tournaments/" + tournamentApiId + "/matches/" + matchApiId + "/reopen.json");
             httpWebRequest.ContentType = "application/json";
             httpWebRequest.Method = "POST";
-
 
             JObject myJson = new JObject();
             myJson.Add("match_id", matchApiId);
@@ -1222,13 +1196,24 @@ namespace OBM.Controllers
                 {
                     var result = streamReader.ReadToEnd();
                 }
-                Debug.WriteLine(httpResponse);
             }
-
-
             catch { }
         }
 
+        public void ChangeBusyState(int compID, bool busy)
+        {
+            var comp = db.Competitors.FirstOrDefault(c => c.CompetitorID.Equals(compID));
+
+            if (busy)
+            {
+                comp.BusyState = "b";
+            }
+            else
+            {
+                comp.BusyState = "a";
+            }
+            db.SaveChanges();
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
