@@ -251,6 +251,8 @@ var ajaxMatches = function () {
     });
 }
 
+var graphText = "";
+
 function lineage(data, current, currY, childY, e, offset) {
     var compList = [];
     var dataList = [];
@@ -323,6 +325,8 @@ function lineage(data, current, currY, childY, e, offset) {
         pointHoverBackgroundColor: nodeLineColor,
         pointHoverRadius: 30
     }];
+
+    graphText += "(" + node[0].title + " at " + node[0].label + ") ";
 
     return {
         node: node,
@@ -434,7 +438,7 @@ function drawTree(data) {
         largestRound = 0;
     }
     
-    var ctx = document.getElementById('myChart');
+    var ctx = document.getElementById('EventGraph');
     ctx.height = 100 * trees.length * largestRound;
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -515,6 +519,7 @@ function drawTree(data) {
             }
         }
     });
+    $('#EventGraph').html(graphText);
 }
 
 window.onload = ajaxMatches;

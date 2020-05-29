@@ -436,9 +436,9 @@ namespace OBM.Controllers
                 {
                     throw new HttpException(404, "Page not Found");
                 }
-                if ((tour.Public == true) || (Request.IsAuthenticated && (User.Identity.GetUserId() == db.Events.Find(found.EventID).OrganizerID)))
+                if (Request.IsAuthenticated && (User.Identity.GetUserId() == db.Events.Find(found.EventID).OrganizerID))
                 {
-                    ViewBag.Access = true;
+                    ViewBag.Access = "full";
                     ViewBag.keyCheck = "Log in for custom seeding options";
                     var motherEvent = db.Events.Find(found.EventID);
 
@@ -487,7 +487,14 @@ namespace OBM.Controllers
                 }
                 else
                 {
-                    ViewBag.Access = false;
+                    if (tour.Public == true)
+                    {
+                        ViewBag.Access = "some";
+                    }
+                    else
+                    {
+                        ViewBag.Access = "none";
+                    }
                 }
                 return View(tour);
 
@@ -726,7 +733,7 @@ namespace OBM.Controllers
             CompetitorUpdate(id);
 
             var j = 0;
-            string compStr = "<table class=\"table table-bordered table-striped\"><tr><th>Competitors</th><th>Phone Number</th><th></th></tr>";
+            string compStr = "<table class=\"table table-bordered table-striped\"><tr><th scope=\"col\">Status</th><th scope=\"col\">Competitors</th><th scope=\"col\">Phone Number</th><th scope=\"col\">Options</th></tr>";
             foreach (var i in db.Competitors.Where(p => p.EventID == id).ToList().OrderBy(p => p.CompetitorName))
             {
                 var state = "";
@@ -743,14 +750,14 @@ namespace OBM.Controllers
                 }
                 if(i.PhoneNumber != null)
                 {
-                    compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
-                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td>" +
+                    compStr += "<tr><td align=\"center\">" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
+                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button></td><td>" + i.CompetitorName + "</td>" +
                               "<td>" + i.PhoneNumber + "</td><td><a href=\"/Competitor/UpdateContact/"+ i.CompetitorID + "\">Update</a><button class=\"btn btn-outline-success ml-2\" type=\"submit\" onclick=\"sendSMS(" + i.CompetitorID+","+i.EventID+")\">Contact</button></td></tr>";
                 }
                 else
                 {
-                    compStr += "<tr><td>" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
-                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button>" + i.CompetitorName + "</td>" +
+                    compStr += "<tr><td align=\"center\">" + "<button id=\"busyState-" + j + "\" type=\"submit\" class=\"btn btn-outline-" + col + "\" value=\""
+                              + state + "\" onclick=\"sharedFunction(" + i.CompetitorID + ")\">" + state + "</button></td><td>" + i.CompetitorName + "</td>" +
                               "<td>None</td><td><a href=\"/Competitor/UpdateContact/" + i.CompetitorID + "\">Add</a></td></tr>";
                 }
                 
@@ -1390,6 +1397,19 @@ namespace OBM.Controllers
 
             catch { }
             return jsonString;
+        }
+
+        public ActionResult Schedule(int id)
+        {
+            var tourns = db.Tournaments.Where(x => x.EventID == id);
+            return View(tourns);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult GenerateSchedule(string json)
+        {
+            return Json(new { success = true, responseText = "Your message successfuly sent!"});
         }
     }
 }

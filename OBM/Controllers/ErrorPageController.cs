@@ -20,16 +20,19 @@ namespace OBM.Controllers
             {
                 ViewBag.Message = "Could not find this page.";
                 ViewBag.Image = "swan.gif";
+                ViewBag.AltText = "swan in lake gif";
             }
             else if (statusCode > 499 && statusCode < 600)
             {
                 ViewBag.Message = "Server made a mistake.";
                 ViewBag.Image = "koi.gif";
+                ViewBag.AltText = "koi swimming gif";
             }
             else
             {
                 ViewBag.Message = "This is an unexpeced error.";
                 ViewBag.Image = "space.gif";
+                ViewBag.AltText = "flying through space gif";
             }
 
             Response.StatusCode = statusCode;

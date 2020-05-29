@@ -113,6 +113,8 @@ $('#saveBtn').click(function () {
     }, 3000);
 });
 
+var graphText = "";
+
 function lineage(data, current, currY, childY, e, compList) {
     var dataList = [];
     var base = 1;
@@ -172,6 +174,8 @@ function lineage(data, current, currY, childY, e, compList) {
         pointHoverBackgroundColor: nodeLineColor,
         pointHoverRadius: 30
     }];
+
+    graphText += "(" + node[0].title + " at " + node[0].label + ") ";
 
     return {
         node: node,
@@ -360,6 +364,7 @@ function drawTree(data) {
             }
         }
     });
+    $('#myChart').html(graphText);
 }
 
 function hideShow(div) {

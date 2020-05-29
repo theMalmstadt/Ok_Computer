@@ -12,16 +12,17 @@
     </p>
     <table class="table table-bordered table-striped">
         <tr>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.EventName)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Description)
             </th>
-            <th>
+            <th scope="col">
                 @Html.DisplayNameFor(model => model.Location)
-            </th>
-            <th>
+            </th >
+            <th scope="col">
+                Options
             </th>
         </tr>
         @foreach (var item in Model)
@@ -105,17 +106,17 @@ else
             <div class="row justify-content-center">
                 <div class="col-sm-6">
                     <div class="card bg-secondary">
-                        <div class="card-body">
+                        <div class="card-body darker">
                             <table id="eventtable" class="table table-responsive-md table-dark table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th>
+                                        <th scope="col">
                                             Event Name
                                         </th>
-                                        <th>
+                                        <th scope="col">
                                             Organizer
                                         </th>
-                                        <th>
+                                        <th scope="col">
                                             Location
                                         </th>
                                     </tr>
