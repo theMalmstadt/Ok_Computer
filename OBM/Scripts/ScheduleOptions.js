@@ -117,14 +117,60 @@ function sendData() {
 function printGraph(schedule) {
     console.log(schedule);
     var tournIDs = [schedule[0].TournamentID];
-    var tournNames = [schedule[0].TournamentID];
+    var tournNames = [schedule[0].TournamentName];
+    var tournStations = [schedule[0].Station]
+    var smallestInterval = schedule[0].MatchInterval
     var tournColumns = [[]];
-    for (match in schedule) {
-        if (!tournIDs.includes(match.TournamentID)) {
-            tournIDs.push(match.TournamentID);
-            tournNames.push(match.TournamentName);
+    for (var i = 0; i < schedule.length; i++) {
+        //console.log(match);
+        if (!tournIDs.includes(schedule[i].TournamentID)) {
+            tournIDs.push(schedule[i].TournamentID);
+            tournNames.push(schedule[i].TournamentName);
+            tournStations.push(schedule[i].Station)
             tournColumns.push([]);
+        }
+        else {
+            var j = tournIDs.indexOf(schedule[i].TournamentID);
+            var stations = tournStations[j];
+            //console.log(stations, schedule[i].Station);
+            if (stations < schedule[i].Station) {
+                tournStations[j] = schedule[i].Station;
+            }
+        }
+
+        if (schedule[i].MatchInterval < smallestInterval) {
+            smallestInterval = schedule[i].MatchInterval;
         }
     }
     console.log(tournColumns);
+    var htmlChunk = '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
+    var htmlChunkEnd = '</div>';
+
+    //console.log(tournIDs, tournNames, tournStations);
+    for (var i = 0; i < tournIDs.length; i++) {
+        htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + tournStations[i] + '</th></tr>';
+        for (var j = 0; j < schedule.length; j++) {
+            //console.log(match);
+            if (schedule[j].TournamentID == tournIDs[i]) {
+                htmlChunk += '<tr><td class="card border-info">' + tournIDs[i] + ', ' + schedule[j].Station + ', ' + schedule[j].StartTime + '</td></tr>';
+
+            }
+        }
+        htmlChunk += '</table></div>';
+
+        //console.log(htmlChunk);
+    }
+    htmlChunk += htmlChunkEnd;
+    /*var first = '<div class="col" style="padding:0px;"><table class="col"><tr align="center">' +
+        '<th>' + 'Huge Station 1' + '</th></tr><tr><td class="card border-info">' + '9:00 am - Comp1 vs Comp2' +
+        '</td></tr><tr><td class="card border-info">' + '9:10 am - Match D' + '</td></tr></table>';*/
+
+    //console.log(htmlChunk);
+
+    $('#schedule-table').append(htmlChunk);
+
+}
+
+function roundToFive(n) {
+    return Math.ceil(n / 5) * 5;
 }

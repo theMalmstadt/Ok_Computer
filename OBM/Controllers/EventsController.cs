@@ -1483,7 +1483,8 @@ namespace OBM.Controllers
                 var stations = (int)tourn["stations"];
 
                 var movingTime = startTime;
-                var currentStation = 1;
+                int currentStation = 1;
+
                 List<Match> matches = db.Matches.Where(x => x.TournamentID == currentTourn.TournamentID).ToList();
                 List<Match> filteredMatches = new List<Match>();
                 foreach (var match in matches)
@@ -1536,12 +1537,14 @@ namespace OBM.Controllers
                         }
 
                         //System.Diagnostics.Debug.WriteLine(match.MatchID+"@"+ movingTime);
-                        schedule.Add(new ScheduleViewModel(match, movingTime, currentStation, 100));
+                        schedule.Add(new ScheduleViewModel(match, movingTime, matchInterval, currentStation, 100));
                         //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + ", " + currentStation);
 
-                        if ((currentStation + 1) > stations)
+                        //System.Diagnostics.Debug.WriteLine("hello: " + currentStation + " >= " + stations);
+                        if (currentStation >= stations)
                         {
-                            currentStation = stations;
+
+                            currentStation = 1;
                             movingTime += matchInterval;
                         }
                         else

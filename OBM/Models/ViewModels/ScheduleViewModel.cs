@@ -10,7 +10,7 @@ namespace OBM.Models.ViewModels
     {
         private EventContext db = new EventContext();
 
-        public ScheduleViewModel(Match match, int startTime, int station, int percentage)
+        public ScheduleViewModel(Match match, int startTime, int interval, int station, int percentage)
         {
             MatchID = match.MatchID;
             TournamentID = match.TournamentID;
@@ -32,7 +32,9 @@ namespace OBM.Models.ViewModels
                 Competitor2Name = "";
             }
             Round = match.Round;
+            Identifier = match.Identifier;
             StartTime = startTime;
+            MatchInterval = interval;
             Station = station;
             Percentage = percentage;
         }
@@ -43,7 +45,9 @@ namespace OBM.Models.ViewModels
         public string Competitor1Name { get; set; }
         public string Competitor2Name { get; set; }
         public int? Round { get; set; }
+        public string Identifier { get; set; }
         public int StartTime { get; set; }
+        public int MatchInterval { get; set; }
         public int Station { get; set; }
         public int Percentage { get; set; }
     }
