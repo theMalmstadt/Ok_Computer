@@ -1,0 +1,65 @@
+﻿@model OBM.Models.ViewModels.OrganizerViewModel
+@{
+    ViewBag.Title = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h2>@Model.organizer.organizerName</h2>
+            </div>
+        </div>
+        @if (Model.ListEventNameLocationCompCountEventIDs[0].Item1 != "No Events")
+        {
+            <div class="row">
+                <div class="col">
+                    <div class="card bg-secondary">
+                        <div class="card-body darker">
+                            <table id="organizerList" class="table table-responsive-md table-dark table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">
+                                            Event Name
+                                        </th>
+                                        <th>
+                                            Competitor Count
+                                        </th>
+                                        <th>
+                                            Event Location
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var _event in Model.ListEventNameLocationCompCountEventIDs)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @Html.ActionLink(_event.Item1, "Details", "Events", new { id = _event.Item4 }, new { @class = "eventdata" })
+                                            </td>
+                                            <td>
+                                                @_event.Item3
+                                            </td>
+                                            <td>
+                                                @_event.Item2
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+           <div class="row">
+               <div class="col">
+                   <h3><i>@Model.organizer.organizerName has no events yet.</i></h3>
+               </div>
+           </div>
+        }
+
+    </div>
+@Scripts.Render("~/bundles/OrganizerSearch")
