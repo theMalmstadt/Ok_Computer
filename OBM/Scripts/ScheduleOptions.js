@@ -145,18 +145,21 @@ function printGraph(schedule) {
     console.log(tournColumns);
     var htmlChunk = '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
     var htmlChunkEnd = '</div>';
-
-    //console.log(tournIDs, tournNames, tournStations);
+    
+    console.log(tournIDs, tournNames, tournStations);
     for (var i = 0; i < tournIDs.length; i++) {
-        htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + tournStations[i] + '</th></tr>';
-        for (var j = 0; j < schedule.length; j++) {
-            //console.log(match);
-            if (schedule[j].TournamentID == tournIDs[i]) {
-                htmlChunk += '<tr><td class="card border-info">' + tournIDs[i] + ', ' + schedule[j].Station + ', ' + schedule[j].StartTime + '</td></tr>';
+        for (var j = 1; j <= tournStations[i]; j++) {
+            htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + j + '</th></tr>';
 
+            for (var k = 0; k < schedule.length; k++) {
+                //console.log(match);
+                if ((schedule[k].TournamentID == tournIDs[i]) && (schedule[k].Station == j)) {
+                    htmlChunk += '<tr><td class="card border-info">' + schedule[k].MatchID + ', ' + tournIDs[i] + ', ' + j + ', ' + schedule[k].StartTime + '</td></tr>';
+
+                }
             }
+            htmlChunk += '</table></div>';
         }
-        htmlChunk += '</table></div>';
 
         //console.log(htmlChunk);
     }
