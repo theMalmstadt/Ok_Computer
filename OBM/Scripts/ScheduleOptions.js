@@ -56,11 +56,11 @@ function breakSlider(n) {
                     breakStop: (ui.values[1] - sub.getTime()) / 60000
                 }
                 breaks[n] = breakPeriod;
-                console.log(ui.values[0]);
+                //console.log(ui.values[0]);
             }
         });
     });
-    $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(0))) + " - " + formatAMPM(new Date(dummy.setHours(23))));
+    $("#break-" + n + "-value").val(formatAMPM(new Date(dummy.setHours(12))) + " - " + formatAMPM(new Date(dummy.setHours(13))));
     breakPeriod = {
         breakName: document.getElementById("break-" + n + "-name").value,
         breakStart: (dummy.setHours(12) - sub.getTime()) / 60000,
@@ -119,6 +119,7 @@ function printGraph(schedule) {
     var tournIDs = [schedule[0].TournamentID];
     var tournNames = [schedule[0].TournamentName];
     var tournStations = [schedule[0].Station]
+    var matchInterval = [schedule[0].MatchInterval];
     var smallestInterval = schedule[0].MatchInterval
     var tournColumns = [[]];
     for (var i = 0; i < schedule.length; i++) {
@@ -127,6 +128,7 @@ function printGraph(schedule) {
             tournIDs.push(schedule[i].TournamentID);
             tournNames.push(schedule[i].TournamentName);
             tournStations.push(schedule[i].Station)
+            matchInterval.push(schedule[i].MatchInterval);
             tournColumns.push([]);
         }
         else {
@@ -145,16 +147,37 @@ function printGraph(schedule) {
     console.log(tournColumns);
     var htmlChunk = '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
     var htmlChunkEnd = '</div>';
-    
+
+    for (var i = 0; i < tournIDs.length; i++) {
+        var colHeight = (matchInterval[i] / smallestInterval) * 28;
+        console.log(matchInterval, colHeight);
+        for (var j = 1; j <= tournStations[i]; j++) {
+            htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + j + '</th></tr></table></div>';
+        }
+    }
+    htmlChunk += htmlChunkEnd + '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
+
     console.log(tournIDs, tournNames, tournStations);
     for (var i = 0; i < tournIDs.length; i++) {
+        var colHeight = (matchInterval[i] / smallestInterval) * 28;
+        console.log(matchInterval, colHeight);
         for (var j = 1; j <= tournStations[i]; j++) {
-            htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + j + '</th></tr>';
+            htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
 
             for (var k = 0; k < schedule.length; k++) {
                 //console.log(match);
+                for (var l = 0; l < breaks.length; l++) {
+                    console.log(schedule[k].StartTime, matchInterval[i],breaks[l].breakStop);
+                    if ((schedule[k].StartTime + matchInterval[i]) >= breaks[l].breakStop) {
+                        var breakHeight = ((breaks[l].breakStop - breaks[l].breakStart) / smallestInterval) * 28;
+                        htmlChunk += '</table></div></div><div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col card border-info" style="height:' + breakHeight + 'px;">10:00 - Lunch break</div></div>';
+                        htmlChunk += '<div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
+                        breaks.splice(l);
+                    }
+                }
+
                 if ((schedule[k].TournamentID == tournIDs[i]) && (schedule[k].Station == j)) {
-                    htmlChunk += '<tr><td class="card border-info">' + schedule[k].MatchID + ', ' + tournIDs[i] + ', ' + j + ', ' + schedule[k].StartTime + '</td></tr>';
+                    htmlChunk += '<tr><td class="card border-info" style="height:' + colHeight + 'px;">' + schedule[k].MatchID + ', ' + tournIDs[i] + ', ' + j + ', ' + schedule[k].StartTime + '</td></tr>';
 
                 }
             }
@@ -164,12 +187,8 @@ function printGraph(schedule) {
         //console.log(htmlChunk);
     }
     htmlChunk += htmlChunkEnd;
-    /*var first = '<div class="col" style="padding:0px;"><table class="col"><tr align="center">' +
-        '<th>' + 'Huge Station 1' + '</th></tr><tr><td class="card border-info">' + '9:00 am - Comp1 vs Comp2' +
-        '</td></tr><tr><td class="card border-info">' + '9:10 am - Match D' + '</td></tr></table>';*/
 
-    //console.log(htmlChunk);
-
+    $('#schedule-table').empty();
     $('#schedule-table').append(htmlChunk);
 
 }
