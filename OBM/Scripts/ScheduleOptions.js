@@ -150,7 +150,7 @@ function printGraph(schedule) {
 
     for (var i = 0; i < tournIDs.length; i++) {
         var colHeight = (matchInterval[i] / smallestInterval) * 28;
-        console.log(matchInterval, colHeight);
+        //console.log(matchInterval, colHeight);
         for (var j = 1; j <= tournStations[i]; j++) {
             htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + j + '</th></tr></table></div>';
         }
@@ -160,19 +160,23 @@ function printGraph(schedule) {
     console.log(tournIDs, tournNames, tournStations);
     for (var i = 0; i < tournIDs.length; i++) {
         var colHeight = (matchInterval[i] / smallestInterval) * 28;
-        console.log(matchInterval, colHeight);
+        //console.log(matchInterval, colHeight);
         for (var j = 1; j <= tournStations[i]; j++) {
             htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
-
+            var breakCount = [];
             for (var k = 0; k < schedule.length; k++) {
                 //console.log(match);
                 for (var l = 0; l < breaks.length; l++) {
-                    console.log(schedule[k].StartTime, matchInterval[i],breaks[l].breakStop);
-                    if ((schedule[k].StartTime + matchInterval[i]) >= breaks[l].breakStop) {
+                    //console.log(schedule[k].StartTime + matchInterval[i],breaks[l].breakStart, breaks);
+                    if (((schedule[k].StartTime + matchInterval[i]) >= breaks[l].breakStart) && (schedule[k].StartTime <= breaks[l].breakStop) && (!breakCount.includes(tournNames[i] + j + breaks[l].breakName))) {
+
+                        console.log(schedule[k].StartTime + matchInterval[i], breaks[l].breakStart, breaks);
                         var breakHeight = ((breaks[l].breakStop - breaks[l].breakStart) / smallestInterval) * 28;
-                        htmlChunk += '</table></div></div><div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col card border-info" style="height:' + breakHeight + 'px;">10:00 - Lunch break</div></div>';
-                        htmlChunk += '<div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
-                        breaks.splice(l);
+                        htmlChunk += '<tr><td class="card border-info" style="height:' + breakHeight + 'px;">' + 'lunch break' + '</td></tr>';
+                        breakCount.push(tournNames[i] + j + breaks[l].breakName);
+                        //htmlChunk += '</table></div></div><div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col card border-info" style="height:' + breakHeight + 'px;">10:00 - Lunch break</div></div>';
+                        //htmlChunk += '<div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
+
                     }
                 }
 
