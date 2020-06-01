@@ -114,11 +114,11 @@
                 </dl>
                 <h6 class="font-weight-bold">Remove Participants:</h6>
                 <button id="CompTablebtn" onclick="ShowAndHideTable()" class="btn createbtn2 mb-2">Show</button>
-                using (Html.BeginForm("DeleteCompetitors","Competitor", FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to remove ALL competitors from this tournament?')" }))
+                using (Html.BeginForm("DeleteCompetitors", "Competitor", FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to remove ALL competitors from this tournament?')" }))
                 {
                     <input type="hidden" name="clearAll" value="@ViewBag.clearAll" />
                     <input type="hidden" name="TourneyID" value="@ViewBag.TourneyID" />
-                    <input id="ClearTableBtn" type="submit"  value="Clear All" class="btn btn-warning mb-2" style="display: none"/>
+                    <input id="ClearTableBtn" type="submit" value="Clear All" class="btn btn-warning mb-2" style="display: none" />
                 }
                 <dl class="dl-horizontal">
                     @using (Html.BeginForm("DeleteCompetitors", "Competitor", FormMethod.Post, new { onsubmit = "return confirm('Are you sure you want to delete?')" }))
@@ -147,7 +147,7 @@
                                             }
                                         </tbody>
                                     </table>
-                                    <input type="submit" class="btn-danger" value="Delete"/>
+                                    <input type="submit" class="btn-danger" value="Delete" />
                                 </div>
                             </div>
                         </dd>
@@ -259,17 +259,20 @@
             <div class="form-group">
                 <input id="delete-tournament" type="submit" value="Delete Tournament" class="btn btn-danger" />
             </div>
-       }
+        }
         <div>
             @Html.ActionLink("Back to Event", "Manage", "Events", routeValues: new { id = Model.EventID }, htmlAttributes: new { @class = "btn registerbtn" })
         </div>
-   }
+        <div>
+        </div>
+    }
     else
-   {
+    {
         <div class="form-horizontal">
             <h4>Access Denied</h4>
         </div>
-   }
+    }
+    @Html.ActionLink("Public View", "Details", "Tournaments", routeValues: new { id = Model.TournamentID }, htmlAttributes: new { @class = "btn createbtn2" })
 
 
     @section scripts
