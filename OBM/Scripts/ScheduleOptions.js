@@ -123,7 +123,6 @@ function printGraph(schedule) {
     var smallestInterval = schedule[0].MatchInterval
     var tournColumns = [[]];
     for (var i = 0; i < schedule.length; i++) {
-        //console.log(match);
         if (!tournIDs.includes(schedule[i].TournamentID)) {
             tournIDs.push(schedule[i].TournamentID);
             tournNames.push(schedule[i].TournamentName);
@@ -134,7 +133,6 @@ function printGraph(schedule) {
         else {
             var j = tournIDs.indexOf(schedule[i].TournamentID);
             var stations = tournStations[j];
-            //console.log(stations, schedule[i].Station);
             if (stations < schedule[i].Station) {
                 tournStations[j] = schedule[i].Station;
             }
@@ -144,57 +142,48 @@ function printGraph(schedule) {
             smallestInterval = schedule[i].MatchInterval;
         }
     }
-    console.log(tournColumns);
+    //console.log(tournColumns);
     var htmlChunk = '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
     var htmlChunkEnd = '</div>';
 
     for (var i = 0; i < tournIDs.length; i++) {
         var colHeight = (matchInterval[i] / smallestInterval) * 28;
-        //console.log(matchInterval, colHeight);
         for (var j = 1; j <= tournStations[i]; j++) {
             htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"><th>' + tournNames[i] + ' Station ' + j + '</th></tr></table></div>';
         }
     }
     htmlChunk += htmlChunkEnd + '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
 
-    console.log(tournIDs, tournNames, tournStations);
     for (var i = 0; i < tournIDs.length; i++) {
         var colHeight = (matchInterval[i] / smallestInterval) * 28;
-        //console.log(matchInterval, colHeight);
         for (var j = 1; j <= tournStations[i]; j++) {
             htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
             var breakCount = [];
             for (var k = 0; k < schedule.length; k++) {
-                //console.log(match);
                 for (var l = 0; l < breaks.length; l++) {
-                    //console.log(schedule[k].StartTime + matchInterval[i],breaks[l].breakStart, breaks);
                     if (((schedule[k].StartTime + matchInterval[i]) >= breaks[l].breakStart) && (schedule[k].StartTime <= breaks[l].breakStop) && (!breakCount.includes(tournNames[i] + j + breaks[l].breakName))) {
-
-                        console.log(schedule[k].StartTime + matchInterval[i], breaks[l].breakStart, breaks);
+                        var start = new Date((breaks[l].breakStart + 480)* 60000);
+                        var stop = new Date((breaks[l].breakStop + 480) * 60000);
                         var breakHeight = ((breaks[l].breakStop - breaks[l].breakStart) / smallestInterval) * 28;
-                        htmlChunk += '<tr><td class="card border-info" style="height:' + breakHeight + 'px;">' + 'lunch break' + '</td></tr>';
+                        htmlChunk += '<tr><td class="card border-info" style="height:' + breakHeight + 'px;">' + formatAMPM(start) + ' - ' + formatAMPM(stop) + ' | ' + breaks[l].breakName + '</td></tr>';
                         breakCount.push(tournNames[i] + j + breaks[l].breakName);
                         //htmlChunk += '</table></div></div><div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col card border-info" style="height:' + breakHeight + 'px;">10:00 - Lunch break</div></div>';
                         //htmlChunk += '<div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
-
                     }
                 }
 
                 if ((schedule[k].TournamentID == tournIDs[i]) && (schedule[k].Station == j)) {
-                    htmlChunk += '<tr><td class="card border-info" style="height:' + colHeight + 'px;">' + schedule[k].MatchID + ', ' + tournIDs[i] + ', ' + j + ', ' + schedule[k].StartTime + '</td></tr>';
-
+                    var start = new Date((schedule[k].StartTime + 480) * 60000);
+                    htmlChunk += '<tr><td class="card border-info" style="height:' + colHeight + 'px;">' + formatAMPM(start) + ' | Round ' + schedule[k].Round + ' | ' + schedule[k].Competitor1Name + ' vs ' + schedule[k].Competitor2Name + '</td></tr>';
                 }
             }
             htmlChunk += '</table></div>';
         }
-
-        //console.log(htmlChunk);
     }
     htmlChunk += htmlChunkEnd;
 
     $('#schedule-table').empty();
     $('#schedule-table').append(htmlChunk);
-
 }
 
 function roundToFive(n) {
