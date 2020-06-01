@@ -110,8 +110,15 @@ function sendData() {
         type: 'POST',
         url: '/Events/GenerateSchedule?json=' + encodeURIComponent(JSON.stringify(data)),
         data: { __RequestVerificationToken: token },
-        success: printGraph
+        success: delayToAnimate
     });
+}
+
+function delayToAnimate(data) {
+    $('#schedule-table').append('<div class="col" align="center"><div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div></div>');
+    setTimeout(function () {
+        printGraph(data);
+    }, 3000);
 }
 
 function printGraph(schedule) {
