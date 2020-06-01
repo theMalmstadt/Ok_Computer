@@ -32,6 +32,7 @@ function addBreak() {
 function removeBreak(n) {
     $('#break-div-' + n).remove();
     breaks.splice(n, 1);
+    //breakCount--;
 }
 
 function breakSlider(n) {
@@ -87,6 +88,8 @@ function formatMilliseconds(time) {
 }
 
 function sendData() {
+    $('#schedule-table').empty();
+    $('#schedule-table').append('<div class="col" align="center"><div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div></div>');
     for (var i = 0; i < tourns.length; i++) {
         var tourn = {
             tournID: Number(tourns[i].tournID),
@@ -97,7 +100,7 @@ function sendData() {
         }
         tourns[i] = tourn;
     }
-
+    breaks = breaks.filter(Boolean);
     var data = {
         breaks: breaks,
         event: Number(document.getElementById("EventID").value),
@@ -115,10 +118,10 @@ function sendData() {
 }
 
 function delayToAnimate(data) {
-    $('#schedule-table').append('<div class="col" align="center"><div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div></div>');
+    //$('#schedule-table').append('<div class="col" align="center"><div class="spinner-border text-secondary" role="status"><span class="sr-only">Loading...</span></div></div>');
     setTimeout(function () {
         printGraph(data);
-    }, 3000);
+    }, 1000);
 }
 
 function printGraph(schedule) {
@@ -162,26 +165,27 @@ function printGraph(schedule) {
     htmlChunk += htmlChunkEnd + '<div class="row" align="center" style="padding-left:50px; padding-right:50px;">';
 
     for (var i = 0; i < tournIDs.length; i++) {
-        var colHeight = (matchInterval[i] / smallestInterval) * 28;
+        var colHeight = (matchInterval[i] / smallestInterval) * 56;
         for (var j = 1; j <= tournStations[i]; j++) {
             htmlChunk += '<div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
             var breakCount = [];
             for (var k = 0; k < schedule.length; k++) {
-                for (var l = 0; l < breaks.length; l++) {
-                    if (((schedule[k].StartTime + matchInterval[i]) >= breaks[l].breakStart) && (schedule[k].StartTime <= breaks[l].breakStop) && (!breakCount.includes(tournNames[i] + j + breaks[l].breakName))) {
-                        var start = new Date((breaks[l].breakStart + 480)* 60000);
-                        var stop = new Date((breaks[l].breakStop + 480) * 60000);
-                        var breakHeight = ((breaks[l].breakStop - breaks[l].breakStart) / smallestInterval) * 28;
-                        htmlChunk += '<tr><td class="card border-info" style="height:' + breakHeight + 'px;">' + formatAMPM(start) + ' - ' + formatAMPM(stop) + ' | ' + breaks[l].breakName + '</td></tr>';
-                        breakCount.push(tournNames[i] + j + breaks[l].breakName);
-                        //htmlChunk += '</table></div></div><div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col card border-info" style="height:' + breakHeight + 'px;">10:00 - Lunch break</div></div>';
-                        //htmlChunk += '<div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
-                    }
-                }
-
+                
                 if ((schedule[k].TournamentID == tournIDs[i]) && (schedule[k].Station == j)) {
+                    for (var l = 0; l < breaks.length; l++) {
+                        if (((schedule[k].StartTime + matchInterval[i]) >= breaks[l].breakStart) && (schedule[k].StartTime <= breaks[l].breakStop) && (!breakCount.includes(tournNames[i] + j + breaks[l].breakName))) {
+                            var start = new Date((breaks[l].breakStart + 480) * 60000);
+                            var stop = new Date((breaks[l].breakStop + 480) * 60000);
+                            var breakHeight = ((breaks[l].breakStop - breaks[l].breakStart) / smallestInterval) * 56;
+                            htmlChunk += '<tr><td class="card border-info" align="center" style="height:' + breakHeight + 'px;">' + formatAMPM(start) + ' - ' + formatAMPM(stop) + '<br>' + breaks[l].breakName + '</td></tr>';
+                            breakCount.push(tournNames[i] + j + breaks[l].breakName);
+                            //htmlChunk += '</table></div></div><div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col card border-info" style="height:' + breakHeight + 'px;">10:00 - Lunch break</div></div>';
+                            //htmlChunk += '<div class="row" align="center" style="padding-left:50px; padding-right:50px;"><div class="col" style="padding:0px;"><table class="col"><tr align="center"></tr>';
+                        }
+                    }
+
                     var start = new Date((schedule[k].StartTime + 480) * 60000);
-                    htmlChunk += '<tr><td class="card border-info" style="height:' + colHeight + 'px;">' + formatAMPM(start) + ' | Round ' + schedule[k].Round + ' | ' + schedule[k].Competitor1Name + ' vs ' + schedule[k].Competitor2Name + '</td></tr>';
+                    htmlChunk += '<tr><td class="card border-info" align="center" style="height:' + colHeight + 'px;">' + formatAMPM(start) + ' - Round ' + schedule[k].Round + ' - Match ' + schedule[k].Identifier + '<br>' + schedule[k].Competitor1Name + ' vs ' + schedule[k].Competitor2Name + '</td></tr>';
                 }
             }
             htmlChunk += '</table></div>';

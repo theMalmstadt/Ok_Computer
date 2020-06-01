@@ -1489,36 +1489,11 @@ namespace OBM.Controllers
                 List<Match> filteredMatches = new List<Match>();
                 foreach (var match in matches)
                 {
-                    if (match.Competitor1ID != null)
+                    if (new MatchViewModel(match).Winner == null)
                     {
-                        var comp1 = db.Competitors.Find(match.Competitor1ID);
-                        if (allEventComps.Contains(comp1))
-                        {
-                            allEventComps.Remove(comp1);
-                        }
-                        else
-                        {
-                            multiTournComps.Add(comp1);
-                        }
-                    }
-                    if (match.Competitor2ID != null)
-                    {
-                        var comp2 = db.Competitors.Find(match.Competitor2ID);
-                        if (allEventComps.Contains(comp2))
-                        {
-                            allEventComps.Remove(comp2);
-                        }
-                        else
-                        {
-                            multiTournComps.Add(comp2);
-                        }
-                    }
-
-                    if ((new MatchViewModel(match).Winner == null) && (match.PrereqMatch1ID == null) && (match.PrereqMatch2ID == null))
-                    {
+                        System.Diagnostics.Debug.WriteLine("A");
                         foreach (var b in breaks)
                         {
-                            //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + " > " + (int)b["breakStart"]);
                             if ((movingTime) < (int)b["breakStart"])
                             {
                                 if ((movingTime + matchInterval) >= (int)b["breakStart"])
@@ -1536,11 +1511,51 @@ namespace OBM.Controllers
                             }
                         }
 
-                        //System.Diagnostics.Debug.WriteLine(match.MatchID+"@"+ movingTime);
-                        schedule.Add(new ScheduleViewModel(match, movingTime, matchInterval, currentStation, 100));
-                        //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + ", " + currentStation);
+                        if ((match.PrereqMatch1ID == null) && (match.PrereqMatch2ID == null))
+                        {
+                            System.Diagnostics.Debug.WriteLine("B");
+                            if (match.Competitor1ID != null)
+                            {
+                                var comp1 = db.Competitors.Find(match.Competitor1ID);
+                                if (allEventComps.Contains(comp1))
+                                {
+                                    allEventComps.Remove(comp1);
+                                }
+                                else if (!multiTournComps.Contains(comp1))
+                                {
+                                    multiTournComps.Add(comp1);
+                                }
+                            }
+                            if (match.Competitor2ID != null)
+                            {
+                                var comp2 = db.Competitors.Find(match.Competitor2ID);
+                                if (allEventComps.Contains(comp2))
+                                {
+                                    allEventComps.Remove(comp2);
+                                }
+                                else if (!multiTournComps.Contains(comp2))
+                                {
+                                    multiTournComps.Add(comp2);
+                                }
+                            }
 
-                        //System.Diagnostics.Debug.WriteLine("hello: " + currentStation + " >= " + stations);
+
+
+                            //System.Diagnostics.Debug.WriteLine(match.MatchID+"@"+ movingTime);
+                            schedule.Add(new ScheduleViewModel(match, movingTime, matchInterval, currentStation, 100));
+                            //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + ", " + currentStation);
+
+                            //System.Diagnostics.Debug.WriteLine("hello: " + currentStation + " >= " + stations);
+
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("C");
+                            filteredMatches.Add(match);
+
+                            schedule.Add(new ScheduleViewModel(match, movingTime, matchInterval, currentStation, 100));
+                        }
+
                         if (currentStation >= stations)
                         {
 
@@ -1552,17 +1567,12 @@ namespace OBM.Controllers
                             currentStation++;
                         }
                     }
-                    else
-                    {
-                        filteredMatches.Add(match);
-                    }
-
                 }
                 //System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
             }
             //+System.Diagnostics.Debug.WriteLine(multiTournComps.Count + ", " + allEventComps.Count);
 
-            foreach (var tourn in tourns)
+            /*foreach (var tourn in tourns)
             {
                 var currentTourn = db.Tournaments.Find((int)tourn["tournID"]);
                 var startTime = (int)tourn["startTime"];
@@ -1581,7 +1591,15 @@ namespace OBM.Controllers
                     }
                 }
                 //System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
+
+            }*/
+
+
+            foreach (var i in multiTournComps)
+            {
+                System.Diagnostics.Debug.Write(i.CompetitorName); 
             }
+
             return Json(schedule, JsonRequestBehavior.AllowGet);
         }
     }

@@ -21,7 +21,7 @@ namespace OBM.Models.ViewModels
             }
             else
             {
-                Competitor1Name = "";
+                Competitor1Name = "winner of " + db.Matches.Find(match.PrereqMatch1ID).Identifier;
             }
             if (match.Competitor2ID != null)
             {
@@ -29,7 +29,7 @@ namespace OBM.Models.ViewModels
             }
             else
             {
-                Competitor2Name = "";
+                Competitor2Name = "winner of " + db.Matches.Find(match.PrereqMatch2ID).Identifier;
             }
             Round = match.Round;
             Identifier = match.Identifier;
