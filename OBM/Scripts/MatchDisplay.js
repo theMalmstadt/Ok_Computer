@@ -23,7 +23,7 @@ function sharedFunction(id) {
     });
 }
 
-var interval = 1000 * 100000;
+var interval = 1000 * 5;
 
 var ajax_match_update = function () {
     var eventID = $("#eventID").val();
