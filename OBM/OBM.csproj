@@ -587,7 +587,6 @@
     <Content Include="Views\Events\Schedule.cshtml" />
     <Content Include="Views\Organizer\PublicProfile.cshtml" />
     <Content Include="Views\Organizer\OrganizersSearch.cshtml" />
-    <Content Include="Views\Organizer\PrivateProfile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

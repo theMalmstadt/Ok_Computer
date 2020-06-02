@@ -47,25 +47,5 @@ namespace OBM.Controllers
 
             return View(organizerViewModel);
         }
-
-        [HttpGet]
-        public ActionResult PrivateProfile(string OrgID)
-        {
-            Organizer organizer = new Organizer();
-
-            organizer.organizerID = OrgID;
-            organizer.organizerName = db.AspNetUsers.Find(OrgID).UserName;
-
-            OrganizerViewModel organizerViewModel = new OrganizerViewModel(organizer);
-
-            return View(organizerViewModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public void ChangePrivateProfile()
-        {
-
-        }
     }
 }
