@@ -1,5 +1,6 @@
 ﻿
 @model OBM.Models.Tournament
+@using Microsoft.AspNet.Identity;
 
 @{
     ViewBag.Title = "Details";
@@ -94,5 +95,13 @@
 </div>
 
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Search", "Home", new { table = "Tournaments" }, htmlAttributes: new { @class = "btn createbtn2" })
 </p>
+@if (User.Identity.GetUserId() == ViewBag.OrganizerId)
+{
+    <p>
+        @Html.ActionLink("Management View", "Tournament", "Events", routeValues: new { id = Model.TournamentID }, htmlAttributes: new { @class = "btn createbtn2" })
+    </p>
+}
+
+

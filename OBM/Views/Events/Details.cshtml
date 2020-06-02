@@ -1,63 +1,65 @@
 ﻿@model OBM.Models.ViewModels.EventViewModel
+@using Microsoft.AspNet.Identity;
+
 
 @{
     ViewBag.Title = "Details";
 }
 
-    <h2>@Model.EventName</h2>
+<h2>@Model.EventName</h2>
 
-    <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
-    <div>
-        <h4>Event</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.OrganizerName)
-            </dt>
+<input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.OrganizerName)
+        </dt>
 
-            <dd>
-                @Html.DisplayFor(model => model.OrganizerName)
-            </dd>
-
-
-            
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Description)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Description)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Location)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Location)
-            </dd>
-
-            <dt>
-                @Html.DisplayNameFor(model => model.Public)
-            </dt>
-
-            <dd>
-                @Html.DisplayFor(model => model.Public)
-            </dd>
-
-            <dd>
-                @Html.ActionLink("View Standings", "Standings", new { id = Model.EventID })
-            </dd>
-        </dl>
+        <dd>
+            @Html.DisplayFor(model => model.OrganizerName)
+        </dd>
 
 
-        <div class="dl-horizontal" id="TournamentList">
-            <h1>
-                Tournaments      
-            </h1>
-        </div>
-        <script>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Location)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Public)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Public)
+        </dd>
+
+        <dd>
+            @Html.ActionLink("View Standings", "Standings", new { id = Model.EventID })
+        </dd>
+    </dl>
+
+
+    <div class="dl-horizontal" id="TournamentList">
+        <h1>
+            Tournaments
+        </h1>
+    </div>
+    <script>
              EventID =@Model.EventID;
         console.log(EventID);
         $.ajax({
@@ -84,12 +86,17 @@
                     $("#TournamentList").append('</table></thead></tr>');
                 }
 });
-        </script>
-    </div>
+    </script>
+</div>
 </br>
-    <p>
-        @Html.ActionLink("Back to List", "Index")
-    </p>
+<p>
+    @Html.ActionLink("Back to List", "Search", "Home", new { table = "Events" }, null)
+</p>
+@{
+    if (User.Identity.GetUserId() == Model.OrganizerID)
+    {
+        @Html.ActionLink("Management View", "Manage", "Events", routeValues: new { id = Model.EventID }, htmlAttributes: new { @class = "btn createbtn2" })
 
-
+    }
+}
 

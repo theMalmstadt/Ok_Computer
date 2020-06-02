@@ -45,6 +45,8 @@ namespace OBM.Controllers
             {
                 return HttpNotFound();
             }
+
+            ViewBag.OrganizerId = db.Events.Find(tournament.EventID).OrganizerID;
             return View(tournament);
         }
 
