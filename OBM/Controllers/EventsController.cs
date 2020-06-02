@@ -1491,7 +1491,6 @@ namespace OBM.Controllers
                 {
                     if (new MatchViewModel(match).Winner == null)
                     {
-                        System.Diagnostics.Debug.WriteLine("A");
                         foreach (var b in breaks)
                         {
                             if ((movingTime) < (int)b["breakStart"])
@@ -1499,7 +1498,6 @@ namespace OBM.Controllers
                                 if ((movingTime + matchInterval) >= (int)b["breakStart"])
                                 {
                                     movingTime = (int)b["breakStop"];
-                                    //System.Diagnostics.Debug.WriteLine("new time: " + movingTime);
                                 }
                             }
                             else
@@ -1513,7 +1511,6 @@ namespace OBM.Controllers
 
                         if ((match.PrereqMatch1ID == null) && (match.PrereqMatch2ID == null))
                         {
-                            System.Diagnostics.Debug.WriteLine("B");
                             if (match.Competitor1ID != null)
                             {
                                 var comp1 = db.Competitors.Find(match.Competitor1ID);
@@ -1539,18 +1536,10 @@ namespace OBM.Controllers
                                 }
                             }
 
-
-
-                            //System.Diagnostics.Debug.WriteLine(match.MatchID+"@"+ movingTime);
                             schedule.Add(new ScheduleViewModel(match, movingTime, matchInterval, currentStation, 100));
-                            //System.Diagnostics.Debug.WriteLine(match.MatchID + ", " + movingTime + ", " + currentStation);
-
-                            //System.Diagnostics.Debug.WriteLine("hello: " + currentStation + " >= " + stations);
-
                         }
                         else
                         {
-                            System.Diagnostics.Debug.WriteLine("C");
                             filteredMatches.Add(match);
 
                             schedule.Add(new ScheduleViewModel(match, movingTime, matchInterval, currentStation, 100));
@@ -1568,7 +1557,6 @@ namespace OBM.Controllers
                         }
                     }
                 }
-                //System.Diagnostics.Debug.WriteLine(filteredMatches.Count);
             }
             //+System.Diagnostics.Debug.WriteLine(multiTournComps.Count + ", " + allEventComps.Count);
 
