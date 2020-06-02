@@ -17,5 +17,5 @@ function SendingResponse(data) {
 }
 
 function errorOnAjax() {
-    console.log("Error in Ajax request.");
+    console.log("SMS Message Sending Failure.");
 }
