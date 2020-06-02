@@ -16,7 +16,9 @@
     if (ViewBag.Access == true)
     {
         <div class="col-md-10" align="center">
-            <button type="button" class ="btn createbtn" onclick="toggleStream()">Stream Tools</button>
+            <button type="button" class="btn createbtn" onclick="toggleStream()">Stream Tools</button>
+            <button type="button" class="btn createbtn" onclick="window.location.href='/Events/Details/@Model.EventID';" >Public View</button>
+
             <form id="streamForm" style="display: none">
                 <br />
                 <label for="round">Round:</label>
@@ -29,27 +31,29 @@
                 <input type="text" id="player2" name="player2" value="Player 2" />
                 <label for="score2">Score 2:</label>
                 <input type="number" id="score2" name="score2" value="0" /><br />
+                <input type="hidden" id="matchSerial" name="matchSerial" />
                 <input type="button" onclick="updateAll()" value="Update">
-                <p>@Html.ActionLink("Need help with stream files?", controllerName:"Events", actionName:"StreamHelp")</p>
+                <input type="button" onclick="SubmitStream()" value="Submit" />
+                <p>@Html.ActionLink("Need help with stream files?", controllerName: "Events", actionName: "StreamHelp")</p>
             </form>
-        <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
-        <div id="Matches">
-            @Html.AntiForgeryToken();
-        </div>
-        <div id="Competitors">
-        </div>
-        <br />
-        @Html.ActionLink("See Schedule", "Schedule", new { id = Model.EventID })
-        <button type="button" onclick="hideShow('MinimalGraph');" class="btn createbtn">Show Estimated Time Line</button>
-        <div id="MinimalGraph" style="display:none">
-            <canvas id="EventGraph" aria-label="Estimated Event Timeline"></canvas>
-        </div>
-        <br />
+            <input type="hidden" id="eventID" name="eventID" value="@Html.DisplayFor(model => model.EventID)" />
+            <div id="Matches">
+                @Html.AntiForgeryToken();
+            </div>
+            <div id="Competitors">
+            </div>
             <br />
-        <p>
-            @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
-            @Html.ActionLink("Back to List", "Index")
-        </p>
+            @Html.ActionLink("See Schedule", "Schedule", new { id = Model.EventID })
+            <button type="button" onclick="hideShow('MinimalGraph');" class="btn createbtn">Show Estimated Time Line</button>
+            <div id="MinimalGraph" style="display:none">
+                <canvas id="EventGraph" aria-label="Estimated Event Timeline"></canvas>
+            </div>
+            <br />
+            <br />
+            <p>
+                @Html.ActionLink("Edit Details", "Edit", new { id = Model.EventID }) |
+                @Html.ActionLink("Back to List", "Index")
+            </p>
         </div>
     }
     else

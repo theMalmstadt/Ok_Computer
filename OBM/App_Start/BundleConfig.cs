@@ -54,6 +54,11 @@ namespace OBM
                 "~/Scripts/randomColor.js",
                 "~/Scripts/TournamentDisplay.js"
                 ));
+
+            bundles.Add(new ScriptBundle("~/bundles/OrganizerSearch").Include(
+                "~/Scripts/datatables.min.js",
+                "~/Scripts/OrganizerSearchTable.js"
+                ));
         }
     }
 }

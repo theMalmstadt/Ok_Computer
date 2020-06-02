@@ -135,7 +135,7 @@ function toggleStream() {
     }
 }
 
-function StreamMatch(round, player1, player2) {
+function StreamMatch(round, player1, player2, mymatch) {
     var field = document.getElementById("round");
     field.value = round;
 
@@ -150,6 +150,9 @@ function StreamMatch(round, player1, player2) {
 
     field = document.getElementById("score2");
     field.value = 0;
+
+    field = document.getElementById("matchSerial");
+    field.value = mymatch;
 
     updateAll();
 }
@@ -214,6 +217,31 @@ function SubmitScore(mymatch)
         console.log(mymatch.scoreCsv);
 
         
+        PostScore(mymatch);
+    }
+    else
+        alert("Please Enter a number for each score.");
+}
+
+function SubmitStream()
+{
+    var mymatch = JSON.parse(document.getElementById("matchSerial").value);
+
+    var score1 = parseInt(document.getElementById("score1").value);
+
+    var score2 = parseInt(document.getElementById("score2").value);
+
+    console.log(mymatch);
+
+    if (Number.isInteger(score1) && Number.isInteger(score2)) {
+        console.log("Submitted Scores: " + score1 + " " + score2);
+        mymatch.scoreCsv = score1 + "-" + score2;
+        mymatch.score1 = score1;
+        mymatch.score2 = score2;
+
+        console.log(mymatch.scoreCsv);
+
+
         PostScore(mymatch);
     }
     else

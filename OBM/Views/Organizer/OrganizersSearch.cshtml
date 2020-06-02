@@ -1,0 +1,42 @@
+﻿@model IEnumerable<OBM.Models.Organizer>
+@{
+    ViewBag.Title = "Organziser Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid justify-content-center">
+    <div class="row">
+        <div class="col-12 text-center">
+            <h2>Which Organizer are you looking for?</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-4">
+            <div class="card bg-secondary">
+                <div class="card-body darker">
+                    <table id="organizerList" class="table table-responsive-md table-dark table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    Organizer Name
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var organizer in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(organizer.organizerName, "PublicProfile", "Organizer", new { OrgID = organizer.organizerID}, new { @class = "eventdata" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Scripts.Render("~/bundles/OrganizerSearch")

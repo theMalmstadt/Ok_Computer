@@ -25,8 +25,9 @@
         <div class="navbar-collapse collapse" id="navbarSupportedContent">
             <ul class="nav navbar-nav mr-auto">
                 <li><i>@Html.ActionLink("OK Brackets", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "nav-item" })</i></li>
-                <li><i>@Html.ActionLink("Events", "Index", "Events", null, new { @class = "nav-link pt-2", @id = "nav-item" })</i></li>
-                <li><i>@Html.ActionLink("Tournaments", "Index", "Tournaments", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Events", "Search", "Home", new { table = "Events", }, new { @class = "nav-link pt-2", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Tournaments", "Search", "Home", new { table = "Tournaments", }, new { @class = "nav-link", @id = "nav-item" })</i></li>
+                <li><i>@Html.ActionLink("Organizers", "OrganizersSearch", "Organizer", null, new { @class = "nav-link", @id = "nav-item" })</i></li>
             </ul>
 
             <!-- Search form -->

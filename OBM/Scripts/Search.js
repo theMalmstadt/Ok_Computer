@@ -7,6 +7,9 @@ $(document).ready(function () {
    
     if($("#table").val()=="Events")
         drawEvents();
+
+    if ($("#table").val() == "Tournaments")
+        drawTournaments();
     $("#table").change(redraw);
 
 
